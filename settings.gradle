@@ -1,0 +1,5 @@
+rootProject.name = 'money-tree'
+
+include 'domain'
+include 'mt-api'
+include 'persist'
