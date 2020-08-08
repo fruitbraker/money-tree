@@ -3,7 +3,7 @@ info:
   description: "API for money tree"
   version: "1.0.0"
   title: "Money Tree"
-  # termsOfService: "http://swagger.io/terms/"
+   termsOfService: "http://swagger.io/terms/"
   contact:
     email: "test@test.com"
 host: "localhost"
@@ -13,9 +13,7 @@ tags:
   - name: "Expense"
     description: "Everything you've spent money on"
   - name: "Expense Category"
-    description: "The category an expense falls under"
-  - name: "Budget Target"
-    description: "Budget targets to help control the spending on certain expense categories"
+    description: "The category an expense falls under with a monthly target spending"
   - name: "Income"
     description: "Information on your source of money"
   - name: "Income Category"
@@ -192,22 +190,21 @@ paths:
         "400":
           description: "Bad request."
 
-  /categories/expense/{id}:
+  /categories/expense/{category}:
     get:
       tags:
         - "Expense Category"
-      summary: "Retrieves expense category with {expense_category_id}"
+      summary: "Retrieves expense category by name"
       description: "Returns a single expense cateory."
       produces:
         - "application/json"
       parameters:
-        - name: "id"
+        - name: "category"
           in: "path"
           description: "ID of resource target to return"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
       responses:
         "200":
           description: "successful operation"
@@ -222,20 +219,19 @@ paths:
     put:
       tags:
         - "Expense Category"
-      summary: "Updates expense category with {expense_category_id}"
+      summary: "Updates expense category by name"
       description: ""
       consumes:
         - "application/json"
       produces:
         - "application/json"
       parameters:
-        - name: "id"
+        - name: "category"
           in: "path"
           description: "ID of resource that needs to be updated."
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
         - in: "body"
           name: "body"
           description: "Resource to be added."
@@ -256,18 +252,17 @@ paths:
     delete:
       tags:
         - "Expense Category"
-      summary: "Deletes expense category by id"
+      summary: "Deletes expense category by name"
       description: ""
       produces:
         - "application/json"
       parameters:
-        - name: "id"
+        - name: "category"
           in: "path"
           description: "Resource id to delete"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
       responses:
         "204":
           description: "Resource successfully deleted."
@@ -277,134 +272,6 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resoruce conflict."
-
-  /targets/budget:
-    get:
-      tags:
-        - "Budget Target"
-      summary: "Retrieve all budget targets."
-      description: ""
-      produces:
-        - "application/json"
-      responses:
-        "200":
-          description: "Successful operation."
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/definitions/Budget_Target"
-    post:
-      tags:
-        - "Budget Target"
-      summary: "Creates a new budget target"
-      description: "Monthly budget target"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          required: true
-          schema:
-            $ref: "#/definitions/Budget_Target"
-      responses:
-        "201":
-          description: "Resource successfully created."
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Budget_Target"
-        "400":
-          description: "Bad request."
-
-  /targets/budget{id}:
-    get:
-      tags:
-        - "Budget Target"
-      summary: "Retrieve a budget target by id"
-      description: "Returns a single budget target"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "id"
-          in: "path"
-          description: "ID of resource target to return"
-          required: true
-          schema:
-            type: "integer"
-            format: "int32"
-      responses:
-        "200":
-          description: "successful operation"
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Budget_Target"
-        "400":
-          description: "Bad request."
-        "404":
-          description: "Resource not found."
-    put:
-      tags:
-        - "Budget Target"
-      summary: "Updates a budget target by id"
-      description: ""
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "id"
-          in: "path"
-          description: "ID of resource that needs to be updated."
-          required: true
-          schema:
-            type: "integer"
-            format: "int32"
-        - in: "body"
-          name: "body"
-          description: "Resource to be addeds."
-          required: true
-          schema:
-            $ref: "#/definitions/Budget_Target"
-      responses:
-        "200":
-          description: "Resource successfully updated."
-        "201":
-          description: "Resource successfully created."
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Budget_Target"
-        "400":
-          description: "Bad request."
-    delete:
-      tags:
-        - "Budget Target"
-      summary: "Deletes a budget target by id"
-      description: ""
-      produces:
-        - "application/json"
-      parameters:
-        - name: "id"
-          in: "path"
-          description: "Resource id to delete"
-          required: true
-          schema:
-            type: "integer"
-            format: "int32"
-      responses:
-        "204":
-          description: "Resource successfully deleted."
-        "400":
-          description: "Bad request."
-        "404":
-          description: "Resource not found."
-        "409":
-          description: "Resource conflict."
 
   /income:
     get:
@@ -418,11 +285,11 @@ paths:
         "200":
           description: "Successful operation."
           content:
-             application/json:
-               schema:
-                 type: array
-                 items:
-                   $ref: "#/definitions/Income"
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/Income"
     post:
       tags:
         - "Income"
@@ -802,22 +669,9 @@ paths:
           description: "Resourse conflict."
 
 definitions:
-  Budget_Target:
-    type: "object"
-    properties:
-      budget_target_id:
-        type: "string"
-      category:
-        $ref: "#/definitions/Expense_Category"
-      amount:
-        type: "number"
-        format: "double"
-      metadata:
-        $ref: "#/definitions/Metadata"
   Expense:
-    type: "object"
     properties:
-      expense_id:
+      id:
         type: "integer"
         format: "int32"
       transaction_date:
@@ -828,29 +682,32 @@ definitions:
         format: "double"
       vendor:
         $ref: "#/definitions/Vendor"
-      category:
-        $ref: "#/definitions/Expense_Category"
+      expense_category:
+        type: "string"
       metadata:
         $ref: "#/definitions/Metadata"
       hide:
         type: "boolean"
         description: "Should this not be calculated into the budgets?"
   Expense_Category:
-    type: "object"
     properties:
-      expense_category_id:
+      name:
         type: "string"
         example: "Restaurant"
+      target_amount:
+        type: "number"
+        format: "double"
+      metadata:
+        $ref: "#/definitions/Metadata"
   Income:
-    type: "object"
     properties:
-      income_id:
+      id:
         type: "integer"
         format: "int32"
       source:
         type: "string"
         example: "Company Inc"
-      category:
+      income_category:
         $ref: "#/definitions/Income_Category"
       transaction_amount:
         type: "number"
@@ -858,24 +715,24 @@ definitions:
       transaction_date:
         type: "string"
         format: "date"
+      hide:
+        type: "boolean"
       metadata:
         $ref: "#/definitions/Metadata"
   Income_Category:
-    type: "object"
     properties:
-      income_category_id:
+      name:
         type: "string"
+        example: "Job"
   Vendor:
-    type: "object"
     properties:
-      vendor_id:
+      id:
         type: "integer"
         format: "int32"
       name:
         type: "string"
         example: "A store's name"
   Metadata:
-    type: "object"
     properties:
       date_created:
         type: "string"
@@ -886,7 +743,3 @@ definitions:
       notes:
         type: "string"
         example: "Something about this?"
-
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
