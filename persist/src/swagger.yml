@@ -195,7 +195,7 @@ paths:
       tags:
         - "Expense Category"
       summary: "Retrieves expense category by name"
-      description: "Returns a single expense cateory."
+      description: "Returns a single expense category."
       produces:
         - "application/json"
       parameters:
@@ -271,7 +271,7 @@ paths:
         "404":
           description: "Resource not found."
         "409":
-          description: "Resoruce conflict."
+          description: "Resource conflict."
 
   /income:
     get:
@@ -455,7 +455,7 @@ paths:
       tags:
         - "Income Category"
       summary: "Retrieves income category by id"
-      description: "Returns a single expense cateory."
+      description: "Returns a single expense category."
       produces:
         - "application/json"
       parameters:
@@ -666,7 +666,7 @@ paths:
         "404":
           description: "Resource not found."
         "409":
-          description: "Resourse conflict."
+          description: "Resource conflict."
 
 definitions:
   Expense:
