@@ -1,9 +1,9 @@
 package moneytree.api.metadata
 
-import java.time.LocalDate
+import java.time.OffsetDateTime
 
 data class Metadata(
-    val dateCreated: LocalDate?,
-    val dateModified: LocalDate?,
+    val dateCreated: OffsetDateTime,
+    val dateModified: OffsetDateTime,
     val notes: String?
 )

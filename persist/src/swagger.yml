@@ -3,7 +3,7 @@ info:
   description: "API for money tree"
   version: "1.0.0"
   title: "Money Tree"
-   termsOfService: "http://swagger.io/terms/"
+  # termsOfService: "http://swagger.io/terms/"
   contact:
     email: "test@test.com"
 host: "localhost"
@@ -90,7 +90,7 @@ paths:
                 $ref: "#/definitions/Expense"
         "404":
           description: "Expense not found."
-    put:
+    patch:
       tags:
         - "Expense"
       summary: "Update expense by id"
@@ -113,16 +113,8 @@ paths:
           schema:
             $ref: "#/definitions/Expense"
       responses:
-        "200":
+        "204":
           description: "Expense successfully updated."
-          schema:
-            $ref: "#/definitions/Expense"
-        "201":
-          description: "Expense successfully created."
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Expense"
         "400":
           description: "Bad request."
     delete:
@@ -195,7 +187,7 @@ paths:
       tags:
         - "Expense Category"
       summary: "Retrieves expense category by name"
-      description: "Returns a single expense category."
+      description: "Returns a single expense cateory."
       produces:
         - "application/json"
       parameters:
@@ -216,7 +208,7 @@ paths:
           description: "Bad request."
         "404":
           description: "Resource not found."
-    put:
+    patch:
       tags:
         - "Expense Category"
       summary: "Updates expense category by name"
@@ -239,10 +231,8 @@ paths:
           schema:
             $ref: "#/definitions/Expense_Category"
       responses:
-        "200":
+        "204":
           description: "Resource successfully updated."
-        "201":
-          description: "Resource successfully created."
           content:
             application/json:
               schema:
@@ -271,7 +261,7 @@ paths:
         "404":
           description: "Resource not found."
         "409":
-          description: "Resource conflict."
+          description: "Resoruce conflict."
 
   /income:
     get:
@@ -343,7 +333,7 @@ paths:
           description: "Bad request."
         "404":
           description: "Resource not found."
-    put:
+    patch:
       tags:
         - "Income"
       summary: "Updates income data with id"
@@ -367,20 +357,10 @@ paths:
           schema:
             $ref: "#/definitions/Income"
       responses:
-        "200":
+        "204":
           description: "Resource successfully updated."
-          schema:
-            $ref: "#/definitions/Income"
-        "201":
-          description: "Resource successfully created."
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Income"
         "400":
           description: "Bad request."
-        "404":
-          description: "Resource not found."
     delete:
       tags:
         - "Income"
@@ -455,7 +435,7 @@ paths:
       tags:
         - "Income Category"
       summary: "Retrieves income category by id"
-      description: "Returns a single expense category."
+      description: "Returns a single expense cateory."
       produces:
         - "application/json"
       parameters:
@@ -477,7 +457,7 @@ paths:
           description: "Bad request."
         "404":
           description: "Resource not found."
-    put:
+    patch:
       tags:
         - "Income Category"
       summary: "Updates income category by id"
@@ -501,14 +481,8 @@ paths:
           schema:
             $ref: "#/definitions/Income_Category"
       responses:
-        "200":
+        "204":
           description: "Resource successfully updated."
-        "201":
-          description: "Resource successfully created."
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Income_Category"
         "400":
           description: "Bad request."
         "404":
@@ -607,7 +581,7 @@ paths:
           description: "Bad request."
         "404":
           description: "Resource not found."
-    put:
+    patch:
       tags:
         - "Vendor"
       summary: "Updates vendor data by id"
@@ -631,18 +605,10 @@ paths:
           schema:
             $ref: "#/definitions/Vendor"
       responses:
-        "200":
+        "204":
           description: "Resource successfully updated."
-        "201":
-          description: "Resource successfully created."
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Vendor"
         "400":
           description: "Bad request."
-        "404":
-          description: "Resource not found."
     delete:
       tags:
         - "Vendor"
@@ -666,7 +632,7 @@ paths:
         "404":
           description: "Resource not found."
         "409":
-          description: "Resource conflict."
+          description: "Resourse conflict."
 
 definitions:
   Expense:
@@ -691,7 +657,7 @@ definitions:
         description: "Should this not be calculated into the budgets?"
   Expense_Category:
     properties:
-      name:
+      id:
         type: "string"
         example: "Restaurant"
       target_amount:
@@ -721,7 +687,7 @@ definitions:
         $ref: "#/definitions/Metadata"
   Income_Category:
     properties:
-      name:
+      id:
         type: "string"
         example: "Job"
   Vendor:

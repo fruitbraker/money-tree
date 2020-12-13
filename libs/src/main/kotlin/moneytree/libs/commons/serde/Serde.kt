@@ -13,6 +13,5 @@ val jackson: ObjectMapper = jacksonObjectMapper()
     .registerModule(JavaTimeModule())
     .registerModule(KotlinModule())
     .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-    .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
 
-fun Any.toJsonBuffer(): ByteArray = jackson.writeValueAsBytes(this)
+fun Any.toJson(): String = jackson.writeValueAsString(this)

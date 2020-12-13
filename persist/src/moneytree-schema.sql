@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS expense_category
 (
     id VARCHAR(32) PRIMARY KEY NOT NULL,
     target_amount DECIMAL(12,4) DEFAULT 0.00 NOT NULL,
-    metadata JSONB NOT NULL
+    metadata VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS income_category
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS expense
     transaction_amount DECIMAL(12,4) NOT NULL,
     vendor INT REFERENCES vendor(id) NOT NULL,
     category VARCHAR(32) REFERENCES expense_category(id) NOT NULL,
-    metadata JSONB NOT NULL,
+    metadata VARCHAR(256) NOT NULL,
     hide boolean DEFAULT false NOT NULL
 );
 
@@ -38,6 +38,6 @@ CREATE TABLE IF NOT EXISTS income
 	category VARCHAR(32) REFERENCES income_category(id) NOT NULL,
     transaction_amount DECIMAL(12,4) NOT NULL,
     transaction_date DATE NOT NULL,
-	metadata JSONB NOT NULL,
+	metadata VARCHAR(256) NOT NULL,
 	hide boolean DEFAULT false NOT NULL
 );

@@ -1,9 +1,8 @@
 package moneytree.api.expense
 
-import moneytree.domain.metadata.Metadata
+import moneytree.api.metadata.Metadata
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.OffsetDateTime
 import moneytree.domain.expense.Expense as ExpenseDomain
 import moneytree.domain.metadata.Metadata as MetadataDomain
 
@@ -13,7 +12,7 @@ data class Expense(
     val transactionAmount: BigDecimal,
     val vendor: Int,
     val category: String,
-    val metadata: Metadata?,
+    val metadata: Metadata,
     val hide: Boolean
 ) {
     companion object {
@@ -25,9 +24,9 @@ data class Expense(
                 vendor = expense.vendor,
                 category = expense.category,
                 metadata = MetadataDomain(
-                    dateCreated = expense.metadata?.dateCreated,
-                    dateModified = expense.metadata?.dateModified,
-                    notes = expense.metadata?.notes
+                    dateCreated = expense.metadata.dateCreated,
+                    dateModified = expense.metadata.dateModified,
+                    notes = expense.metadata.notes
                 ),
                 hide = expense.hide
             )
@@ -40,10 +39,10 @@ data class Expense(
                 transactionAmount = expenseDomain.transactionAmount,
                 vendor = expenseDomain.vendor,
                 category = expenseDomain.category,
-                metadata = MetadataDomain(
-                    dateCreated = expenseDomain.metadata?.dateCreated,
-                    dateModified = expenseDomain.metadata?.dateModified,
-                    notes = expenseDomain.metadata?.notes
+                metadata = Metadata(
+                    dateCreated = expenseDomain.metadata.dateCreated,
+                    dateModified = expenseDomain.metadata.dateModified,
+                    notes = expenseDomain.metadata.notes
                 ),
                 hide = expenseDomain.hide
             )

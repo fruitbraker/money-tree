@@ -10,6 +10,6 @@ data class Expense(
     val transactionAmount: BigDecimal,
     val vendor: Int,
     val category: String,
-    val metadata: Metadata?,
+    val metadata: Metadata,
     val hide: Boolean
 )

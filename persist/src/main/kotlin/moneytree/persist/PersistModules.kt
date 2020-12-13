@@ -40,5 +40,4 @@ class PersistModules(val schema: String) : AbstractModule() {
         ).withExecuteLogging(true)
         return DSL.using(ds, SQLDialect.POSTGRES, settings)
     }
-
 }
