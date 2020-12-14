@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  moneytree_postgres:
+    image: postgres:13.1
+    hostname: postgres
+    container_name: moneytree_postgres
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "moneytree-dev"
+
+  moneytree_pgadmin:
+    image: dpage/pgadmin4:latest
+    hostname: pgadmin
+    container_name: moneytree_pgadmin
+    ports:
+      - "15433:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
