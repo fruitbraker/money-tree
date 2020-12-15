@@ -79,8 +79,8 @@ paths:
           description: "ID of expense to return"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "200":
           description: "Successful operation"
@@ -104,8 +104,8 @@ paths:
           description: "ID of expense that needs to be updated."
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
         - in: "body"
           name: "body"
           description: "Expense info to update to."
@@ -117,6 +117,8 @@ paths:
           description: "Expense successfully updated."
         "400":
           description: "Bad request."
+        "404":
+          description: "Expense not found"
     delete:
       tags:
         - "Expense"
@@ -130,8 +132,8 @@ paths:
           description: "Expense id to delete"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "204":
           description: "Expense successfully deleted."
@@ -182,7 +184,7 @@ paths:
         "400":
           description: "Bad request."
 
-  /categories/expense/{category}:
+  /categories/expense/{id}:
     get:
       tags:
         - "Expense Category"
@@ -191,12 +193,13 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "category"
+        - name: "id"
           in: "path"
           description: "ID of resource target to return"
           required: true
           schema:
             type: "string"
+            format: "uuid"
       responses:
         "200":
           description: "successful operation"
@@ -218,27 +221,26 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "category"
+        - name: "id"
           in: "path"
           description: "ID of resource that needs to be updated."
           required: true
           schema:
             type: "string"
+            format: "uuid"
         - in: "body"
           name: "body"
-          description: "Resource to be added."
+          description: "Resource to be modified."
           required: true
           schema:
             $ref: "#/definitions/Expense_Category"
       responses:
         "204":
           description: "Resource successfully updated."
-          content:
-            application/json:
-              schema:
-                $ref: "#/definitions/Expense_Category"
         "400":
           description: "Bad request."
+        "404":
+          description: "Resource not found."
     delete:
       tags:
         - "Expense Category"
@@ -253,6 +255,7 @@ paths:
           required: true
           schema:
             type: "string"
+            format: "uuid"
       responses:
         "204":
           description: "Resource successfully deleted."
@@ -320,8 +323,8 @@ paths:
           description: "ID of resource target to return"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "200":
           description: "successful operation"
@@ -348,8 +351,8 @@ paths:
           description: "ID of resource that needs to be updated."
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
         - in: "body"
           name: "body"
           description: "Resource to be added."
@@ -374,8 +377,8 @@ paths:
           description: "Resource id to delete"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "204":
           description: "Resource successfully deleted."
@@ -444,8 +447,8 @@ paths:
           description: "ID of resource target to return"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "200":
           description: "successful operation"
@@ -472,8 +475,8 @@ paths:
           description: "ID of resource that needs to be updated."
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
         - in: "body"
           name: "body"
           description: "Resource to be added."
@@ -500,8 +503,8 @@ paths:
           description: "Resource id to delete"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "204":
           description: "Resource successfully deleted."
@@ -568,8 +571,8 @@ paths:
           description: "ID of resource target to return"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "200":
           description: "successful operation"
@@ -596,8 +599,8 @@ paths:
           description: "ID of resource that needs to be updated."
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
         - in: "body"
           name: "body"
           description: "Resource to be added."
@@ -609,6 +612,8 @@ paths:
           description: "Resource successfully updated."
         "400":
           description: "Bad request."
+        "404":
+          description: "Resource not found."
     delete:
       tags:
         - "Vendor"
@@ -622,8 +627,8 @@ paths:
           description: "Resource id to delete"
           required: true
           schema:
-            type: "integer"
-            format: "int32"
+            type: "string"
+            format: "uuid"
       responses:
         "204":
           description: "Resource successfully deleted."
@@ -638,8 +643,8 @@ definitions:
   Expense:
     properties:
       id:
-        type: "integer"
-        format: "int32"
+        type: "string"
+        format: "uuid"
       transaction_date:
         type: "string"
         format: "date"
@@ -659,6 +664,9 @@ definitions:
     properties:
       id:
         type: "string"
+        example: "uuid"
+      name:
+        type: "string"
         example: "Restaurant"
       target_amount:
         type: "number"
@@ -668,8 +676,8 @@ definitions:
   Income:
     properties:
       id:
-        type: "integer"
-        format: "int32"
+        type: "string"
+        format: "uuid"
       source:
         type: "string"
         example: "Company Inc"
@@ -689,17 +697,27 @@ definitions:
     properties:
       id:
         type: "string"
+        example: "uuid"
+      name:
+        type: "string"
         example: "Job"
+      metadata:
+        $ref: "#/definitions/Metadata"
   Vendor:
     properties:
       id:
-        type: "integer"
-        format: "int32"
+        type: "string"
+        format: "uuid"
       name:
         type: "string"
         example: "A store's name"
+      metadata:
+        $ref: "#/definitions/Metadata"
   Metadata:
     properties:
+      id:
+        type: "string"
+        format: "uuid"
       date_created:
         type: "string"
         format: "date-time"
