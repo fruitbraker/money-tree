@@ -24,8 +24,8 @@ class ExpenseRepository @Inject constructor(
             transactionDate = this[EXPENSE.TRANSACTION_DATE],
             transactionAmount = this[EXPENSE.TRANSACTION_AMOUNT],
             vendor = this[EXPENSE.VENDOR],
-            category = this[EXPENSE.CATEGORY],
-            metadata = jackson.readValue(this[EXPENSE.METADATA], Metadata::class.java),
+            category = this[EXPENSE.EXPENSE_CATEGORY],
+            metadata = this[],
             hide = this[EXPENSE.HIDE]
         )
     }
@@ -63,18 +63,22 @@ class ExpenseRepository @Inject constructor(
             ).toJson()
             val result = dslContext.configuration().dsl()
                 .insertInto(EXPENSE)
-                .columns(EXPENSE.TRANSACTION_DATE,
+                .columns(
+                    EXPENSE.TRANSACTION_DATE,
                     EXPENSE.TRANSACTION_AMOUNT,
                     EXPENSE.VENDOR,
-                    EXPENSE.CATEGORY,
+                    EXPENSE.EXPENSE_CATEGORY,
                     EXPENSE.METADATA,
-                    EXPENSE.HIDE)
-                .values(expense.transactionDate,
+                    EXPENSE.HIDE
+                )
+                .values(
+                    expense.transactionDate,
                     expense.transactionAmount,
                     expense.vendor,
                     expense.category,
-                    metadata,
-                    expense.hide)
+                    expense.metadata,
+                    expense.hide
+                )
                 .returning()
                 .fetch()
 

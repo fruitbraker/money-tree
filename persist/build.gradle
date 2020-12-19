@@ -19,9 +19,9 @@ jooq {
     main(sourceSets.main) {
         jdbc {
             driver = 'org.postgresql.Driver'
-            url = 'jdbc:postgresql://localhost:5432/moneytree'
+            url = 'jdbc:postgresql://localhost:15432/moneytree-dev'
             user = 'postgres'
-            password = 'qwertyuiop'
+            password = 'password'
         }
         generator {
             name = 'org.jooq.codegen.DefaultGenerator'

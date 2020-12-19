@@ -654,9 +654,10 @@ definitions:
       vendor:
         $ref: "#/definitions/Vendor"
       expense_category:
+        $ref: "#/definitions/Expense_Category"
+      notes:
         type: "string"
-      metadata:
-        $ref: "#/definitions/Metadata"
+        example: "what about this expense"
       hide:
         type: "boolean"
         description: "Should this not be calculated into the budgets?"
@@ -671,8 +672,6 @@ definitions:
       target_amount:
         type: "number"
         format: "double"
-      metadata:
-        $ref: "#/definitions/Metadata"
   Income:
     properties:
       id:
@@ -689,10 +688,11 @@ definitions:
       transaction_date:
         type: "string"
         format: "date"
+      notes:
+        type: "string"
+        example: "what about this income"
       hide:
         type: "boolean"
-      metadata:
-        $ref: "#/definitions/Metadata"
   Income_Category:
     properties:
       id:
@@ -701,8 +701,6 @@ definitions:
       name:
         type: "string"
         example: "Job"
-      metadata:
-        $ref: "#/definitions/Metadata"
   Vendor:
     properties:
       id:
@@ -711,19 +709,3 @@ definitions:
       name:
         type: "string"
         example: "A store's name"
-      metadata:
-        $ref: "#/definitions/Metadata"
-  Metadata:
-    properties:
-      id:
-        type: "string"
-        format: "uuid"
-      date_created:
-        type: "string"
-        format: "date-time"
-      date_modified:
-        type: "string"
-        format: "date-time"
-      notes:
-        type: "string"
-        example: "Something about this?"
