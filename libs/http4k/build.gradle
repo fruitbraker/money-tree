@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(":libs:test-common")
+
+    implementation group: "org.http4k", name: "http4k-core", version: "$http4kVersion"
+    implementation group: "org.http4k", name: "http4k-server-jetty", version: "$http4kVersion"
+    implementation group: "org.http4k", name: "http4k-format-jackson", version: "$http4kVersion"
+    testImplementation group: "org.http4k", name: "http4k-testing-hamkrest", version: "$http4kVersion"
+    testImplementation group: "org.http4k", name: "http4k-client-okhttp", version: "$http4kVersion"
+}
