@@ -1,5 +1,9 @@
 rootProject.name = 'money-tree'
 
-include(":libs:common")
+include(":libs:commons")
 include(":libs:http4k")
-include(":libs:test-common")
+include(":libs:test-commons")
+
+include(":persist")
+include(":mt-api")
+include(":domain")

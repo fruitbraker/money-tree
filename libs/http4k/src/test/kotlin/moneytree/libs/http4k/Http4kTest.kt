@@ -1,11 +1,14 @@
 package moneytree.libs.http4k
 
 import io.kotest.matchers.shouldBe
-import moneytree.libs.test.common.randomString
+import moneytree.libs.test.commons.randomString
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
 import org.http4k.core.Request
+import org.http4k.core.Response
 import org.http4k.core.Status
+import org.http4k.routing.RoutingHttpHandler
+import org.http4k.routing.bind
 import org.junit.jupiter.api.Test
 
 class Http4kTest {
@@ -29,6 +32,24 @@ class Http4kTest {
 
             result.status shouldBe Status.NOT_FOUND
             result.bodyString() shouldBe ""
+        }
+    }
+
+    @Test
+    fun `adding additional routes happy path`() {
+        val randomPath = randomString()
+
+        val newRoute = listOf<RoutingHttpHandler>(
+            "/$randomPath" bind Method.GET to {
+                Response(Status.OK).body("test")
+            }
+        )
+
+        buildRoutes(newRoute).getServer().useTestServer {
+            val result = client(Request(Method.GET, "http://localhost:${it.port()}/$randomPath"))
+
+            result.status shouldBe Status.OK
+            result.bodyString() shouldBe "test"
         }
     }
 }

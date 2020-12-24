@@ -1,8 +1,14 @@
 package moneytree.libs.http4k
 
+import java.util.UUID
 import org.http4k.core.Method
+import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
+import org.http4k.lens.BiDiBodyLens
+import org.http4k.lens.BiDiPathLens
+import org.http4k.lens.Path
+import org.http4k.lens.uuid
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
@@ -10,8 +16,23 @@ import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
-private val healthCheck = "/health" bind Method.GET to {
+internal val healthCheck = "/health" bind Method.GET to {
     Response(Status.OK).body("Money tree is healthy.")
+}
+
+interface HttpRouting<T> {
+    val routes: RoutingHttpHandler
+        get() = makeRoutes()
+
+    val lens: BiDiBodyLens<T>
+    val listLens: BiDiBodyLens<List<T>>
+
+    val uuidLens: BiDiPathLens<UUID>
+        get() = Path.uuid().of("id")
+
+    fun makeRoutes(): RoutingHttpHandler
+    fun get(request: Request): Response
+    fun getById(request: Request): Response
 }
 
 fun buildRoutes(

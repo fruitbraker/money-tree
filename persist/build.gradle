@@ -1,0 +1,57 @@
+plugins {
+    id 'nu.studer.jooq' version '5.2'
+}
+
+dependencies {
+    implementation project(":domain")
+
+    implementation "org.postgresql:postgresql:${postgres_version}"
+    jooqGenerator "org.postgresql:postgresql:${postgres_version}"
+    implementation "org.jooq:jooq:${jooq_version}"
+    implementation "org.jooq:jooq-meta:${jooq_version}"
+    implementation "org.jooq:jooq-codegen:${jooq_version}"
+    implementation "com.zaxxer:HikariCP:${hikari_version}"
+}
+
+jooq {
+    version = "${jooq_version}"
+    edition = nu.studer.gradle.jooq.JooqEdition.OSS
+
+    configurations {
+        main {
+            generationTool {
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://localhost:15432/moneytree-dev'
+                    user = 'postgres'
+                    password = 'password'
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    strategy {
+                        name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+                    }
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        schemata {
+                            schema {
+                                inputSchema = 'mtdev'
+                            }
+                        }
+                    }
+                    generate {
+                        relations = true
+                        deprecated = false
+                        records = true
+                        pojos = true
+                        daos = true
+                        fluentSetters = true
+                    }
+                    target {
+                        packageName = 'moneytree.persist.db.generated'
+                    }
+                }
+            }
+        }
+    }
+}
