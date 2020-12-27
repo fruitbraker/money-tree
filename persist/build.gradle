@@ -7,10 +7,10 @@ dependencies {
 
     implementation "org.postgresql:postgresql:${postgres_version}"
     jooqGenerator "org.postgresql:postgresql:${postgres_version}"
-    implementation "org.jooq:jooq:${jooq_version}"
-    implementation "org.jooq:jooq-meta:${jooq_version}"
+    api "org.jooq:jooq:${jooq_version}"
+    api "org.jooq:jooq-meta:${jooq_version}"
     implementation "org.jooq:jooq-codegen:${jooq_version}"
-    implementation "com.zaxxer:HikariCP:${hikari_version}"
+    api "com.zaxxer:HikariCP:${hikari_version}"
 }
 
 jooq {
@@ -19,6 +19,8 @@ jooq {
 
     configurations {
         main {
+            generateSchemaSourceOnCompilation = false
+
             generationTool {
                 jdbc {
                     driver = 'org.postgresql.Driver'

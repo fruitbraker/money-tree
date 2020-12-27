@@ -25,7 +25,6 @@ class MtApi : AutoCloseable {
     ).asServer(Jetty(9000))
 
     fun start() {
-        persistConnector.start()
         http4kServer.start()
     }
 

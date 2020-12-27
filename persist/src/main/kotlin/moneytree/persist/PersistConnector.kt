@@ -18,12 +18,14 @@ class PersistConnector : AutoCloseable {
     val dslContext: DSLContext
         get() = _dslContext ?: throw java.lang.IllegalStateException("DSL Context cannot be null!")
 
-    fun start() {
+    init {
+        println("setting up hikari datasource")
         _dataSource = HikariDataSource()
         dataSource.jdbcUrl = "jdbc:postgresql://localhost:15432/moneytree-dev?currentSchema=mtdev"
         dataSource.username = "postgres"
         dataSource.password = "password"
 
+        println("configuring dsl settings")
         val dslSettings = Settings().withRenderMapping(
             RenderMapping().withSchemata(
                 MappedSchema().withInput("mtdev").withOutput("mtdev")
@@ -33,6 +35,7 @@ class PersistConnector : AutoCloseable {
     }
 
     override fun close() {
+        println("closing hikdari datasource")
         dataSource.close()
     }
 }
