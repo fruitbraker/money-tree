@@ -12,11 +12,11 @@ class PersistConnector : AutoCloseable {
 
     private var _dataSource: HikariDataSource? = null
     private val dataSource: HikariDataSource
-        get() =_dataSource ?: throw IllegalStateException("Data source cannot be null!")
+        get() = _dataSource ?: throw IllegalStateException("Data source cannot be null!")
 
     private var _dslContext: DSLContext? = null
     val dslContext: DSLContext
-        get() = _dslContext ?: throw java.lang.IllegalStateException("DSL Context cannot be null!")
+        get() = _dslContext ?: throw IllegalStateException("DSL Context cannot be null!")
 
     init {
         println("setting up hikari datasource")
@@ -35,7 +35,7 @@ class PersistConnector : AutoCloseable {
     }
 
     override fun close() {
-        println("closing hikdari datasource")
+        println("closing hikari datasource")
         dataSource.close()
     }
 }

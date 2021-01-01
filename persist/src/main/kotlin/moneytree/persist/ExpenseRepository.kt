@@ -1,8 +1,9 @@
-package moneytree.persist.expense
+package moneytree.persist
 
 import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.expense.Expense
+import moneytree.libs.commons.result.Result
 import moneytree.persist.db.generated.Tables.EXPENSE
 import org.jooq.DSLContext
 import org.jooq.Record
@@ -23,17 +24,22 @@ class ExpenseRepository(
         )
     }
 
-    override fun get(): List<Expense> {
-        val result = dslContext.configuration().dsl()
-            .select()
-            .from(EXPENSE)
-            .limit(100)
-            .fetch()
-
-        return result.mapNotNull { it.toDomain() }
+    override fun get(): Result<List<Expense>, Throwable> {
+        TODO("Not yet implemented")
+//        val result = dslContext.configuration().dsl()
+//            .select()
+//            .from(EXPENSE)
+//            .limit(100)
+//            .fetch()
+//
+//        return result.mapNotNull { it.toDomain() }
     }
 
-    override fun get(uuid: UUID): Expense {
+    override fun getById(uuid: UUID): Result<Expense?, Throwable> {
+        TODO("Not yet implemented")
+    }
+
+    override fun insert(newEntity: Expense): Result<Expense, Throwable> {
         TODO("Not yet implemented")
     }
 }

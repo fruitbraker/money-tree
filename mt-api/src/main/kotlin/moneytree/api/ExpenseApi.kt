@@ -1,4 +1,4 @@
-package moneytree.api.expense
+package moneytree.api
 
 import moneytree.domain.Repository
 import moneytree.domain.expense.Expense
@@ -8,7 +8,6 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
@@ -29,8 +28,9 @@ class ExpenseApi(
 
     override fun get(request: Request): Response {
         return try {
-            val result = repository.get()
-            Response(Status.OK).with(listLens of result)
+//            val result = repository.get()
+//            Response(Status.OK).with(listLens of result)
+            Response(Status.OK)
         } catch (e: Exception) {
             throw e
         }

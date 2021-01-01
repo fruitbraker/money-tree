@@ -1,9 +1,10 @@
 package moneytree.api
 
-import moneytree.api.expense.ExpenseApi
 import moneytree.libs.http4k.buildRoutes
+import moneytree.persist.ExpenseCategoryRepository
+import moneytree.persist.ExpenseRepository
 import moneytree.persist.PersistConnector
-import moneytree.persist.expense.ExpenseRepository
+import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
@@ -14,13 +15,18 @@ class MtApi : AutoCloseable {
 
     // Data access for entities
     private val expenseRepository = ExpenseRepository(persistConnector.dslContext)
+    private val expenseCategoryRepository = ExpenseCategoryRepository(
+        ExpenseCategoryDao(persistConnector.dslContext.configuration())
+    )
 
     // Routes for entities
     private val expenseApi = ExpenseApi(expenseRepository)
+    private val expenseCategoryApi = ExpenseCategoryApi(expenseCategoryRepository)
 
     private val http4kServer: Http4kServer = buildRoutes(
         listOf(
-            expenseApi.makeRoutes()
+            expenseApi.makeRoutes(),
+            expenseCategoryApi.makeRoutes()
         )
     ).asServer(Jetty(9000))
 

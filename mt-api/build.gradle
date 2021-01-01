@@ -3,4 +3,6 @@ dependencies {
     implementation project(":libs:commons")
     implementation project(":domain")
     implementation project(":persist")
+
+    testImplementation project(":libs:test-commons")
 }

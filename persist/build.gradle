@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(":domain")
+    implementation project(":libs:commons")
 
     implementation "org.postgresql:postgresql:${postgres_version}"
     jooqGenerator "org.postgresql:postgresql:${postgres_version}"
@@ -11,6 +12,8 @@ dependencies {
     api "org.jooq:jooq-meta:${jooq_version}"
     implementation "org.jooq:jooq-codegen:${jooq_version}"
     api "com.zaxxer:HikariCP:${hikari_version}"
+
+    testImplementation project(":libs:test-commons")
 }
 
 jooq {
