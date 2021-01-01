@@ -28,7 +28,8 @@ class ExpenseCategoryApi(
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
             "/expense-category" bind Method.GET to this::get,
-            "/expense-category/{id}" bind Method.GET to this::getById
+            "/expense-category/{id}" bind Method.GET to this::getById,
+            "/expense-category" bind Method.POST to this::insert
         )
     }
 
@@ -46,6 +47,14 @@ class ExpenseCategoryApi(
                 null -> Response(Status.NOT_FOUND)
                 else -> Response(Status.OK).with(lens of expenseCategory)
             }
+        }
+        return Response(Status.BAD_REQUEST)
+    }
+
+    override fun insert(request: Request): Response {
+        val newEntity = lens(request)
+        repository.insert(newEntity).onOk {
+            return Response(Status.CREATED).with(lens of it)
         }
         return Response(Status.BAD_REQUEST)
     }

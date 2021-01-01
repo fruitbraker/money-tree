@@ -36,7 +36,7 @@ class ExpenseCategoryRepositoryTest {
     }
 
     @Test
-    fun `insert and get happy path`() {
+    fun `insert and getById happy path`() {
         val randomUUID = UUID.randomUUID()
         val randomString = randomString()
         val randomTargetAmount = randomBigDecimal()

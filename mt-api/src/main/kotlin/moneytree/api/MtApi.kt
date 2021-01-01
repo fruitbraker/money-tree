@@ -32,6 +32,7 @@ class MtApi : AutoCloseable {
 
     fun start() {
         http4kServer.start()
+        println("Starting server at: http://localhost:${http4kServer.port()}")
     }
 
     override fun close() {

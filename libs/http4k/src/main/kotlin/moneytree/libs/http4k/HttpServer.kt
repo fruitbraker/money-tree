@@ -31,8 +31,11 @@ interface HttpRouting<T> {
         get() = Path.uuid().of("id")
 
     fun makeRoutes(): RoutingHttpHandler
+
     fun get(request: Request): Response
     fun getById(request: Request): Response
+
+    fun insert(request: Request): Response
 }
 
 fun buildRoutes(

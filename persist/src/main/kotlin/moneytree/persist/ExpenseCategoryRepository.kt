@@ -58,7 +58,7 @@ class ExpenseCategoryRepository(
                     EXPENSE_CATEGORY.TARGET_AMOUNT
                 )
                 .values(
-                    newEntity.id,
+                    newEntity.id ?: UUID.randomUUID(),
                     newEntity.name,
                     newEntity.targetAmount
                 )

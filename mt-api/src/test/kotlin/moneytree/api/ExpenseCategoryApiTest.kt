@@ -15,10 +15,9 @@ import org.http4k.client.OkHttp
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
+import org.http4k.core.with
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -44,30 +43,24 @@ class ExpenseCategoryApiTest {
         listOf(
             expenseCategoryApi.makeRoutes()
         )
-    ).asServer(Jetty(9000))
+    ).asServer(Jetty(0))
 
-    @BeforeAll
-    fun setup() {
+    private val url = setup()
+
+    private fun setup(): String {
         every { expenseCategoryRepository.get() } returns listOf(expenseCategory).toOk()
         every { expenseCategoryRepository.getById(randomUUID) } returns expenseCategory.toOk()
+        every { expenseCategoryRepository.insert(expenseCategory) } returns expenseCategory.toOk()
 
         server.start()
-    }
-
-    @AfterAll
-    fun teardown() {
-        server.stop()
-    }
-
-    companion object {
-        const val GET_URL = "http://localhost:9000/expense-category"
+        return "http://localhost:${server.port()}/expense-category"
     }
 
     @Test
     fun `get happy path`() {
         val request = Request(
             Method.GET,
-            GET_URL
+            url
         )
 
         val result = client(request)
@@ -80,12 +73,25 @@ class ExpenseCategoryApiTest {
     fun `getById happy path`() {
         val request = Request(
             Method.GET,
-            "$GET_URL/$randomUUID"
+            "$url/$randomUUID"
         )
 
         val result = client(request)
 
         result.status shouldBe Status.OK
+        result.bodyString() shouldBe expenseCategory.toJson()
+    }
+
+    @Test
+    fun `insert happy path`() {
+        val request = Request(
+            Method.POST,
+            url
+        ).with(expenseCategoryApi.lens of expenseCategory)
+
+        val result = client(request)
+
+        result.status shouldBe Status.CREATED
         result.bodyString() shouldBe expenseCategory.toJson()
     }
 }
