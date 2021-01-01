@@ -1,51 +1,61 @@
 plugins {
-    id 'nu.studer.jooq' version '4.2'
+    id 'nu.studer.jooq' version '5.2'
 }
 
 dependencies {
     implementation project(":domain")
-    implementation project(":libs")
+    implementation project(":libs:commons")
+
     implementation "org.postgresql:postgresql:${postgres_version}"
-    jooqRuntime "org.postgresql:postgresql:${postgres_version}"
-    implementation "org.jooq:jooq:${jooq_version}"
-    implementation "org.jooq:jooq-meta:${jooq_version}"
+    jooqGenerator "org.postgresql:postgresql:${postgres_version}"
+    api "org.jooq:jooq:${jooq_version}"
+    api "org.jooq:jooq-meta:${jooq_version}"
     implementation "org.jooq:jooq-codegen:${jooq_version}"
-    implementation "com.zaxxer:HikariCP:${hikari_version}"
+    api "com.zaxxer:HikariCP:${hikari_version}"
+
+    testImplementation project(":libs:test-commons")
 }
 
 jooq {
     version = "${jooq_version}"
-    edition = 'OSS'
-    main(sourceSets.main) {
-        jdbc {
-            driver = 'org.postgresql.Driver'
-            url = 'jdbc:postgresql://localhost:5432/moneytree'
-            user = 'postgres'
-            password = 'qwertyuiop'
-        }
-        generator {
-            name = 'org.jooq.codegen.DefaultGenerator'
-            strategy {
-                name = 'org.jooq.codegen.DefaultGeneratorStrategy'
-            }
-            database {
-                name = 'org.jooq.meta.postgres.PostgresDatabase'
-                schemata {
-                    schema {
-                        inputSchema = 'mtdev'
+    edition = nu.studer.gradle.jooq.JooqEdition.OSS
+
+    configurations {
+        main {
+            generateSchemaSourceOnCompilation = false
+
+            generationTool {
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://localhost:15432/moneytree-dev'
+                    user = 'postgres'
+                    password = 'password'
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    strategy {
+                        name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+                    }
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        schemata {
+                            schema {
+                                inputSchema = 'mtdev'
+                            }
+                        }
+                    }
+                    generate {
+                        relations = true
+                        deprecated = false
+                        records = true
+                        pojos = true
+                        daos = true
+                        fluentSetters = true
+                    }
+                    target {
+                        packageName = 'moneytree.persist.db.generated'
                     }
                 }
-            }
-            generate {
-                relations = true
-                deprecated = false
-                records = true
-                pojos = true
-                daos = true
-                fluentSetters = true
-            }
-            target {
-                packageName = 'moneytree.persist.db.generated'
             }
         }
     }
