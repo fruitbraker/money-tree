@@ -37,8 +37,7 @@ class ExpenseApi(
     }
 
     override fun getById(request: Request): Response {
-        val uuid = uuidLens(request)
-        return Response(Status.OK).body("Get by id with $uuid")
+        TODO("Not yet implemented")
     }
 
     override fun insert(request: Request): Response {
