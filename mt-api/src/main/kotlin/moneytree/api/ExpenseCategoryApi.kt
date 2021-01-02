@@ -4,6 +4,8 @@ import moneytree.domain.ExpenseCategory
 import moneytree.domain.Repository
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.http4k.HttpRouting
+import moneytree.validator.ValidationResult
+import moneytree.validator.Validator
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -17,7 +19,8 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 
 class ExpenseCategoryApi(
-    private val repository: Repository<ExpenseCategory>
+    private val repository: Repository<ExpenseCategory>,
+    private val validator: Validator<ExpenseCategory>
 ) : HttpRouting<ExpenseCategory> {
 
     override val lens: BiDiBodyLens<ExpenseCategory>
@@ -53,9 +56,11 @@ class ExpenseCategoryApi(
 
     override fun insert(request: Request): Response {
         val newEntity = lens(request)
-        repository.insert(newEntity).onOk {
-            return Response(Status.CREATED).with(lens of it)
+        return when (validator.validate(newEntity)) {
+            ValidationResult.Accepted -> {
+                processResult(repository.insert(newEntity), lens).status(Status.CREATED)
+            }
+            ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
         }
-        return Response(Status.BAD_REQUEST)
     }
 }

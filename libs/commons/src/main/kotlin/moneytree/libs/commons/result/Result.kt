@@ -114,10 +114,10 @@ fun <T> T.toOk() = Result.Ok(this)
 fun <E> E.toErr() = Result.Err(this)
 
 // For testing purposes
-inline fun <T, E> Result<T, E>.shouldBeOk() {
+fun <T, E> Result<T, E>.shouldBeOk() {
     if (this is Result.Err) throw RuntimeException("Expected OK, but got ${this.javaClass.simpleName}.")
 }
 
-inline fun <T, E> Result<T, E>.shouldBeErr() {
+fun <T, E> Result<T, E>.shouldBeErr() {
     if (this is Result.Ok) throw RuntimeException("Expected Err, but got ${this.javaClass.simpleName}.")
 }
