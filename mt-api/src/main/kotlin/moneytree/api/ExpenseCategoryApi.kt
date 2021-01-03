@@ -37,7 +37,7 @@ class ExpenseCategoryApi(
     }
 
     override fun get(request: Request): Response {
-        return processGetByIdResult(repository.get(), listLens)
+        return processGetResult(repository.get(), listLens)
     }
 
     override fun getById(request: Request): Response {

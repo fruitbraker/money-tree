@@ -12,6 +12,32 @@ import org.junit.jupiter.api.Test
 class ResultProcessorTest {
 
     private val lens = Body.auto<Sample>().toLens()
+    private val listLens = Body.auto<List<Sample>>().toLens()
+
+    @Test
+    fun `processGetResult returns OK with a list of entity`() {
+        val listSample = listOf(
+            Sample(randomString()),
+            Sample(randomString())
+        )
+        val okResult = listSample.toOk()
+
+        val result = processGetResult(okResult, listLens)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe listSample.toJson()
+    }
+
+    @Test
+    fun `processGetResult returns with OK with empty list`() {
+        val listSample = emptyList<Sample>()
+        val okResult = listSample.toOk()
+
+        val result = processGetResult(okResult, listLens)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe listSample.toJson()
+    }
 
     @Test
     fun `processGetByIdResult returns ok with nonnull entity`() {
