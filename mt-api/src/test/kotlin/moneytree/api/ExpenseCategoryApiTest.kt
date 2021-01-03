@@ -11,6 +11,7 @@ import moneytree.libs.http4k.buildRoutes
 import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
 import moneytree.persist.ExpenseCategoryRepository
+import moneytree.validator.ExpenseCategoryValidator
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -37,7 +38,8 @@ class ExpenseCategoryApiTest {
     )
 
     private val expenseCategoryRepository = mockkClass(ExpenseCategoryRepository::class)
-    private val expenseCategoryApi = ExpenseCategoryApi(expenseCategoryRepository)
+    private val expenseCategoryValidator = ExpenseCategoryValidator()
+    private val expenseCategoryApi = ExpenseCategoryApi(expenseCategoryRepository, expenseCategoryValidator)
 
     private val server = buildRoutes(
         listOf(

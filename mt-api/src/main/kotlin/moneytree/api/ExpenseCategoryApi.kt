@@ -1,15 +1,17 @@
 package moneytree.api
 
+import java.util.UUID
 import moneytree.domain.ExpenseCategory
 import moneytree.domain.Repository
-import moneytree.libs.commons.result.onOk
 import moneytree.libs.http4k.HttpRouting
+import moneytree.validator.ValidationResult
+import moneytree.validator.Validator
+import moneytree.validator.validateUUID
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.BiDiBodyLens
 import org.http4k.routing.RoutingHttpHandler
@@ -17,7 +19,8 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 
 class ExpenseCategoryApi(
-    private val repository: Repository<ExpenseCategory>
+    private val repository: Repository<ExpenseCategory>,
+    private val validator: Validator<ExpenseCategory>
 ) : HttpRouting<ExpenseCategory> {
 
     override val lens: BiDiBodyLens<ExpenseCategory>
@@ -34,28 +37,24 @@ class ExpenseCategoryApi(
     }
 
     override fun get(request: Request): Response {
-        repository.get().onOk {
-            return Response(Status.OK).with(listLens of it)
-        }
-        return Response(Status.BAD_REQUEST)
+        return processGetResult(repository.get(), listLens)
     }
 
     override fun getById(request: Request): Response {
-        val uuid = uuidLens(request)
-        repository.getById(uuid).onOk { expenseCategory ->
-            return when (expenseCategory) {
-                null -> Response(Status.NOT_FOUND)
-                else -> Response(Status.OK).with(lens of expenseCategory)
-            }
+        val uuid = idLens(request)
+        return when (uuid.validateUUID()) {
+            ValidationResult.Accepted -> processGetByIdResult(repository.getById(UUID.fromString(uuid)), lens)
+            ValidationResult.Rejected -> Response(Status.NOT_FOUND)
         }
-        return Response(Status.BAD_REQUEST)
     }
 
     override fun insert(request: Request): Response {
         val newEntity = lens(request)
-        repository.insert(newEntity).onOk {
-            return Response(Status.CREATED).with(lens of it)
+        return when (validator.validate(newEntity)) {
+            ValidationResult.Accepted -> {
+                processInsertResult(repository.insert(newEntity), lens).status(Status.CREATED)
+            }
+            ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
         }
-        return Response(Status.BAD_REQUEST)
     }
 }

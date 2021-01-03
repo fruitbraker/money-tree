@@ -1,7 +1,7 @@
 package moneytree.persist
 
 import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 import moneytree.domain.ExpenseCategory
@@ -77,7 +77,7 @@ class ExpenseCategoryRepositoryTest {
         val result = expenseCategoryRepository.get()
         result.shouldBeOk()
         result.onOk {
-            it.size shouldBeGreaterThan 1
+            it.size shouldBeGreaterThanOrEqual 1
             it shouldContain expenseCategory
         }
     }

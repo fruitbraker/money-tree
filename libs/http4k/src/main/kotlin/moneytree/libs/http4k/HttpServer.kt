@@ -1,6 +1,5 @@
 package moneytree.libs.http4k
 
-import java.util.UUID
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -8,7 +7,7 @@ import org.http4k.core.Status
 import org.http4k.lens.BiDiBodyLens
 import org.http4k.lens.BiDiPathLens
 import org.http4k.lens.Path
-import org.http4k.lens.uuid
+import org.http4k.lens.string
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
@@ -27,8 +26,8 @@ interface HttpRouting<T> {
     val lens: BiDiBodyLens<T>
     val listLens: BiDiBodyLens<List<T>>
 
-    val uuidLens: BiDiPathLens<UUID>
-        get() = Path.uuid().of("id")
+    val idLens: BiDiPathLens<String>
+        get() = Path.string().of("id")
 
     fun makeRoutes(): RoutingHttpHandler
 
