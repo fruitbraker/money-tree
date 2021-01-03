@@ -4,7 +4,7 @@ import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.expense.Expense
 import moneytree.libs.commons.result.Result
-import moneytree.persist.db.generated.Tables.EXPENSE
+import moneytree.persist.generated.Tables.EXPENSE
 import org.jooq.DSLContext
 import org.jooq.Record
 
