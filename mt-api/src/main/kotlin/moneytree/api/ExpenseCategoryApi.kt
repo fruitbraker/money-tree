@@ -37,13 +37,13 @@ class ExpenseCategoryApi(
     }
 
     override fun get(request: Request): Response {
-        return processResult(repository.get(), listLens)
+        return processGetByIdResult(repository.get(), listLens)
     }
 
     override fun getById(request: Request): Response {
         val uuid = idLens(request)
         return when (uuid.validateUUID()) {
-            ValidationResult.Accepted -> processResult(repository.getById(UUID.fromString(uuid)), lens)
+            ValidationResult.Accepted -> processGetByIdResult(repository.getById(UUID.fromString(uuid)), lens)
             ValidationResult.Rejected -> Response(Status.NOT_FOUND)
         }
     }
@@ -52,7 +52,7 @@ class ExpenseCategoryApi(
         val newEntity = lens(request)
         return when (validator.validate(newEntity)) {
             ValidationResult.Accepted -> {
-                processResult(repository.insert(newEntity), lens).status(Status.CREATED)
+                processInsertResult(repository.insert(newEntity), lens).status(Status.CREATED)
             }
             ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
         }
