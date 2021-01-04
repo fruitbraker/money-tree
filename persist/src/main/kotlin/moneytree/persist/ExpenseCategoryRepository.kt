@@ -5,9 +5,9 @@ import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
-import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
-import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
-import moneytree.persist.db.generated.tables.pojos.ExpenseCategory
+import moneytree.persist.generated.Tables.EXPENSE_CATEGORY
+import moneytree.persist.generated.tables.daos.ExpenseCategoryDao
+import moneytree.persist.generated.tables.pojos.ExpenseCategory
 import org.jooq.Record
 
 class ExpenseCategoryRepository(

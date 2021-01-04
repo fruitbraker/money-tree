@@ -9,7 +9,7 @@ import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
 import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
-import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
+import moneytree.persist.generated.tables.daos.ExpenseCategoryDao
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

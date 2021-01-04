@@ -2,8 +2,8 @@ package moneytree.persist
 
 import com.zaxxer.hikari.HikariDataSource
 import moneytree.libs.test.commons.randomString
-import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
-import moneytree.persist.db.generated.Tables.VENDOR
+import moneytree.persist.generated.Tables.EXPENSE_CATEGORY
+import moneytree.persist.generated.Tables.VENDOR
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.conf.MappedSchema
@@ -32,7 +32,9 @@ class PersistConnectorTestHarness : AutoCloseable {
 
     init {
         _dataSource = HikariDataSource()
-        dataSource.jdbcUrl = "jdbc:postgresql://localhost:15432/moneytree-dev?currentSchema=$testSchema"
+        val host = System.getenv("POSTGRES_HOST") ?: "localhost"
+        val port = System.getenv("POSTGRES_PORT") ?: 15432
+        dataSource.jdbcUrl = "jdbc:postgresql://$host:$port/moneytree-dev"
         dataSource.username = "postgres"
         dataSource.password = "password"
 
