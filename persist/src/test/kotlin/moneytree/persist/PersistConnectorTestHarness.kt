@@ -32,7 +32,9 @@ class PersistConnectorTestHarness : AutoCloseable {
 
     init {
         _dataSource = HikariDataSource()
-        dataSource.jdbcUrl = "jdbc:postgresql://localhost:15432/moneytree-dev"
+        val host = System.getenv("POSTGRES_HOST") ?: "localhost"
+        val port = System.getenv("POSTGRES_PORT") ?: 15432
+        dataSource.jdbcUrl = "jdbc:postgresql://$host:$port/moneytree-dev"
         dataSource.username = "postgres"
         dataSource.password = "password"
 
