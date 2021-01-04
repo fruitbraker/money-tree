@@ -21,7 +21,7 @@ class PersistConnector : AutoCloseable {
     init {
         println("setting up hikari datasource")
         _dataSource = HikariDataSource()
-        dataSource.jdbcUrl = "jdbc:postgresql://localhost:5432/moneytree-dev?currentSchema=mtdev"
+        dataSource.jdbcUrl = "jdbc:postgresql://localhost:15432/moneytree-dev?currentSchema=mtdev"
         dataSource.username = "postgres"
         dataSource.password = "password"
 

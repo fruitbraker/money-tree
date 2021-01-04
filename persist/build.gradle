@@ -27,7 +27,7 @@ jooq {
             generationTool {
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = 'jdbc:postgresql://localhost:5432/moneytree-dev'
+                    url = 'jdbc:postgresql://localhost:15432/moneytree-dev'
                     user = 'postgres'
                     password = 'password'
                 }
