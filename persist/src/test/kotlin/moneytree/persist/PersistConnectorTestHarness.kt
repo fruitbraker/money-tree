@@ -32,7 +32,7 @@ class PersistConnectorTestHarness : AutoCloseable {
 
     init {
         _dataSource = HikariDataSource()
-        dataSource.jdbcUrl = "jdbc:postgresql://localhost:15432/moneytree-dev?currentSchema=$testSchema"
+        dataSource.jdbcUrl = "jdbc:postgresql://localhost:15432/moneytree-dev"
         dataSource.username = "postgres"
         dataSource.password = "password"
 
