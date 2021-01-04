@@ -39,4 +39,3 @@ class PersistConnector : AutoCloseable {
         dataSource.close()
     }
 }
-
