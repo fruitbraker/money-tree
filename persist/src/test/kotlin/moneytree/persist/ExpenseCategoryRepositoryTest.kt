@@ -6,7 +6,6 @@ import io.kotest.matchers.shouldBe
 import java.util.UUID
 import moneytree.domain.ExpenseCategory
 import moneytree.libs.commons.result.onOk
-import moneytree.libs.commons.result.shouldBeErr
 import moneytree.libs.commons.result.shouldBeOk
 import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
@@ -32,7 +31,7 @@ class ExpenseCategoryRepositoryTest {
     fun `get with unknown UUID returns null`() {
         val result = expenseCategoryRepository.getById(UUID.randomUUID())
 
-        result.shouldBeErr()
+        result.shouldBeOk()
         result.onOk { it shouldBe null }
     }
 
