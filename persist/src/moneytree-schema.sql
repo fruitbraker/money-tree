@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS expense
     transaction_amount DECIMAL(12,4) NOT NULL,
     vendor uuid REFERENCES vendor(id) NOT NULL,
     expense_category uuid REFERENCES expense_category(id) NOT NULL,
-    notes VARCHAR(256),
+    notes VARCHAR(256) NOT NULL,
     hide boolean DEFAULT false NOT NULL,
 	PRIMARY KEY (id)
 );
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS income
 	income_category uuid REFERENCES income_category(id) NOT NULL,
     transaction_amount DECIMAL(12,4) NOT NULL,
     transaction_date DATE NOT NULL,
-	notes VARCHAR(256),
+	notes VARCHAR(256) NOT NULL,
 	hide boolean DEFAULT false NOT NULL,
 	PRIMARY KEY (id)
 );

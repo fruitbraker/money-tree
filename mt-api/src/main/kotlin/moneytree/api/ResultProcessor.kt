@@ -30,3 +30,10 @@ fun <T, E> processInsertResult(result: Result<T, E>, lens: BiDiBodyLens<T>): Res
         is Result.Err -> Response(Status.BAD_REQUEST)
     }
 }
+
+fun <T, E> processUpdateResult(result: Result<T, E>, lens: BiDiBodyLens<T>): Response {
+    return when (result) {
+        is Result.Ok -> Response(Status.OK).with(lens of result.value)
+        is Result.Err -> Response(Status.BAD_REQUEST)
+    }
+}

@@ -35,6 +35,8 @@ interface HttpRouting<T> {
     fun getById(request: Request): Response
 
     fun insert(request: Request): Response
+
+    fun updateById(request: Request): Response
 }
 
 fun buildRoutes(

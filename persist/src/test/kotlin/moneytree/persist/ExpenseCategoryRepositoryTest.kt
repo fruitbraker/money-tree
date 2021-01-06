@@ -81,4 +81,40 @@ class ExpenseCategoryRepositoryTest {
             it shouldContain expenseCategory
         }
     }
+
+    @Test
+    fun `updates entity happy path`() {
+        val randomUUID = UUID.randomUUID()
+        val randomString = randomString()
+        val randomTargetAmount = randomBigDecimal()
+
+        val expenseCategory = ExpenseCategory(
+            id = randomUUID,
+            name = randomString,
+            targetAmount = randomTargetAmount
+        )
+
+        expenseCategoryRepository.insert(expenseCategory)
+
+        val newRandomString = randomString()
+        val newRandomTargetAmount = randomBigDecimal()
+
+        val updatedExpenseCategory = ExpenseCategory(
+            id = randomUUID,
+            name = newRandomString,
+            targetAmount = newRandomTargetAmount
+        )
+
+        val insertResult = expenseCategoryRepository.updateById(updatedExpenseCategory)
+        insertResult.shouldBeOk()
+        insertResult.onOk {
+            it shouldBe updatedExpenseCategory
+        }
+
+        val retrieveResult = expenseCategoryRepository.getById(randomUUID)
+        retrieveResult.shouldBeOk()
+        retrieveResult.onOk {
+            it shouldBe updatedExpenseCategory
+        }
+    }
 }
