@@ -68,4 +68,17 @@ class ExpenseCategoryRepository(
             result.first().toDomain()
         }
     }
+
+    override fun updateById(updatedEntity: ExpenseCategoryDomain): Result<ExpenseCategoryDomain, Throwable> {
+        return resultTry {
+            expenseCategoryDao.configuration().dsl()
+                .update(EXPENSE_CATEGORY)
+                .set(EXPENSE_CATEGORY.NAME, updatedEntity.name)
+                .set(EXPENSE_CATEGORY.TARGET_AMOUNT, updatedEntity.targetAmount)
+                .where(EXPENSE_CATEGORY.ID.eq(updatedEntity.id))
+                .execute()
+
+            updatedEntity
+        }
+    }
 }

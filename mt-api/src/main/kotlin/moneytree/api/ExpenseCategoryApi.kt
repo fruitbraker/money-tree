@@ -30,9 +30,10 @@ class ExpenseCategoryApi(
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
-            "/expense-category" bind Method.GET to this::get,
-            "/expense-category/{id}" bind Method.GET to this::getById,
-            "/expense-category" bind Method.POST to this::insert
+            "/category/expense" bind Method.GET to this::get,
+            "/category/expense/{id}" bind Method.GET to this::getById,
+            "/category/expense" bind Method.POST to this::insert,
+            "/category/expense/{id}" bind Method.PUT to this::updateById
         )
     }
 
@@ -56,5 +57,14 @@ class ExpenseCategoryApi(
             }
             ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
         }
+    }
+
+    override fun updateById(request: Request): Response {
+        val uuid = idLens(request)
+        val updatedEntity = lens(request)
+
+        if (UUID.fromString(uuid) != updatedEntity.id) return Response(Status.BAD_REQUEST)
+
+        return processUpdateResult(repository.updateById(updatedEntity), lens)
     }
 }
