@@ -5,15 +5,15 @@ import moneytree.domain.validation.schema.ExpenseCategoryValidationSchema
 
 class ExpenseCategoryValidator : Validator<ExpenseCategory> {
     override fun validate(input: ExpenseCategory): ValidationResult {
-        var isValid = true
+        input.id?.let { uuid ->
+            if (uuid.toString().validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
+        }
 
-        if (input.name.length > ExpenseCategoryValidationSchema.NAME_LENGTH)
-            isValid = false
+        if (input.name.length > ExpenseCategoryValidationSchema.NAME_LENGTH) return ValidationResult.Rejected
         if (input.targetAmount < ExpenseCategoryValidationSchema.TARGET_AMOUNT_MIN ||
             input.targetAmount > ExpenseCategoryValidationSchema.TARGET_AMOUNT_MAX
-        )
-            isValid = false
+        ) return ValidationResult.Rejected
 
-        return if (isValid) ValidationResult.Accepted else ValidationResult.Rejected
+        return ValidationResult.Accepted
     }
 }

@@ -53,9 +53,10 @@ class ExpenseCategoryApiTest {
         every { expenseCategoryRepository.get() } returns listOf(expenseCategory).toOk()
         every { expenseCategoryRepository.getById(randomUUID) } returns expenseCategory.toOk()
         every { expenseCategoryRepository.insert(expenseCategory) } returns expenseCategory.toOk()
+        every { expenseCategoryRepository.updateById(expenseCategory) } returns expenseCategory.toOk()
 
         server.start()
-        return "http://localhost:${server.port()}/expense-category"
+        return "http://localhost:${server.port()}/category/expense"
     }
 
     @Test
@@ -94,6 +95,19 @@ class ExpenseCategoryApiTest {
         val result = client(request)
 
         result.status shouldBe Status.CREATED
+        result.bodyString() shouldBe expenseCategory.toJson()
+    }
+
+    @Test
+    fun `updateById happy path`() {
+        val request = Request(
+            Method.PUT,
+            "$url/$randomUUID"
+        ).with(expenseCategoryApi.lens of expenseCategory)
+
+        val result = client(request)
+
+        result.status shouldBe Status.OK
         result.bodyString() shouldBe expenseCategory.toJson()
     }
 }

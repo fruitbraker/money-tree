@@ -48,7 +48,7 @@ class ExpenseCategoryValidatorTest {
     }
 
     @Test
-    fun `rejects impropertarget amount`() {
+    fun `rejects improper target amount`() {
         val randomUUID = UUID.randomUUID()
         val randomName = randomString()
         val randomTargetAmount = BigDecimal(Double.MAX_VALUE)

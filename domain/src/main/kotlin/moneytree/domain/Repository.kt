@@ -8,4 +8,5 @@ interface Repository<T> {
     fun getById(uuid: UUID): Result<T?, Throwable>
 
     fun insert(newEntity: T): Result<T, Throwable>
+    fun updateById(updatedEntity: T): Result<T, Throwable>
 }

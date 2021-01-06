@@ -2,7 +2,6 @@ package moneytree.api
 
 import moneytree.libs.http4k.buildRoutes
 import moneytree.persist.ExpenseCategoryRepository
-import moneytree.persist.ExpenseRepository
 import moneytree.persist.PersistConnector
 import moneytree.persist.generated.tables.daos.ExpenseCategoryDao
 import moneytree.validator.ExpenseCategoryValidator
@@ -15,7 +14,6 @@ class MtApi : AutoCloseable {
     private val persistConnector = PersistConnector()
 
     // Data access
-    private val expenseRepository = ExpenseRepository(persistConnector.dslContext)
     private val expenseCategoryRepository = ExpenseCategoryRepository(
         ExpenseCategoryDao(persistConnector.dslContext.configuration())
     )
@@ -24,7 +22,6 @@ class MtApi : AutoCloseable {
     private val expenseCategoryValidator = ExpenseCategoryValidator()
 
     // Routes for entities
-    private val expenseApi = ExpenseApi(expenseRepository)
     private val expenseCategoryApi = ExpenseCategoryApi(
         expenseCategoryRepository,
         expenseCategoryValidator
@@ -32,7 +29,6 @@ class MtApi : AutoCloseable {
 
     private val http4kServer: Http4kServer = buildRoutes(
         listOf(
-            expenseApi.makeRoutes(),
             expenseCategoryApi.makeRoutes()
         )
     ).asServer(Jetty(9000))
