@@ -7,14 +7,14 @@ CREATE EXTENSION "uuid-ossp";
 CREATE TABLE IF NOT EXISTS income_category
 (
 	id uuid DEFAULT uuid_generate_v4(),
-	name VARCHAR(32) NOT NULL,
+	name VARCHAR(256) NOT NULL,
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS expense_category
 (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    name VARCHAR(32) NOT NULL,
+    name VARCHAR(256) NOT NULL,
     target_amount DECIMAL(12,4) DEFAULT 0.00 NOT NULL,
 	PRIMARY KEY (id)
 );
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS expense_category
 CREATE TABLE IF NOT EXISTS vendor
 (
 	id uuid DEFAULT uuid_generate_v4() NOT NULL,
-	name VARCHAR(32) NOT NULL,
+	name VARCHAR(256) NOT NULL,
 	PRIMARY KEY (id)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS expense
 CREATE TABLE IF NOT EXISTS income
 (
 	id uuid DEFAULT uuid_generate_v4() NOT NULL,
-	source VARCHAR(32) NOT NULL,
+	source VARCHAR(256) NOT NULL,
 	income_category uuid REFERENCES income_category(id) NOT NULL,
     transaction_amount DECIMAL(12,4) NOT NULL,
     transaction_date DATE NOT NULL,
