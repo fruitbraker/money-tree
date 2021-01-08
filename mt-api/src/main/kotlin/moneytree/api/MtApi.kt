@@ -3,7 +3,7 @@ package moneytree.api
 import moneytree.libs.http4k.buildRoutes
 import moneytree.persist.ExpenseCategoryRepository
 import moneytree.persist.PersistConnector
-import moneytree.persist.generated.tables.daos.ExpenseCategoryDao
+import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import moneytree.validator.ExpenseCategoryValidator
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty

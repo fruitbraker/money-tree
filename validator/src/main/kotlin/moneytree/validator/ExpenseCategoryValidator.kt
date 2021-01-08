@@ -6,7 +6,7 @@ import moneytree.domain.validation.schema.ExpenseCategoryValidationSchema
 class ExpenseCategoryValidator : Validator<ExpenseCategory> {
     override fun validate(input: ExpenseCategory): ValidationResult {
         input.id?.let { uuid ->
-            if (uuid.toString().validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
+            if (uuid.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
         }
 
         if (input.name.length > ExpenseCategoryValidationSchema.NAME_LENGTH) return ValidationResult.Rejected
