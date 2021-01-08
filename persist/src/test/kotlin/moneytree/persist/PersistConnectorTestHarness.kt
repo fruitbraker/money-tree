@@ -2,8 +2,8 @@ package moneytree.persist
 
 import com.zaxxer.hikari.HikariDataSource
 import moneytree.libs.test.commons.randomString
-import moneytree.persist.generated.Tables.EXPENSE_CATEGORY
-import moneytree.persist.generated.Tables.VENDOR
+import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
+import moneytree.persist.db.generated.Tables.VENDOR
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.conf.MappedSchema
@@ -55,6 +55,7 @@ class PersistConnectorTestHarness : AutoCloseable {
 
     private fun createTables() {
         createExpenseCategory()
+        createVendor()
     }
 
     private fun createExpense() {
@@ -80,7 +81,17 @@ class PersistConnectorTestHarness : AutoCloseable {
             .column("name", VARCHAR(256))
             .column("target_amount", DECIMAL(12, 4))
             .constraints(
-                primaryKey("id"),
+                primaryKey("id")
+            )
+            .execute()
+    }
+
+    private fun createVendor() {
+        dslContext.createTable("vendor")
+            .column("id", UUID)
+            .column("name", VARCHAR(256))
+            .constraints(
+                primaryKey("id")
             )
             .execute()
     }
