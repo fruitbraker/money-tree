@@ -65,6 +65,9 @@ class ExpenseCategoryApi(
 
         if (UUID.fromString(uuid) != updatedEntity.id) return Response(Status.BAD_REQUEST)
 
-        return processUpdateResult(repository.updateById(updatedEntity), lens)
+        return when (validator.validate(updatedEntity)) {
+            ValidationResult.Accepted -> processUpdateResult(repository.updateById(updatedEntity), lens)
+            ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
+        }
     }
 }
