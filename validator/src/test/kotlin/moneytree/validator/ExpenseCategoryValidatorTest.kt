@@ -31,9 +31,7 @@ class ExpenseCategoryValidatorTest {
     @Test
     fun `rejects improper name length`() {
         val randomUUID = UUID.randomUUID()
-        val randomName =
-            "${randomString()}${randomString()}${randomString()}${randomString()}" +
-                "${randomString()}${randomString()}${randomString()}${randomString()}${randomString()}${randomString()}"
+        val randomName = randomString(999)
         val randomTargetAmount = randomBigDecimal()
 
         val expenseCategory = ExpenseCategory(

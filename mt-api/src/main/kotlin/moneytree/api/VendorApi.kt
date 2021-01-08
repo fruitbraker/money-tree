@@ -1,8 +1,8 @@
 package moneytree.api
 
 import java.util.UUID
-import moneytree.domain.ExpenseCategory
 import moneytree.domain.Repository
+import moneytree.domain.Vendor
 import moneytree.libs.http4k.HttpRouting
 import moneytree.validator.ValidationResult
 import moneytree.validator.Validator
@@ -18,22 +18,22 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 
-class ExpenseCategoryApi(
-    private val repository: Repository<ExpenseCategory>,
-    private val validator: Validator<ExpenseCategory>
-) : HttpRouting<ExpenseCategory> {
+class VendorApi(
+    private val repository: Repository<Vendor>,
+    private val validator: Validator<Vendor>
+) : HttpRouting<Vendor> {
 
-    override val lens: BiDiBodyLens<ExpenseCategory>
-        get() = Body.auto<ExpenseCategory>().toLens()
-    override val listLens: BiDiBodyLens<List<ExpenseCategory>>
-        get() = Body.auto<List<ExpenseCategory>>().toLens()
+    override val lens: BiDiBodyLens<Vendor>
+        get() = Body.auto<Vendor>().toLens()
+    override val listLens: BiDiBodyLens<List<Vendor>>
+        get() = Body.auto<List<Vendor>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
-            "/category/expense" bind Method.GET to this::get,
-            "/category/expense/{id}" bind Method.GET to this::getById,
-            "/category/expense" bind Method.POST to this::insert,
-            "/category/expense/{id}" bind Method.PUT to this::updateById
+            "/vendor" bind Method.GET to this::get,
+            "/vendor/{id}" bind Method.GET to this::getById,
+            "/vendor" bind Method.POST to this::insert,
+            "/vendor/{id}" bind Method.PUT to this::updateById
         )
     }
 

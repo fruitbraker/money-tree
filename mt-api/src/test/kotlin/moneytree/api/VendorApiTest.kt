@@ -4,14 +4,13 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkClass
 import java.util.UUID
-import moneytree.domain.ExpenseCategory
+import moneytree.domain.Vendor
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
-import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
-import moneytree.persist.ExpenseCategoryRepository
-import moneytree.validator.ExpenseCategoryValidator
+import moneytree.persist.VendorRepository
+import moneytree.validator.VendorValidator
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -24,40 +23,37 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ExpenseCategoryApiTest {
-
+class VendorApiTest {
     private val client = OkHttp()
 
     private val randomUUID = UUID.randomUUID()
     private val randomString = randomString()
-    private val randomBigDecimal = randomBigDecimal()
 
-    private val expenseCategory = ExpenseCategory(
+    private val vendor = Vendor(
         id = randomUUID,
-        name = randomString,
-        targetAmount = randomBigDecimal
+        name = randomString
     )
 
-    private val expenseCategoryRepository = mockkClass(ExpenseCategoryRepository::class)
-    private val expenseCategoryValidator = ExpenseCategoryValidator()
-    private val expenseCategoryApi = ExpenseCategoryApi(expenseCategoryRepository, expenseCategoryValidator)
+    private val vendorRepository = mockkClass(VendorRepository::class)
+    private val vendorValidator = VendorValidator()
+    private val vendorApi = VendorApi(vendorRepository, vendorValidator)
 
     private val server = buildRoutes(
         listOf(
-            expenseCategoryApi.makeRoutes()
+            vendorApi.makeRoutes()
         )
     ).asServer(Jetty(0))
 
     private val url = setup()
 
     private fun setup(): String {
-        every { expenseCategoryRepository.get() } returns listOf(expenseCategory).toOk()
-        every { expenseCategoryRepository.getById(randomUUID) } returns expenseCategory.toOk()
-        every { expenseCategoryRepository.insert(expenseCategory) } returns expenseCategory.toOk()
-        every { expenseCategoryRepository.updateById(expenseCategory) } returns expenseCategory.toOk()
+        every { vendorRepository.get() } returns listOf(vendor).toOk()
+        every { vendorRepository.getById(randomUUID) } returns vendor.toOk()
+        every { vendorRepository.insert(vendor) } returns vendor.toOk()
+        every { vendorRepository.updateById(vendor) } returns vendor.toOk()
 
         server.start()
-        return "http://localhost:${server.port()}/category/expense"
+        return "http://localhost:${server.port()}/vendor"
     }
 
     @AfterAll
@@ -76,7 +72,7 @@ class ExpenseCategoryApiTest {
         val result = client(request)
 
         result.status shouldBe Status.OK
-        result.bodyString() shouldBe listOf(expenseCategory).toJson()
+        result.bodyString() shouldBe listOf(vendor).toJson()
     }
 
     @Test
@@ -89,7 +85,7 @@ class ExpenseCategoryApiTest {
         val result = client(request)
 
         result.status shouldBe Status.OK
-        result.bodyString() shouldBe expenseCategory.toJson()
+        result.bodyString() shouldBe vendor.toJson()
     }
 
     @Test
@@ -97,12 +93,12 @@ class ExpenseCategoryApiTest {
         val request = Request(
             Method.POST,
             url
-        ).with(expenseCategoryApi.lens of expenseCategory)
+        ).with(vendorApi.lens of vendor)
 
         val result = client(request)
 
         result.status shouldBe Status.CREATED
-        result.bodyString() shouldBe expenseCategory.toJson()
+        result.bodyString() shouldBe vendor.toJson()
     }
 
     @Test
@@ -110,11 +106,11 @@ class ExpenseCategoryApiTest {
         val request = Request(
             Method.PUT,
             "$url/$randomUUID"
-        ).with(expenseCategoryApi.lens of expenseCategory)
+        ).with(vendorApi.lens of vendor)
 
         val result = client(request)
 
         result.status shouldBe Status.OK
-        result.bodyString() shouldBe expenseCategory.toJson()
+        result.bodyString() shouldBe vendor.toJson()
     }
 }
