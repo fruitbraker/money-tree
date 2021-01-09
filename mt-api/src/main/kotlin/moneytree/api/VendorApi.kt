@@ -1,17 +1,10 @@
 package moneytree.api
 
-import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.Vendor
-import moneytree.libs.http4k.HttpRouting
-import moneytree.validator.ValidationResult
 import moneytree.validator.Validator
-import moneytree.validator.validateUUID
 import org.http4k.core.Body
 import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.core.Status
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.BiDiBodyLens
 import org.http4k.routing.RoutingHttpHandler
@@ -19,10 +12,12 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 
 class VendorApi(
-    private val repository: Repository<Vendor>,
-    private val validator: Validator<Vendor>
-) : HttpRouting<Vendor> {
-
+    repository: Repository<Vendor>,
+    validator: Validator<Vendor>
+) : MtApiRoutes<Vendor>(
+    repository,
+    validator
+) {
     override val lens: BiDiBodyLens<Vendor>
         get() = Body.auto<Vendor>().toLens()
     override val listLens: BiDiBodyLens<List<Vendor>>
@@ -35,39 +30,5 @@ class VendorApi(
             "/vendor" bind Method.POST to this::insert,
             "/vendor/{id}" bind Method.PUT to this::updateById
         )
-    }
-
-    override fun get(request: Request): Response {
-        return processGetResult(repository.get(), listLens)
-    }
-
-    override fun getById(request: Request): Response {
-        val uuid = idLens(request)
-        return when (uuid.validateUUID()) {
-            ValidationResult.Accepted -> processGetByIdResult(repository.getById(UUID.fromString(uuid)), lens)
-            ValidationResult.Rejected -> Response(Status.NOT_FOUND)
-        }
-    }
-
-    override fun insert(request: Request): Response {
-        val newEntity = lens(request)
-        return when (validator.validate(newEntity)) {
-            ValidationResult.Accepted -> {
-                processInsertResult(repository.insert(newEntity), lens).status(Status.CREATED)
-            }
-            ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
-        }
-    }
-
-    override fun updateById(request: Request): Response {
-        val uuid = idLens(request)
-        val updatedEntity = lens(request)
-
-        if (UUID.fromString(uuid) != updatedEntity.id) return Response(Status.BAD_REQUEST)
-
-        return when (validator.validate(updatedEntity)) {
-            ValidationResult.Accepted -> processUpdateResult(repository.updateById(updatedEntity), lens)
-            ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
-        }
     }
 }

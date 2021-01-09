@@ -65,12 +65,12 @@ class VendorRepository(
         }
     }
 
-    override fun updateById(updatedEntity: VendorDomain): Result<VendorDomain, Throwable> {
+    override fun updateById(updatedEntity: VendorDomain, uuid: UUID): Result<VendorDomain, Throwable> {
         return resultTry {
             vendorDao.configuration().dsl()
                 .update(VENDOR)
                 .set(VENDOR.NAME, updatedEntity.name)
-                .where(VENDOR.ID.eq(updatedEntity.id))
+                .where(VENDOR.ID.eq(uuid))
                 .execute()
 
             updatedEntity

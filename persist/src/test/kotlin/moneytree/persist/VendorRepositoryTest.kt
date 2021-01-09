@@ -92,7 +92,7 @@ class VendorRepositoryTest {
             name = newRandomString
         )
 
-        val result = vendorRepository.updateById(updatedVendor)
+        val result = vendorRepository.updateById(updatedVendor, randomUUID)
         result.shouldBeOk()
         result.onOk { it shouldBe updatedVendor }
     }

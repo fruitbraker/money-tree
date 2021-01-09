@@ -20,9 +20,6 @@ internal val healthCheck = "/health" bind Method.GET to {
 }
 
 interface HttpRouting<T> {
-    val routes: RoutingHttpHandler
-        get() = makeRoutes()
-
     val lens: BiDiBodyLens<T>
     val listLens: BiDiBodyLens<List<T>>
 
