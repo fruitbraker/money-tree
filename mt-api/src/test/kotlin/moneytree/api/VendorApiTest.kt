@@ -50,7 +50,7 @@ class VendorApiTest {
         every { vendorRepository.get() } returns listOf(vendor).toOk()
         every { vendorRepository.getById(randomUUID) } returns vendor.toOk()
         every { vendorRepository.insert(vendor) } returns vendor.toOk()
-        every { vendorRepository.updateById(vendor, randomUUID) } returns vendor.toOk()
+        every { vendorRepository.upsertById(vendor, randomUUID) } returns vendor.toOk()
 
         server.start()
         return "http://localhost:${server.port()}/vendor"

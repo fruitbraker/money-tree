@@ -28,7 +28,7 @@ class VendorApi(
             "/vendor" bind Method.GET to this::get,
             "/vendor/{id}" bind Method.GET to this::getById,
             "/vendor" bind Method.POST to this::insert,
-            "/vendor/{id}" bind Method.PUT to this::updateById
+            "/vendor/{id}" bind Method.PUT to this::upsertById
         )
     }
 }

@@ -65,15 +65,23 @@ class VendorRepository(
         }
     }
 
-    override fun updateById(updatedEntity: VendorDomain, uuid: UUID): Result<VendorDomain, Throwable> {
+    override fun upsertById(updatedEntity: VendorDomain, uuid: UUID): Result<VendorDomain, Throwable> {
         return resultTry {
             vendorDao.configuration().dsl()
-                .update(VENDOR)
+                .insertInto(VENDOR)
+                .columns(
+                    VENDOR.ID,
+                    VENDOR.NAME
+                )
+                .values(
+                    uuid,
+                    updatedEntity.name
+                )
+                .onDuplicateKeyUpdate()
                 .set(VENDOR.NAME, updatedEntity.name)
-                .where(VENDOR.ID.eq(uuid))
                 .execute()
 
-            updatedEntity
+            updatedEntity.copy(id = uuid)
         }
     }
 }

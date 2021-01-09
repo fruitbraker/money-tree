@@ -69,16 +69,26 @@ class ExpenseCategoryRepository(
         }
     }
 
-    override fun updateById(updatedEntity: ExpenseCategoryDomain, uuid: UUID): Result<ExpenseCategoryDomain, Throwable> {
+    override fun upsertById(updatedEntity: ExpenseCategoryDomain, uuid: UUID): Result<ExpenseCategoryDomain, Throwable> {
         return resultTry {
             expenseCategoryDao.configuration().dsl()
-                .update(EXPENSE_CATEGORY)
+                .insertInto(EXPENSE_CATEGORY)
+                .columns(
+                    EXPENSE_CATEGORY.ID,
+                    EXPENSE_CATEGORY.NAME,
+                    EXPENSE_CATEGORY.TARGET_AMOUNT
+                )
+                .values(
+                    uuid,
+                    updatedEntity.name,
+                    updatedEntity.targetAmount
+                )
+                .onDuplicateKeyUpdate()
                 .set(EXPENSE_CATEGORY.NAME, updatedEntity.name)
                 .set(EXPENSE_CATEGORY.TARGET_AMOUNT, updatedEntity.targetAmount)
-                .where(EXPENSE_CATEGORY.ID.eq(uuid))
                 .execute()
 
-            updatedEntity
+            updatedEntity.copy(id = uuid)
         }
     }
 }

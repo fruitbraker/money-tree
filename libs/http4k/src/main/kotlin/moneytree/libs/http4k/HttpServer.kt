@@ -33,7 +33,7 @@ interface HttpRouting<T> {
 
     fun insert(request: Request): Response
 
-    fun updateById(request: Request): Response
+    fun upsertById(request: Request): Response
 }
 
 fun buildRoutes(

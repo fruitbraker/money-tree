@@ -54,7 +54,7 @@ class ExpenseCategoryApiTest {
         every { expenseCategoryRepository.get() } returns listOf(expenseCategory).toOk()
         every { expenseCategoryRepository.getById(randomUUID) } returns expenseCategory.toOk()
         every { expenseCategoryRepository.insert(expenseCategory) } returns expenseCategory.toOk()
-        every { expenseCategoryRepository.updateById(expenseCategory, randomUUID) } returns expenseCategory.toOk()
+        every { expenseCategoryRepository.upsertById(expenseCategory, randomUUID) } returns expenseCategory.toOk()
 
         server.start()
         return "http://localhost:${server.port()}/category/expense"
