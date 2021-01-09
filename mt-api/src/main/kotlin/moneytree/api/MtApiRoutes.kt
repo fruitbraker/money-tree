@@ -10,7 +10,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 
-abstract class MtApiRoutes<T> (
+abstract class MtApiRoutes<T>(
     private val repository: Repository<T>,
     private val validator: Validator<T>
 ) : HttpRouting<T> {
@@ -37,12 +37,18 @@ abstract class MtApiRoutes<T> (
         }
     }
 
-    override fun updateById(request: Request): Response {
-        val uuid = UUID.fromString(idLens(request))
+    override fun upsertById(request: Request): Response {
+        val uuid = idLens(request)
         val updatedEntity = lens(request)
 
-        return when (validator.validate(updatedEntity)) {
-            ValidationResult.Accepted -> processUpdateResult(repository.updateById(updatedEntity, uuid), lens)
+        return when (validator.validateWithUUID(updatedEntity, uuid)) {
+            ValidationResult.Accepted -> processUpdateResult(
+                repository.upsertById(
+                    updatedEntity,
+                    UUID.fromString(uuid)
+                ),
+                lens
+            )
             ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
         }
     }

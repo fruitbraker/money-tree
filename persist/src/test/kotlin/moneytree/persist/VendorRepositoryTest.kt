@@ -74,7 +74,7 @@ class VendorRepositoryTest {
     }
 
     @Test
-    fun `updates entity happy path`() {
+    fun `upsertById updates existing entity`() {
         val randomUUID = UUID.randomUUID()
         val randomString = randomString()
 
@@ -92,8 +92,57 @@ class VendorRepositoryTest {
             name = newRandomString
         )
 
-        val result = vendorRepository.updateById(updatedVendor, randomUUID)
+        val result = vendorRepository.upsertById(updatedVendor, randomUUID)
         result.shouldBeOk()
         result.onOk { it shouldBe updatedVendor }
+
+        val retrieveResult = vendorRepository.getById(randomUUID)
+        retrieveResult.shouldBeOk()
+        retrieveResult.onOk { it shouldBe updatedVendor }
+    }
+
+    @Test
+    fun `upsertById adds a new entity`() {
+        val randomUUID = UUID.randomUUID()
+        val randomString = randomString()
+
+        val vendor = Vendor(
+            id = randomUUID,
+            name = randomString
+        )
+
+        val result = vendorRepository.upsertById(vendor, randomUUID)
+        result.shouldBeOk()
+        result.onOk { it shouldBe vendor }
+
+        val retrieveResult = vendorRepository.getById(randomUUID)
+        retrieveResult.shouldBeOk()
+        retrieveResult.onOk { it shouldBe vendor }
+    }
+
+    @Test
+    fun `upsertById upserts with id parameter`() {
+        val parameterId = UUID.randomUUID()
+        val randomUUID = UUID.randomUUID()
+        val randomString = randomString()
+
+        val vendor = Vendor(
+            id = randomUUID,
+            name = randomString
+        )
+
+        val idParameterVendor = vendor.copy(id = parameterId)
+
+        val result = vendorRepository.upsertById(vendor, parameterId)
+        result.shouldBeOk()
+        result.onOk { it shouldBe idParameterVendor }
+
+        val retrieveResult = vendorRepository.getById(parameterId)
+        retrieveResult.shouldBeOk()
+        retrieveResult.onOk { it shouldBe idParameterVendor }
+
+        val nullResult = vendorRepository.getById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
     }
 }

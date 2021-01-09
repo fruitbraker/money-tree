@@ -83,7 +83,7 @@ class ExpenseCategoryRepositoryTest {
     }
 
     @Test
-    fun `updates entity happy path`() {
+    fun `upsert updates existing entity`() {
         val randomUUID = UUID.randomUUID()
         val randomString = randomString()
         val randomTargetAmount = randomBigDecimal()
@@ -105,7 +105,7 @@ class ExpenseCategoryRepositoryTest {
             targetAmount = newRandomTargetAmount
         )
 
-        val insertResult = expenseCategoryRepository.updateById(updatedExpenseCategory, randomUUID)
+        val insertResult = expenseCategoryRepository.upsertById(updatedExpenseCategory, randomUUID)
         insertResult.shouldBeOk()
         insertResult.onOk {
             it shouldBe updatedExpenseCategory
@@ -116,5 +116,52 @@ class ExpenseCategoryRepositoryTest {
         retrieveResult.onOk {
             it shouldBe updatedExpenseCategory
         }
+    }
+
+    @Test
+    fun `upsert inserts new entity`() {
+        val randomUUID = UUID.randomUUID()
+        val randomString = randomString()
+        val randomTargetAmount = randomBigDecimal()
+
+        val expenseCategory = ExpenseCategory(
+            id = randomUUID,
+            name = randomString,
+            targetAmount = randomTargetAmount
+        )
+
+        val result = expenseCategoryRepository.upsertById(expenseCategory, randomUUID)
+        result.shouldBeOk()
+        result.onOk { it shouldBe expenseCategory }
+
+        val retrieveResult = expenseCategoryRepository.getById(randomUUID)
+        retrieveResult.shouldBeOk()
+        retrieveResult.onOk {
+            it shouldBe expenseCategory
+        }
+    }
+
+    @Test
+    fun `upsertById upserts with parameter id`() {
+        val parameterId = UUID.randomUUID()
+        val randomUUID = UUID.randomUUID()
+        val randomString = randomString()
+        val randomTargetAmount = randomBigDecimal()
+
+        val expenseCategory = ExpenseCategory(
+            id = randomUUID,
+            name = randomString,
+            targetAmount = randomTargetAmount
+        )
+
+        val idParameterExpenseCategory = expenseCategory.copy(id = parameterId)
+
+        val result = expenseCategoryRepository.upsertById(expenseCategory, parameterId)
+        result.shouldBeOk()
+        result.onOk { it shouldBe idParameterExpenseCategory }
+
+        val nullResult = expenseCategoryRepository.getById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
     }
 }
