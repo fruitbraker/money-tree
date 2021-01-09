@@ -105,7 +105,7 @@ class ExpenseCategoryRepositoryTest {
             targetAmount = newRandomTargetAmount
         )
 
-        val insertResult = expenseCategoryRepository.updateById(updatedExpenseCategory)
+        val insertResult = expenseCategoryRepository.updateById(updatedExpenseCategory, randomUUID)
         insertResult.shouldBeOk()
         insertResult.onOk {
             it shouldBe updatedExpenseCategory
