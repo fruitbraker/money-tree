@@ -1,4 +1,4 @@
-package moneytree.api
+package moneytree
 
 import java.util.UUID
 import moneytree.domain.Repository

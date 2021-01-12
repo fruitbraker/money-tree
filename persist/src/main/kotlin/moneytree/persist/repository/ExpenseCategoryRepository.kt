@@ -1,6 +1,6 @@
-package moneytree.persist
+package moneytree.persist.repository
 
-import moneytree.domain.ExpenseCategory as ExpenseCategoryDomain
+import moneytree.domain.entity.ExpenseCategory as ExpenseCategoryDomain
 import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.libs.commons.result.Result

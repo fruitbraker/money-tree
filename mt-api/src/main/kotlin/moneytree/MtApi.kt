@@ -1,9 +1,11 @@
-package moneytree.api
+package moneytree
 
+import moneytree.api.ExpenseCategoryApi
+import moneytree.api.VendorApi
 import moneytree.libs.http4k.buildRoutes
-import moneytree.persist.ExpenseCategoryRepository
+import moneytree.persist.repository.ExpenseCategoryRepository
 import moneytree.persist.PersistConnector
-import moneytree.persist.VendorRepository
+import moneytree.persist.repository.VendorRepository
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import moneytree.persist.db.generated.tables.daos.VendorDao
 import moneytree.validator.ExpenseCategoryValidator

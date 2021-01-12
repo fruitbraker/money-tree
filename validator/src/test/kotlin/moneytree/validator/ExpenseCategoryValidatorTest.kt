@@ -3,7 +3,7 @@ package moneytree.validator
 import io.kotest.matchers.shouldBe
 import java.math.BigDecimal
 import java.util.UUID
-import moneytree.domain.ExpenseCategory
+import moneytree.domain.entity.ExpenseCategory
 import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
 import org.junit.jupiter.api.Test

@@ -1,13 +1,14 @@
-package moneytree.persist
+package moneytree.persist.repository
 
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import java.util.UUID
-import moneytree.domain.Vendor
+import moneytree.domain.entity.Vendor
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
 import moneytree.libs.test.commons.randomString
+import moneytree.persist.PersistConnectorTestHarness
 import moneytree.persist.db.generated.tables.daos.VendorDao
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
@@ -16,8 +17,8 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VendorRepositoryTest {
 
-    private var persistHarness = PersistConnectorTestHarness()
-    private var vendorRepository = VendorRepository(
+    private val persistHarness = PersistConnectorTestHarness()
+    private val vendorRepository = VendorRepository(
         VendorDao(persistHarness.dslContext.configuration())
     )
 
@@ -28,10 +29,10 @@ class VendorRepositoryTest {
 
     @Test
     fun `get with unknown UUID returns null`() {
-        val result = vendorRepository.getById(UUID.randomUUID())
+        val getResult = vendorRepository.getById(UUID.randomUUID())
 
-        result.shouldBeOk()
-        result.onOk { it shouldBe null }
+        getResult.shouldBeOk()
+        getResult.onOk { it shouldBe null }
     }
 
     @Test
@@ -48,9 +49,9 @@ class VendorRepositoryTest {
         insertResult.shouldBeOk()
         insertResult.onOk { it shouldBe vendor }
 
-        val retrieveResult = vendorRepository.getById(randomUUID)
-        retrieveResult.shouldBeOk()
-        retrieveResult.onOk { it shouldBe vendor }
+        val getResult = vendorRepository.getById(randomUUID)
+        getResult.shouldBeOk()
+        getResult.onOk { it shouldBe vendor }
     }
 
     @Test
@@ -65,9 +66,9 @@ class VendorRepositoryTest {
 
         vendorRepository.insert(vendor)
 
-        val result = vendorRepository.get()
-        result.shouldBeOk()
-        result.onOk {
+        val getResult = vendorRepository.get()
+        getResult.shouldBeOk()
+        getResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
             it shouldContain vendor
         }
@@ -92,9 +93,9 @@ class VendorRepositoryTest {
             name = newRandomString
         )
 
-        val result = vendorRepository.upsertById(updatedVendor, randomUUID)
-        result.shouldBeOk()
-        result.onOk { it shouldBe updatedVendor }
+        val upsertResult = vendorRepository.upsertById(updatedVendor, randomUUID)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk { it shouldBe updatedVendor }
 
         val retrieveResult = vendorRepository.getById(randomUUID)
         retrieveResult.shouldBeOk()
@@ -111,9 +112,13 @@ class VendorRepositoryTest {
             name = randomString
         )
 
-        val result = vendorRepository.upsertById(vendor, randomUUID)
-        result.shouldBeOk()
-        result.onOk { it shouldBe vendor }
+        val nullResult = vendorRepository.getById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
+
+        val upsertResult = vendorRepository.upsertById(vendor, randomUUID)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk { it shouldBe vendor }
 
         val retrieveResult = vendorRepository.getById(randomUUID)
         retrieveResult.shouldBeOk()
@@ -133,13 +138,13 @@ class VendorRepositoryTest {
 
         val idParameterVendor = vendor.copy(id = parameterId)
 
-        val result = vendorRepository.upsertById(vendor, parameterId)
-        result.shouldBeOk()
-        result.onOk { it shouldBe idParameterVendor }
+        val upsertResult = vendorRepository.upsertById(vendor, parameterId)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk { it shouldBe idParameterVendor }
 
-        val retrieveResult = vendorRepository.getById(parameterId)
-        retrieveResult.shouldBeOk()
-        retrieveResult.onOk { it shouldBe idParameterVendor }
+        val getResult = vendorRepository.getById(parameterId)
+        getResult.shouldBeOk()
+        getResult.onOk { it shouldBe idParameterVendor }
 
         val nullResult = vendorRepository.getById(randomUUID)
         nullResult.shouldBeOk()

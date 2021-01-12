@@ -1,4 +1,4 @@
-package moneytree.api
+package moneytree
 
 import moneytree.libs.commons.result.Result
 import org.http4k.core.Response

@@ -2,7 +2,7 @@ package moneytree.validator
 
 import io.kotest.matchers.shouldBe
 import java.util.UUID
-import moneytree.domain.Vendor
+import moneytree.domain.entity.Vendor
 import moneytree.libs.test.commons.randomString
 import moneytree.validator.ValidationResult.Accepted
 import moneytree.validator.ValidationResult.Rejected

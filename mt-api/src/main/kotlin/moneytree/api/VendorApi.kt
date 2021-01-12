@@ -1,7 +1,8 @@
 package moneytree.api
 
+import moneytree.MtApiRoutes
 import moneytree.domain.Repository
-import moneytree.domain.Vendor
+import moneytree.domain.entity.Vendor
 import moneytree.validator.Validator
 import org.http4k.core.Body
 import org.http4k.core.Method
@@ -18,17 +19,15 @@ class VendorApi(
     repository,
     validator
 ) {
-    override val lens: BiDiBodyLens<Vendor>
-        get() = Body.auto<Vendor>().toLens()
-    override val listLens: BiDiBodyLens<List<Vendor>>
-        get() = Body.auto<List<Vendor>>().toLens()
+    override val lens: BiDiBodyLens<Vendor> = Body.auto<Vendor>().toLens()
+    override val listLens: BiDiBodyLens<List<Vendor>> = Body.auto<List<Vendor>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
-            "/vendor" bind Method.GET to this::get,
-            "/vendor/{id}" bind Method.GET to this::getById,
-            "/vendor" bind Method.POST to this::insert,
-            "/vendor/{id}" bind Method.PUT to this::upsertById
+            "/vendor" bind Method.GET to ::get,
+            "/vendor/{id}" bind Method.GET to ::getById,
+            "/vendor" bind Method.POST to ::insert,
+            "/vendor/{id}" bind Method.PUT to ::upsertById
         )
     }
 }

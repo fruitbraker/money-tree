@@ -4,13 +4,13 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkClass
 import java.util.UUID
-import moneytree.domain.ExpenseCategory
+import moneytree.domain.entity.ExpenseCategory
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
 import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
-import moneytree.persist.ExpenseCategoryRepository
+import moneytree.persist.repository.ExpenseCategoryRepository
 import moneytree.validator.ExpenseCategoryValidator
 import org.http4k.client.OkHttp
 import org.http4k.core.Method

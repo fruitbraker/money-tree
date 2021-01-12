@@ -4,12 +4,12 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkClass
 import java.util.UUID
-import moneytree.domain.Vendor
+import moneytree.domain.entity.Vendor
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
 import moneytree.libs.test.commons.randomString
-import moneytree.persist.VendorRepository
+import moneytree.persist.repository.VendorRepository
 import moneytree.validator.VendorValidator
 import org.http4k.client.OkHttp
 import org.http4k.core.Method

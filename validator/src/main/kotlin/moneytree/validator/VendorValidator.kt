@@ -1,6 +1,6 @@
 package moneytree.validator
 
-import moneytree.domain.Vendor
+import moneytree.domain.entity.Vendor
 import moneytree.domain.validation.schema.VendorValidationSchema
 
 class VendorValidator : Validator<Vendor> {

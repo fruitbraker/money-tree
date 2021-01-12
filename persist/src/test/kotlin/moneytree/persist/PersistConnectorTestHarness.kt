@@ -56,6 +56,7 @@ class PersistConnectorTestHarness : AutoCloseable {
     private fun createTables() {
         createExpenseCategory()
         createVendor()
+        createExpense()
     }
 
     private fun createExpense() {

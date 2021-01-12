@@ -1,4 +1,4 @@
-package moneytree.domain.expense
+package moneytree.domain.entity
 
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -18,7 +18,9 @@ data class ExpenseSummary(
     val id: UUID,
     val transactionDate: LocalDate,
     val transactionAmount: BigDecimal,
+    val vendorId: UUID,
     val vendorName: String,
+    val expenseCategoryId: UUID,
     val expenseCategory: String,
     val notes: String,
     val hide: Boolean
