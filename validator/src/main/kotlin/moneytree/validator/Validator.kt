@@ -3,6 +3,7 @@ package moneytree.validator
 import java.util.UUID
 
 private val UUID_REGEX = "[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}".toRegex()
+private val LOCAL_DATE_REGEX = "[1-9]{4}-[01]{1}[012]{1}-[012]{1}[0-9]{1}"
 
 interface Validator<T> {
     fun validate(input: T): ValidationResult
