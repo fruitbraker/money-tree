@@ -61,8 +61,8 @@ class ExpenseRepositoryTest {
         val randomUUID = UUID.randomUUID()
         val todayLocalDate = LocalDate.now()
         val randomTransactionAmount = randomBigDecimal()
-        val vendorId = randomVendor.id ?: throw IllegalStateException("Vendor cannot be null!")
-        val expenseCategoryId = randomExpenseCategory.id ?: throw IllegalStateException("Expense category cannot be null!")
+        val vendorId = randomVendor.id ?: fail("Vendor id cannot be null!")
+        val expenseCategoryId = randomExpenseCategory.id ?: fail("Expense category id cannot be null!")
         val notes = randomString()
         val hide = false
 
