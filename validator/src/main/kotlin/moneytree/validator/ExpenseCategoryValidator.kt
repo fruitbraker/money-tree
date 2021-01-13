@@ -1,6 +1,6 @@
 package moneytree.validator
 
-import moneytree.domain.ExpenseCategory
+import moneytree.domain.entity.ExpenseCategory
 import moneytree.domain.validation.schema.ExpenseCategoryValidationSchema
 
 class ExpenseCategoryValidator : Validator<ExpenseCategory> {

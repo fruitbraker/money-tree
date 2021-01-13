@@ -1,7 +1,8 @@
 package moneytree.api
 
-import moneytree.domain.ExpenseCategory
+import moneytree.MtApiRoutes
 import moneytree.domain.Repository
+import moneytree.domain.entity.ExpenseCategory
 import moneytree.validator.Validator
 import org.http4k.core.Body
 import org.http4k.core.Method
@@ -18,17 +19,15 @@ class ExpenseCategoryApi(
     repository,
     validator
 ) {
-    override val lens: BiDiBodyLens<ExpenseCategory>
-        get() = Body.auto<ExpenseCategory>().toLens()
-    override val listLens: BiDiBodyLens<List<ExpenseCategory>>
-        get() = Body.auto<List<ExpenseCategory>>().toLens()
+    override val lens: BiDiBodyLens<ExpenseCategory> = Body.auto<ExpenseCategory>().toLens()
+    override val listLens: BiDiBodyLens<List<ExpenseCategory>> = Body.auto<List<ExpenseCategory>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
-            "/category/expense" bind Method.GET to this::get,
-            "/category/expense/{id}" bind Method.GET to this::getById,
-            "/category/expense" bind Method.POST to this::insert,
-            "/category/expense/{id}" bind Method.PUT to this::upsertById
+            "/category/expense" bind Method.GET to ::get,
+            "/category/expense/{id}" bind Method.GET to ::getById,
+            "/category/expense" bind Method.POST to ::insert,
+            "/category/expense/{id}" bind Method.PUT to ::upsertById
         )
     }
 }

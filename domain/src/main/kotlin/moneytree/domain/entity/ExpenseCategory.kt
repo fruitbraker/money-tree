@@ -1,4 +1,4 @@
-package moneytree.domain
+package moneytree.domain.entity
 
 import java.math.BigDecimal
 import java.util.UUID

@@ -1,6 +1,6 @@
-package moneytree.persist
+package moneytree.persist.repository
 
-import moneytree.domain.Vendor as VendorDomain
+import moneytree.domain.entity.Vendor as VendorDomain
 import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.libs.commons.result.Result

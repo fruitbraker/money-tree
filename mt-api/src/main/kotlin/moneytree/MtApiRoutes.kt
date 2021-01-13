@@ -1,4 +1,4 @@
-package moneytree.api
+package moneytree
 
 import java.util.UUID
 import moneytree.domain.Repository
@@ -28,7 +28,11 @@ abstract class MtApiRoutes<T>(
     }
 
     override fun insert(request: Request): Response {
-        val newEntity = lens(request)
+        val newEntity = try {
+            lens(request)
+        } catch (e: Throwable) {
+            return Response(Status.BAD_REQUEST)
+        }
         return when (validator.validate(newEntity)) {
             ValidationResult.Accepted -> {
                 processInsertResult(repository.insert(newEntity), lens).status(Status.CREATED)
@@ -39,7 +43,11 @@ abstract class MtApiRoutes<T>(
 
     override fun upsertById(request: Request): Response {
         val uuid = idLens(request)
-        val updatedEntity = lens(request)
+        val updatedEntity = try {
+            lens(request)
+        } catch (e: Throwable) {
+            return Response(Status.BAD_REQUEST)
+        }
 
         return when (validator.validateWithUUID(updatedEntity, uuid)) {
             ValidationResult.Accepted -> processUpdateResult(

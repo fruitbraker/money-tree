@@ -1,14 +1,15 @@
-package moneytree.persist
+package moneytree.persist.repository
 
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import java.util.UUID
-import moneytree.domain.ExpenseCategory
+import moneytree.domain.entity.ExpenseCategory
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
 import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
+import moneytree.persist.PersistConnectorTestHarness
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
@@ -17,8 +18,8 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ExpenseCategoryRepositoryTest {
 
-    private var persistHarness = PersistConnectorTestHarness()
-    private var expenseCategoryRepository = ExpenseCategoryRepository(
+    private val persistHarness = PersistConnectorTestHarness()
+    private val expenseCategoryRepository = ExpenseCategoryRepository(
         ExpenseCategoryDao(persistHarness.dslContext.configuration())
     )
 
@@ -29,10 +30,10 @@ class ExpenseCategoryRepositoryTest {
 
     @Test
     fun `get with unknown UUID returns null`() {
-        val result = expenseCategoryRepository.getById(UUID.randomUUID())
+        val getResult = expenseCategoryRepository.getById(UUID.randomUUID())
 
-        result.shouldBeOk()
-        result.onOk { it shouldBe null }
+        getResult.shouldBeOk()
+        getResult.onOk { it shouldBe null }
     }
 
     @Test
@@ -74,9 +75,9 @@ class ExpenseCategoryRepositoryTest {
 
         expenseCategoryRepository.insert(expenseCategory)
 
-        val result = expenseCategoryRepository.get()
-        result.shouldBeOk()
-        result.onOk {
+        val getResult = expenseCategoryRepository.get()
+        getResult.shouldBeOk()
+        getResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
             it shouldContain expenseCategory
         }
@@ -130,13 +131,17 @@ class ExpenseCategoryRepositoryTest {
             targetAmount = randomTargetAmount
         )
 
-        val result = expenseCategoryRepository.upsertById(expenseCategory, randomUUID)
-        result.shouldBeOk()
-        result.onOk { it shouldBe expenseCategory }
+        val nullResult = expenseCategoryRepository.getById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
 
-        val retrieveResult = expenseCategoryRepository.getById(randomUUID)
-        retrieveResult.shouldBeOk()
-        retrieveResult.onOk {
+        val upsertResult = expenseCategoryRepository.upsertById(expenseCategory, randomUUID)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk { it shouldBe expenseCategory }
+
+        val getResult = expenseCategoryRepository.getById(randomUUID)
+        getResult.shouldBeOk()
+        getResult.onOk {
             it shouldBe expenseCategory
         }
     }
@@ -156,9 +161,9 @@ class ExpenseCategoryRepositoryTest {
 
         val idParameterExpenseCategory = expenseCategory.copy(id = parameterId)
 
-        val result = expenseCategoryRepository.upsertById(expenseCategory, parameterId)
-        result.shouldBeOk()
-        result.onOk { it shouldBe idParameterExpenseCategory }
+        val upsertResult = expenseCategoryRepository.upsertById(expenseCategory, parameterId)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk { it shouldBe idParameterExpenseCategory }
 
         val nullResult = expenseCategoryRepository.getById(randomUUID)
         nullResult.shouldBeOk()
