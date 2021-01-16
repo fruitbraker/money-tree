@@ -48,6 +48,7 @@ class ExpenseApi(
         )
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun getExpenseSummary(request: Request): Response {
         return processGetResult(expenseSummaryRepository.getExpenseSummary(), summaryListLens)
     }
