@@ -13,9 +13,6 @@ import moneytree.persist.db.generated.Tables.VENDOR
 import moneytree.persist.db.generated.tables.daos.ExpenseDao
 import moneytree.persist.db.generated.tables.pojos.Expense
 import org.jooq.Record
-
-private typealias ExpenseSummaryDomain = ExpenseSummary
-
 class ExpenseRepository(
     private val expenseDao: ExpenseDao
 ) : Repository<ExpenseDomain>, ExpenseSummaryRepository {

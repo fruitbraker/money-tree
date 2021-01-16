@@ -1,10 +1,16 @@
 package moneytree.api
 
+import java.util.UUID
 import moneytree.MtApiRoutes
+import moneytree.domain.ExpenseSummaryRepository
 import moneytree.domain.Repository
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseSummary
+import moneytree.processGetByIdResult
+import moneytree.processGetResult
+import moneytree.validator.ValidationResult
 import moneytree.validator.Validator
+import moneytree.validator.validateUUID
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -23,6 +29,8 @@ class ExpenseApi(
     repository,
     validator
 ) {
+    private val expenseSummaryRepository = repository as ExpenseSummaryRepository
+
     override val lens: BiDiBodyLens<Expense> = Body.auto<Expense>().toLens()
     override val listLens: BiDiBodyLens<List<Expense>> = Body.auto<List<Expense>>().toLens()
 
@@ -31,20 +39,31 @@ class ExpenseApi(
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
+            "/expense/summary" bind Method.GET to this::getExpenseSummary,
+            "/expense/summary/{id}" bind Method.GET to this::getExpenseSummaryById,
             "/expense" bind Method.GET to ::get,
             "/expense/{id}" bind Method.GET to ::getById,
             "/expense" bind Method.POST to ::insert,
-            "/expense/{id}" bind Method.PUT to ::upsertById,
-            "/expense/summary" bind Method.GET to this::getExpenseSummary,
-            "/expense/summary/{id}" bind Method.GET to this::getExpenseSummaryById
+            "/expense/{id}" bind Method.PUT to ::upsertById
         )
     }
 
     private fun getExpenseSummary(request: Request): Response {
-        return Response(Status.OK)
+        return processGetResult(expenseSummaryRepository.getExpenseSummary(), summaryListLens)
     }
 
     private fun getExpenseSummaryById(request: Request): Response {
-        return Response(Status.OK)
+        val uuid = idLens(request)
+        return when (uuid.validateUUID()) {
+            ValidationResult.Accepted -> processGetByIdResult(
+                expenseSummaryRepository.getExpenseSummaryById(
+                    UUID.fromString(
+                        uuid
+                    )
+                ),
+                summaryLens
+            )
+            ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
+        }
     }
 }
