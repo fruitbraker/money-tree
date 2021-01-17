@@ -35,7 +35,7 @@ abstract class MtApiRoutes<T>(
         }
         return when (validator.validate(newEntity)) {
             ValidationResult.Accepted -> {
-                processInsertResult(repository.insert(newEntity), lens).status(Status.CREATED)
+                processInsertResult(repository.insert(newEntity), lens)
             }
             ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
         }

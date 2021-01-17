@@ -57,6 +57,7 @@ class PersistConnectorTestHarness : AutoCloseable {
         createExpenseCategory()
         createVendor()
         createExpense()
+        createIncomeCategory()
     }
 
     private fun createExpense() {
@@ -89,6 +90,16 @@ class PersistConnectorTestHarness : AutoCloseable {
 
     private fun createVendor() {
         dslContext.createTable("vendor")
+            .column("id", UUID)
+            .column("name", VARCHAR(256))
+            .constraints(
+                primaryKey("id")
+            )
+            .execute()
+    }
+
+    private fun createIncomeCategory() {
+        dslContext.createTable("income_category")
             .column("id", UUID)
             .column("name", VARCHAR(256))
             .constraints(
