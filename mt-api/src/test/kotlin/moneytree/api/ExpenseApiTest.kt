@@ -6,6 +6,7 @@ import io.mockk.mockkClass
 import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.entity.Expense
+import moneytree.domain.entity.ExpenseSummary
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
@@ -32,7 +33,9 @@ class ExpenseApiTest {
     private val todayLocalDate = LocalDate.now()
     private val randomTransactionAmount = randomBigDecimal()
     private val vendorId = UUID.randomUUID()
+    private val vendorName = randomString()
     private val expenseCategoryId = UUID.randomUUID()
+    private val expenseCategory = randomString()
     private val notes = randomString()
     private val hide = false
 
@@ -42,6 +45,18 @@ class ExpenseApiTest {
         transactionDate = todayLocalDate,
         vendor = vendorId,
         expenseCategory = expenseCategoryId,
+        notes = notes,
+        hide = hide
+    )
+
+    private val expenseSummary = ExpenseSummary(
+        id = randomUUID,
+        transactionAmount = randomTransactionAmount,
+        transactionDate = todayLocalDate,
+        vendorId = vendorId,
+        vendorName = vendorName,
+        expenseCategoryId = expenseCategoryId,
+        expenseCategory = expenseCategory,
         notes = notes,
         hide = hide
     )
@@ -63,6 +78,8 @@ class ExpenseApiTest {
         every { expenseRepository.getById(randomUUID) } returns expense.toOk()
         every { expenseRepository.insert(expense) } returns expense.toOk()
         every { expenseRepository.upsertById(expense, randomUUID) } returns expense.toOk()
+        every { expenseRepository.getExpenseSummary() } returns listOf(expenseSummary).toOk()
+        every { expenseRepository.getExpenseSummaryById(randomUUID) } returns expenseSummary.toOk()
 
         server.start()
         return "http://localhost:${server.port()}/expense"
@@ -124,5 +141,31 @@ class ExpenseApiTest {
 
         result.status shouldBe Status.OK
         result.bodyString() shouldBe expense.toJson()
+    }
+
+    @Test
+    fun `getExpenseSummary happy path`() {
+        val request = Request(
+            Method.GET,
+            "$url/summary"
+        )
+
+        val result = client(request)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe listOf(expenseSummary).toJson()
+    }
+
+    @Test
+    fun `getExpenseSummaryById happy path`() {
+        val request = Request(
+            Method.GET,
+            "$url/summary/$randomUUID"
+        )
+
+        val result = client(request)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe expenseSummary.toJson()
     }
 }
