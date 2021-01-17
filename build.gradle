@@ -48,4 +48,14 @@ subprojects {
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$junit_version"
         testImplementation "io.mockk:mockk:$mockk_version"
     }
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
 }
