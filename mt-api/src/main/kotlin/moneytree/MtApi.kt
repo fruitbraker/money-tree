@@ -2,17 +2,21 @@ package moneytree
 
 import moneytree.api.ExpenseApi
 import moneytree.api.ExpenseCategoryApi
+import moneytree.api.IncomeCategoryApi
 import moneytree.api.VendorApi
 import moneytree.libs.http4k.buildRoutes
 import moneytree.persist.PersistConnector
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import moneytree.persist.db.generated.tables.daos.ExpenseDao
+import moneytree.persist.db.generated.tables.daos.IncomeCategoryDao
 import moneytree.persist.db.generated.tables.daos.VendorDao
 import moneytree.persist.repository.ExpenseCategoryRepository
 import moneytree.persist.repository.ExpenseRepository
+import moneytree.persist.repository.IncomeCategoryRepository
 import moneytree.persist.repository.VendorRepository
 import moneytree.validator.ExpenseCategoryValidator
 import moneytree.validator.ExpenseValidator
+import moneytree.validator.IncomeCategoryValidator
 import moneytree.validator.VendorValidator
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
@@ -32,11 +36,15 @@ class MtApi : AutoCloseable {
     private val expenseRepository = ExpenseRepository(
         ExpenseDao(persistConnector.dslContext.configuration())
     )
+    private val incomeCategoryRepository = IncomeCategoryRepository(
+        IncomeCategoryDao(persistConnector.dslContext.configuration())
+    )
 
     // Validator
     private val expenseCategoryValidator = ExpenseCategoryValidator()
     private val vendorValidator = VendorValidator()
     private val expenseValidator = ExpenseValidator()
+    private val incomeCategoryValidator = IncomeCategoryValidator()
 
     // Routes for entities
     private val expenseCategoryApi = ExpenseCategoryApi(
@@ -51,12 +59,17 @@ class MtApi : AutoCloseable {
         expenseRepository,
         expenseValidator
     )
+    private val incomeCategoryApi = IncomeCategoryApi(
+        incomeCategoryRepository,
+        incomeCategoryValidator
+    )
 
     private val http4kServer: Http4kServer = buildRoutes(
         listOf(
             expenseCategoryApi.makeRoutes(),
             vendorApi.makeRoutes(),
-            expenseApi.makeRoutes()
+            expenseApi.makeRoutes(),
+            incomeCategoryApi.makeRoutes()
         )
     ).asServer(Jetty(9000))
 
