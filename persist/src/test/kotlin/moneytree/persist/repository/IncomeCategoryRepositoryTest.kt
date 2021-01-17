@@ -7,7 +7,6 @@ import java.util.UUID
 import moneytree.domain.entity.IncomeCategory
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
-import moneytree.libs.test.commons.randomBigDecimal
 import moneytree.libs.test.commons.randomString
 import moneytree.persist.PersistConnectorTestHarness
 import moneytree.persist.db.generated.tables.daos.IncomeCategoryDao
@@ -83,7 +82,6 @@ class IncomeCategoryRepositoryTest {
     fun `upsert updates existing entity`() {
         val randomUUID = UUID.randomUUID()
         val randomString = randomString()
-        val randomTargetAmount = randomBigDecimal()
 
         val incomeCategory = IncomeCategory(
             id = randomUUID,
