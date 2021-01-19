@@ -5,8 +5,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.entity.Expense
-import moneytree.libs.test.commons.randomBigDecimal
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomBigDecimal
+import moneytree.libs.testcommons.randomString
 import org.junit.jupiter.api.Test
 
 class ExpenseValidatorTest {

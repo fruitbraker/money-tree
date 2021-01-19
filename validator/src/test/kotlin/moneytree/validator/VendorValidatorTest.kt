@@ -3,7 +3,7 @@ package moneytree.validator
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 import moneytree.domain.entity.Vendor
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import moneytree.validator.ValidationResult.Accepted
 import moneytree.validator.ValidationResult.Rejected
 import org.junit.jupiter.api.Test

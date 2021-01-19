@@ -8,7 +8,7 @@ import moneytree.domain.entity.Vendor
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.VendorRepository
 import moneytree.validator.VendorValidator
 import org.http4k.client.OkHttp

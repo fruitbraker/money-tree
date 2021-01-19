@@ -14,8 +14,8 @@ import moneytree.libs.commons.result.onErr
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeErr
 import moneytree.libs.commons.result.shouldBeOk
-import moneytree.libs.test.commons.randomBigDecimal
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomBigDecimal
+import moneytree.libs.testcommons.randomString
 import moneytree.persist.FOREIGN_KEY_CONSTRAINT_VIOLATION
 import moneytree.persist.PersistConnectorTestHarness
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.fail
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ExpenseRepositoryTest {
+
     private val persistHarness = PersistConnectorTestHarness()
     private val expenseRepository = ExpenseRepository(
         ExpenseDao(persistHarness.dslContext.configuration())
@@ -78,9 +79,12 @@ class ExpenseRepositoryTest {
         )
 
         val insertResult = expenseRepository.insert(expense)
-
         insertResult.shouldBeOk()
         insertResult.onOk { it shouldBe expense }
+
+        val getResult = expenseRepository.getById(randomUUID)
+        getResult.shouldBeOk()
+        getResult.onOk { it shouldBe expense }
     }
 
     @Test
@@ -241,9 +245,9 @@ class ExpenseRepositoryTest {
         nullResult.shouldBeOk()
         nullResult.onOk { it shouldBe null }
 
-        val result = expenseRepository.upsertById(expense, randomUUID)
-        result.shouldBeOk()
-        result.onOk { it shouldBe expense }
+        val upsertResult = expenseRepository.upsertById(expense, randomUUID)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk { it shouldBe expense }
 
         val getResult = expenseRepository.getById(randomUUID)
         getResult.shouldBeOk()

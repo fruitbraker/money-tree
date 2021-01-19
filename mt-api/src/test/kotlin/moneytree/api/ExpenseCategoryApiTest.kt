@@ -8,8 +8,8 @@ import moneytree.domain.entity.ExpenseCategory
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
-import moneytree.libs.test.commons.randomBigDecimal
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomBigDecimal
+import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.ExpenseCategoryRepository
 import moneytree.validator.ExpenseCategoryValidator
 import org.http4k.client.OkHttp

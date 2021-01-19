@@ -7,7 +7,7 @@ import java.util.UUID
 import moneytree.domain.entity.Vendor
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import moneytree.persist.PersistConnectorTestHarness
 import moneytree.persist.db.generated.tables.daos.VendorDao
 import org.junit.jupiter.api.AfterAll
