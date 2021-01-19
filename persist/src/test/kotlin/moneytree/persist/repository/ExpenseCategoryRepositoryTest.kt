@@ -7,8 +7,8 @@ import java.util.UUID
 import moneytree.domain.entity.ExpenseCategory
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
-import moneytree.libs.test.commons.randomBigDecimal
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomBigDecimal
+import moneytree.libs.testcommons.randomString
 import moneytree.persist.PersistConnectorTestHarness
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import org.junit.jupiter.api.AfterAll

@@ -1,7 +1,7 @@
 package moneytree.libs.http4k
 
 import io.kotest.matchers.shouldBe
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
 import org.http4k.core.Request

@@ -1,4 +1,4 @@
-package moneytree.libs.test.commons
+package moneytree.libs.testcommons
 
 import java.math.BigDecimal
 import java.math.RoundingMode

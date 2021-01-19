@@ -3,7 +3,7 @@ package moneytree.validator
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 import moneytree.domain.entity.IncomeCategory
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import org.junit.jupiter.api.Test
 
 class IncomeCategoryValidatorTest {

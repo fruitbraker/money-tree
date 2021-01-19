@@ -3,7 +3,7 @@ package moneytree.api
 import io.kotest.matchers.shouldBe
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import moneytree.processGetByIdResult
 import moneytree.processGetResult
 import moneytree.processInsertResult

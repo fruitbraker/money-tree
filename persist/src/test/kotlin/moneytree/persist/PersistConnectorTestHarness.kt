@@ -1,8 +1,9 @@
 package moneytree.persist
 
 import com.zaxxer.hikari.HikariDataSource
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
+import moneytree.persist.db.generated.Tables.INCOME_CATEGORY
 import moneytree.persist.db.generated.Tables.VENDOR
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
@@ -58,6 +59,7 @@ class PersistConnectorTestHarness : AutoCloseable {
         createVendor()
         createExpense()
         createIncomeCategory()
+        createIncome()
     }
 
     private fun createExpense() {
@@ -104,6 +106,22 @@ class PersistConnectorTestHarness : AutoCloseable {
             .column("name", VARCHAR(256))
             .constraints(
                 primaryKey("id")
+            )
+            .execute()
+    }
+
+    private fun createIncome() {
+        dslContext.createTable("income")
+            .column("id", UUID)
+            .column("source", VARCHAR(256))
+            .column("income_category", UUID)
+            .column("transaction_date", LOCALDATE)
+            .column("transaction_amount", DECIMAL(12, 4))
+            .column("notes", VARCHAR(256))
+            .column("hide", BOOLEAN)
+            .constraints(
+                primaryKey("id"),
+                foreignKey("income_category").references(INCOME_CATEGORY),
             )
             .execute()
     }

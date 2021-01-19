@@ -3,14 +3,16 @@ package moneytree.api
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkClass
+import java.time.LocalDate
 import java.util.UUID
-import moneytree.domain.entity.Vendor
+import moneytree.domain.entity.Income
 import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
+import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
-import moneytree.persist.repository.VendorRepository
-import moneytree.validator.VendorValidator
+import moneytree.persist.repository.IncomeRepository
+import moneytree.validator.IncomeValidator
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -23,37 +25,47 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class VendorApiTest {
+class IncomeApiTest {
     private val client = OkHttp()
 
     private val randomUUID = UUID.randomUUID()
-    private val randomString = randomString()
+    private val randomSource = randomString()
+    private val todayLocalDate = LocalDate.now()
+    private val incomeCategoryId = UUID.randomUUID()
+    private val randomTransactionAmount = randomBigDecimal()
+    private val notes = randomString()
+    private val hide = false
 
-    private val vendor = Vendor(
+    private val income = Income(
         id = randomUUID,
-        name = randomString
+        source = randomSource,
+        incomeCategory = incomeCategoryId,
+        transactionDate = todayLocalDate,
+        transactionAmount = randomTransactionAmount,
+        notes = notes,
+        hide = hide
     )
 
-    private val vendorRepository = mockkClass(VendorRepository::class)
-    private val vendorValidator = VendorValidator()
-    private val vendorApi = VendorApi(vendorRepository, vendorValidator)
+    private val incomeRepository = mockkClass(IncomeRepository::class)
+    private val incomeValidator = IncomeValidator()
+    private val incomeApi = IncomeApi(incomeRepository, incomeValidator)
 
     private val server = buildRoutes(
         listOf(
-            vendorApi.makeRoutes()
+            incomeApi.makeRoutes()
         )
     ).asServer(Jetty(0))
 
     private val url = setup()
 
     private fun setup(): String {
-        every { vendorRepository.get() } returns listOf(vendor).toOk()
-        every { vendorRepository.getById(randomUUID) } returns vendor.toOk()
-        every { vendorRepository.insert(vendor) } returns vendor.toOk()
-        every { vendorRepository.upsertById(vendor, randomUUID) } returns vendor.toOk()
+        every { incomeRepository.get() } returns listOf(income).toOk()
+        every { incomeRepository.getById(randomUUID) } returns income.toOk()
+        every { incomeRepository.insert(income) } returns income.toOk()
+        every { incomeRepository.upsertById(income, randomUUID) } returns income.toOk()
 
         server.start()
-        return "http://localhost:${server.port()}/vendor"
+        return "http://localhost:${server.port()}/income"
     }
 
     @AfterAll
@@ -72,7 +84,7 @@ class VendorApiTest {
         val result = client(request)
 
         result.status shouldBe Status.OK
-        result.bodyString() shouldBe listOf(vendor).toJson()
+        result.bodyString() shouldBe listOf(income).toJson()
     }
 
     @Test
@@ -85,7 +97,7 @@ class VendorApiTest {
         val result = client(request)
 
         result.status shouldBe Status.OK
-        result.bodyString() shouldBe vendor.toJson()
+        result.bodyString() shouldBe income.toJson()
     }
 
     @Test
@@ -93,12 +105,12 @@ class VendorApiTest {
         val request = Request(
             Method.POST,
             url
-        ).with(vendorApi.lens of vendor)
+        ).with(incomeApi.lens of income)
 
         val result = client(request)
 
         result.status shouldBe Status.CREATED
-        result.bodyString() shouldBe vendor.toJson()
+        result.bodyString() shouldBe income.toJson()
     }
 
     @Test
@@ -106,11 +118,11 @@ class VendorApiTest {
         val request = Request(
             Method.PUT,
             "$url/$randomUUID"
-        ).with(vendorApi.lens of vendor)
+        ).with(incomeApi.lens of income)
 
         val result = client(request)
 
         result.status shouldBe Status.OK
-        result.bodyString() shouldBe vendor.toJson()
+        result.bodyString() shouldBe income.toJson()
     }
 }

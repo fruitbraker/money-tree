@@ -1,4 +1,4 @@
-package moneytree.libs.test.commons
+package moneytree.libs.testcommons
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

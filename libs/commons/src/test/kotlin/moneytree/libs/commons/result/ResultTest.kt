@@ -1,7 +1,7 @@
 package moneytree.libs.commons.result
 
 import io.kotest.matchers.shouldBe
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import org.junit.jupiter.api.Test
 
 class ResultTest {

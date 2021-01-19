@@ -2,7 +2,7 @@ package moneytree.validator
 
 import io.kotest.matchers.shouldBe
 import java.util.UUID
-import moneytree.libs.test.commons.randomString
+import moneytree.libs.testcommons.randomString
 import org.junit.jupiter.api.Test
 
 class UUIDValidatorTest {
