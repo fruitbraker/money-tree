@@ -1,6 +1,7 @@
 package moneytree
 
 import moneytree.libs.commons.result.Result
+import moneytree.persist.FOREIGN_KEY_CONSTRAINT_VIOLATION
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.with
@@ -31,9 +32,15 @@ fun <T, E> processInsertResult(result: Result<T, E>, lens: BiDiBodyLens<T>): Res
     }
 }
 
-fun <T, E> processUpdateResult(result: Result<T, E>, lens: BiDiBodyLens<T>): Response {
+fun <T, E> processUpsertResult(result: Result<T, E>, lens: BiDiBodyLens<T>): Response {
     return when (result) {
         is Result.Ok -> Response(Status.OK).with(lens of result.value)
-        is Result.Err -> Response(Status.BAD_REQUEST)
+        is Result.Err -> {
+            val reason = result.error as Throwable
+            return if (reason.localizedMessage.contains(FOREIGN_KEY_CONSTRAINT_VIOLATION, ignoreCase = true))
+                Response(Status.CONFLICT)
+            else
+                Response(Status.BAD_REQUEST)
+        }
     }
 }

@@ -50,7 +50,7 @@ abstract class MtApiRoutes<T>(
         }
 
         return when (validator.validateWithUUID(updatedEntity, uuid)) {
-            ValidationResult.Accepted -> processUpdateResult(
+            ValidationResult.Accepted -> processUpsertResult(
                 repository.upsertById(
                     updatedEntity,
                     UUID.fromString(uuid)
