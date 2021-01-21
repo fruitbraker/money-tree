@@ -1,120 +1,50 @@
 package moneytree.api
 
-import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkClass
 import java.util.UUID
 import moneytree.domain.entity.ExpenseCategory
 import moneytree.libs.commons.result.toOk
-import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.buildRoutes
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.ExpenseCategoryRepository
 import moneytree.validator.ExpenseCategoryValidator
-import org.http4k.client.OkHttp
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Status
-import org.http4k.core.with
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ExpenseCategoryApiTest {
-
-    private val client = OkHttp()
+class ExpenseCategoryApiTest: BasicRoutesTest<ExpenseCategory>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomString = randomString()
     private val randomBigDecimal = randomBigDecimal()
 
-    private val expenseCategory = ExpenseCategory(
+    override val entity = ExpenseCategory(
         id = randomUUID,
         name = randomString,
         targetAmount = randomBigDecimal
     )
 
-    private val expenseCategoryRepository = mockkClass(ExpenseCategoryRepository::class)
-    private val expenseCategoryValidator = ExpenseCategoryValidator()
-    private val expenseCategoryApi = ExpenseCategoryApi(expenseCategoryRepository, expenseCategoryValidator)
+    override val entityRepository = mockkClass(ExpenseCategoryRepository::class)
+    override val entityValidator = ExpenseCategoryValidator()
+    override val entityApi = ExpenseCategoryApi(entityRepository, entityValidator)
 
-    private val server = buildRoutes(
+    override val server = buildRoutes(
         listOf(
-            expenseCategoryApi.makeRoutes()
+            entityApi.makeRoutes()
         )
     ).asServer(Jetty(0))
 
-    private val url = setup()
+    override val url = setup()
 
-    private fun setup(): String {
-        every { expenseCategoryRepository.get() } returns listOf(expenseCategory).toOk()
-        every { expenseCategoryRepository.getById(randomUUID) } returns expenseCategory.toOk()
-        every { expenseCategoryRepository.insert(expenseCategory) } returns expenseCategory.toOk()
-        every { expenseCategoryRepository.upsertById(expenseCategory, randomUUID) } returns expenseCategory.toOk()
+    override fun setup(): String {
+        every { entityRepository.get() } returns listOf(entity).toOk()
+        every { entityRepository.getById(any()) } returns entity.toOk()
+        every { entityRepository.insert(entity) } returns entity.toOk()
+        every { entityRepository.upsertById(entity, any()) } returns entity.toOk()
 
         server.start()
         return "http://localhost:${server.port()}/category/expense"
-    }
-
-    @AfterAll
-    fun cleanUp() {
-        server.stop()
-        client.close()
-    }
-
-    @Test
-    fun `get happy path`() {
-        val request = Request(
-            Method.GET,
-            url
-        )
-
-        val result = client(request)
-
-        result.status shouldBe Status.OK
-        result.bodyString() shouldBe listOf(expenseCategory).toJson()
-    }
-
-    @Test
-    fun `getById happy path`() {
-        val request = Request(
-            Method.GET,
-            "$url/$randomUUID"
-        )
-
-        val result = client(request)
-
-        result.status shouldBe Status.OK
-        result.bodyString() shouldBe expenseCategory.toJson()
-    }
-
-    @Test
-    fun `insert happy path`() {
-        val request = Request(
-            Method.POST,
-            url
-        ).with(expenseCategoryApi.lens of expenseCategory)
-
-        val result = client(request)
-
-        result.status shouldBe Status.CREATED
-        result.bodyString() shouldBe expenseCategory.toJson()
-    }
-
-    @Test
-    fun `updateById happy path`() {
-        val request = Request(
-            Method.PUT,
-            "$url/$randomUUID"
-        ).with(expenseCategoryApi.lens of expenseCategory)
-
-        val result = client(request)
-
-        result.status shouldBe Status.OK
-        result.bodyString() shouldBe expenseCategory.toJson()
     }
 }
