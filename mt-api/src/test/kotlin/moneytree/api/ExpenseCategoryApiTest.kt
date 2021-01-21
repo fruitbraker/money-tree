@@ -12,9 +12,8 @@ import moneytree.persist.repository.ExpenseCategoryRepository
 import moneytree.validator.ExpenseCategoryValidator
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
-import org.junit.jupiter.api.TestInstance
 
-class ExpenseCategoryApiTest: BasicRoutesTest<ExpenseCategory>() {
+class ExpenseCategoryApiTest : BasicRoutesTest<ExpenseCategory>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomString = randomString()

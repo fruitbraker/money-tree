@@ -137,5 +137,5 @@ class ResultProcessorTest {
         val blah: String
     )
 
-    private class SampleThrowable(reason: String = randomString()): Throwable(reason)
+    private class SampleThrowable(reason: String = randomString()) : Throwable(reason)
 }

@@ -21,7 +21,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import org.junit.jupiter.api.Test
 
-class ExpenseApiTest: BasicRoutesTest<Expense>() {
+class ExpenseApiTest : BasicRoutesTest<Expense>() {
 
     private val randomUUID = UUID.randomUUID()
     private val todayLocalDate = LocalDate.now()
@@ -78,7 +78,6 @@ class ExpenseApiTest: BasicRoutesTest<Expense>() {
         server.start()
         return "http://localhost:${server.port()}/expense"
     }
-
 
     @Test
     fun `getExpenseSummary happy path`() {

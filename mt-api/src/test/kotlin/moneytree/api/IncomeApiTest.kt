@@ -14,7 +14,7 @@ import moneytree.validator.IncomeValidator
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
-class IncomeApiTest: BasicRoutesTest<Income>() {
+class IncomeApiTest : BasicRoutesTest<Income>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomSource = randomString()
