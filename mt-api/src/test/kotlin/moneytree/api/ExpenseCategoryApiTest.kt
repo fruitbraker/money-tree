@@ -13,7 +13,7 @@ import moneytree.validator.ExpenseCategoryValidator
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
-class ExpenseCategoryApiTest : BasicRoutesTest<ExpenseCategory>() {
+class ExpenseCategoryApiTest : RoutesTest<ExpenseCategory>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomString = randomString()

@@ -8,6 +8,7 @@ import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeCategory
+import moneytree.domain.entity.IncomeSummary
 import moneytree.libs.commons.result.onErr
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeErr
@@ -238,6 +239,98 @@ class IncomeRepositoryTest {
         getResult.onOk { it shouldBe idParameterIncome }
 
         val nullResult = incomeRepository.getById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
+    }
+
+    @Test
+    fun `getSummary happy path`() {
+        val randomIncomeCategory = insertRandomIncomeCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val randomSource = randomString()
+        val randomIncomeCategoryId = randomIncomeCategory.id ?: fail("Expense category id cannot be null!")
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val notes = randomString()
+        val hide = false
+
+        val income = Income(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategory = randomIncomeCategoryId,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val incomeSummary = IncomeSummary(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategoryName = randomIncomeCategory.name,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val insertResult = incomeRepository.insert(income)
+        insertResult.shouldBeOk()
+
+        val summaryResult = incomeRepository.getSummary()
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it.size shouldBeGreaterThanOrEqual 1
+            it shouldContain incomeSummary
+        }
+    }
+
+    @Test
+    fun `getSummaryById happy path`() {
+        val randomIncomeCategory = insertRandomIncomeCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val randomSource = randomString()
+        val randomIncomeCategoryId = randomIncomeCategory.id ?: fail("Expense category id cannot be null!")
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val notes = randomString()
+        val hide = false
+
+        val income = Income(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategory = randomIncomeCategoryId,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val incomeSummary = IncomeSummary(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategoryName = randomIncomeCategory.name,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val insertResult = incomeRepository.insert(income)
+        insertResult.shouldBeOk()
+
+        val summaryResult = incomeRepository.getSummaryById(randomUUID)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk { it shouldBe incomeSummary }
+    }
+
+    @Test
+    fun `getSummaryById returns null on unknown uuid`() {
+        val randomUUID = UUID.randomUUID()
+
+        val nullResult = incomeRepository.getSummaryById(randomUUID)
         nullResult.shouldBeOk()
         nullResult.onOk { it shouldBe null }
     }

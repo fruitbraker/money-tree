@@ -12,7 +12,7 @@ import moneytree.validator.VendorValidator
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
-class VendorApiTest : BasicRoutesTest<Vendor>() {
+class VendorApiTest : RoutesTest<Vendor>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomString = randomString()

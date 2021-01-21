@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class BasicRoutesTest<T> {
+abstract class RoutesTest<T> {
 
     val client = OkHttp()
 

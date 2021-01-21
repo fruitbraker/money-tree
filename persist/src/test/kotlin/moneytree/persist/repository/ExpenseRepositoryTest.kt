@@ -327,7 +327,7 @@ class ExpenseRepositoryTest {
     }
 
     @Test
-    fun `getExpenseSummary happy path`() {
+    fun `getSummary happy path`() {
         val randomVendor = insertRandomVendor()
         val randomExpenseCategory = insertRandomExpenseCategory()
 
@@ -356,7 +356,7 @@ class ExpenseRepositoryTest {
             vendorId = vendorId,
             vendorName = randomVendor.name,
             expenseCategoryId = expenseCategoryId,
-            expenseCategory = randomExpenseCategory.name,
+            expenseCategoryName = randomExpenseCategory.name,
             notes = notes,
             hide = hide
         )
@@ -364,7 +364,7 @@ class ExpenseRepositoryTest {
         val insertResult = expenseRepository.insert(expense)
         insertResult.shouldBeOk()
 
-        val summaryResult = expenseRepository.getExpenseSummary()
+        val summaryResult = expenseRepository.getSummary()
         summaryResult.shouldBeOk()
         summaryResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
@@ -373,7 +373,7 @@ class ExpenseRepositoryTest {
     }
 
     @Test
-    fun `getExpenseSummaryById happy path`() {
+    fun `getSummaryById happy path`() {
         val randomVendor = insertRandomVendor()
         val randomExpenseCategory = insertRandomExpenseCategory()
 
@@ -402,7 +402,7 @@ class ExpenseRepositoryTest {
             vendorId = vendorId,
             vendorName = randomVendor.name,
             expenseCategoryId = expenseCategoryId,
-            expenseCategory = randomExpenseCategory.name,
+            expenseCategoryName = randomExpenseCategory.name,
             notes = notes,
             hide = hide
         )
@@ -410,7 +410,7 @@ class ExpenseRepositoryTest {
         val insertResult = expenseRepository.insert(expense)
         insertResult.shouldBeOk()
 
-        val summaryResult = expenseRepository.getExpenseSummaryById(randomUUID)
+        val summaryResult = expenseRepository.getSummaryById(randomUUID)
         summaryResult.shouldBeOk()
         summaryResult.onOk {
             it shouldBe expenseSummary
@@ -418,14 +418,12 @@ class ExpenseRepositoryTest {
     }
 
     @Test
-    fun `getExpenseSummaryById returns null on unknown id`() {
+    fun `getSummaryById returns null on unknown id`() {
         val randomUUID = UUID.randomUUID()
 
-        val summaryResult = expenseRepository.getExpenseSummaryById(randomUUID)
-        summaryResult.shouldBeOk()
-        summaryResult.onOk {
-            it shouldBe null
-        }
+        val nullResult = expenseRepository.getSummaryById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
     }
 
     private fun insertRandomVendor(): Vendor {

@@ -5,6 +5,9 @@ import moneytree.api.ExpenseCategoryApi
 import moneytree.api.IncomeApi
 import moneytree.api.IncomeCategoryApi
 import moneytree.api.VendorApi
+import moneytree.domain.SummaryRepository
+import moneytree.domain.entity.ExpenseSummary
+import moneytree.domain.entity.IncomeSummary
 import moneytree.libs.http4k.buildRoutes
 import moneytree.persist.PersistConnector
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
@@ -64,6 +67,7 @@ class MtApi : AutoCloseable {
         vendorValidator
     )
     private val expenseApi = ExpenseApi(
+        expenseRepository as SummaryRepository<ExpenseSummary>,
         expenseRepository,
         expenseValidator
     )
@@ -72,6 +76,7 @@ class MtApi : AutoCloseable {
         incomeCategoryValidator
     )
     private val incomeApi = IncomeApi(
+        incomeRepository as SummaryRepository<IncomeSummary>,
         incomeRepository,
         incomeValidator
     )

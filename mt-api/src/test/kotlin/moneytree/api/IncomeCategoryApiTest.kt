@@ -12,7 +12,7 @@ import moneytree.validator.IncomeCategoryValidator
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
-class IncomeCategoryApiTest : BasicRoutesTest<IncomeCategory>() {
+class IncomeCategoryApiTest : RoutesTest<IncomeCategory>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomString = randomString()
