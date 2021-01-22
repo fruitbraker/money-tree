@@ -21,7 +21,7 @@ data class ExpenseSummary(
     val vendorId: UUID,
     val vendorName: String,
     val expenseCategoryId: UUID,
-    val expenseCategory: String,
+    val expenseCategoryName: String,
     val notes: String,
     val hide: Boolean
 )

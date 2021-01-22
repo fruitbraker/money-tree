@@ -2,8 +2,8 @@ package moneytree.persist.repository
 
 import moneytree.domain.entity.Expense as ExpenseDomain
 import java.util.UUID
-import moneytree.domain.ExpenseSummaryRepository
 import moneytree.domain.Repository
+import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.ExpenseSummary
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
@@ -13,9 +13,10 @@ import moneytree.persist.db.generated.Tables.VENDOR
 import moneytree.persist.db.generated.tables.daos.ExpenseDao
 import moneytree.persist.db.generated.tables.pojos.Expense
 import org.jooq.Record
+
 class ExpenseRepository(
     private val expenseDao: ExpenseDao
-) : Repository<ExpenseDomain>, ExpenseSummaryRepository {
+) : Repository<ExpenseDomain>, SummaryRepository<ExpenseSummary> {
 
     private fun Record.toDomain(): ExpenseDomain {
         return ExpenseDomain(
@@ -49,7 +50,7 @@ class ExpenseRepository(
             vendorId = this[VENDOR.ID],
             vendorName = this[VENDOR.NAME],
             expenseCategoryId = this[EXPENSE_CATEGORY.ID],
-            expenseCategory = this[EXPENSE_CATEGORY.NAME],
+            expenseCategoryName = this[EXPENSE_CATEGORY.NAME],
             notes = this[EXPENSE.NOTES],
             hide = this[EXPENSE.HIDE]
         )
@@ -137,7 +138,7 @@ class ExpenseRepository(
         }
     }
 
-    override fun getExpenseSummary(): Result<List<ExpenseSummary>, Throwable> {
+    override fun getSummary(): Result<List<ExpenseSummary>, Throwable> {
         return resultTry {
             val result = expenseDao.configuration().dsl()
                 .select()
@@ -151,7 +152,7 @@ class ExpenseRepository(
         }
     }
 
-    override fun getExpenseSummaryById(uuid: UUID): Result<ExpenseSummary?, Throwable> {
+    override fun getSummaryById(uuid: UUID): Result<ExpenseSummary?, Throwable> {
         return resultTry {
             val result = expenseDao.configuration().dsl()
                 .select()

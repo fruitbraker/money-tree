@@ -3,16 +3,19 @@ package moneytree.persist.repository
 import moneytree.domain.entity.Income as IncomeDomain
 import java.util.UUID
 import moneytree.domain.Repository
+import moneytree.domain.SummaryRepository
+import moneytree.domain.entity.IncomeSummary
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
 import moneytree.persist.db.generated.tables.Income.INCOME
+import moneytree.persist.db.generated.tables.IncomeCategory.INCOME_CATEGORY
 import moneytree.persist.db.generated.tables.daos.IncomeDao
 import moneytree.persist.db.generated.tables.pojos.Income
 import org.jooq.Record
 
 class IncomeRepository(
     private val incomeDao: IncomeDao
-) : Repository<IncomeDomain> {
+) : Repository<IncomeDomain>, SummaryRepository<IncomeSummary> {
 
     private fun Record.toDomain(): IncomeDomain {
         return IncomeDomain(
@@ -35,6 +38,18 @@ class IncomeRepository(
             transactionAmount = this.transactionAmount,
             notes = this.notes,
             hide = this.hide
+        )
+    }
+
+    private fun Record.toSummaryDomain(): IncomeSummary {
+        return IncomeSummary(
+            id = this[INCOME.ID],
+            source = this[INCOME.SOURCE],
+            incomeCategoryName = this[INCOME_CATEGORY.NAME],
+            transactionDate = this[INCOME.TRANSACTION_DATE],
+            transactionAmount = this[INCOME.TRANSACTION_AMOUNT],
+            notes = this[INCOME.NOTES],
+            hide = this[INCOME.HIDE]
         )
     }
 
@@ -120,6 +135,35 @@ class IncomeRepository(
                 .execute()
 
             updatedEntity.copy(id = uuid)
+        }
+    }
+
+    override fun getSummary(): Result<List<IncomeSummary>, Throwable> {
+        return resultTry {
+            val result = incomeDao.configuration().dsl()
+                .select()
+                .from(INCOME)
+                .join(INCOME_CATEGORY).on(INCOME.INCOME_CATEGORY.eq(INCOME_CATEGORY.ID))
+                .limit(100)
+                .fetch()
+
+            result.mapNotNull { it.toSummaryDomain() }
+        }
+    }
+
+    override fun getSummaryById(uuid: UUID): Result<IncomeSummary?, Throwable> {
+        return resultTry {
+            val result = incomeDao.configuration().dsl()
+                .select()
+                .from(INCOME)
+                .join(INCOME_CATEGORY).on(INCOME.INCOME_CATEGORY.eq(INCOME_CATEGORY.ID))
+                .where(INCOME.ID.eq(uuid))
+                .fetch()
+
+            if (result.isNotEmpty)
+                result.first().toSummaryDomain()
+            else
+                null
         }
     }
 }

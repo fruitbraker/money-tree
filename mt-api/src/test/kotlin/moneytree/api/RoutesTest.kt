@@ -1,10 +1,13 @@
 package moneytree.api
 
 import io.kotest.matchers.shouldBe
+import io.mockk.every
 import java.util.UUID
 import moneytree.domain.Repository
+import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.http4k.HttpRouting
+import moneytree.libs.http4k.buildRoutes
 import moneytree.validator.Validator
 import org.http4k.client.OkHttp
 import org.http4k.core.Method
@@ -12,26 +15,49 @@ import org.http4k.core.Request
 import org.http4k.core.Status
 import org.http4k.core.with
 import org.http4k.server.Http4kServer
+import org.http4k.server.Jetty
+import org.http4k.server.asServer
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class BasicRoutesTest<T> {
+abstract class RoutesTest<T> {
 
-    val client = OkHttp()
+    internal val client = OkHttp()
 
-    private val randomUUID = UUID.randomUUID()
+    internal val randomUUIDParameter = UUID.randomUUID()
 
     abstract val entity: T
     abstract val entityRepository: Repository<T>
     abstract val entityValidator: Validator<T>
     abstract val entityApi: HttpRouting<T>
-    abstract val server: Http4kServer
 
-    abstract fun setup(): String
+    private var _server: Http4kServer? = null
+    internal val server
+        get() = _server ?: throw IllegalStateException("Server cannot be null!")
 
-    abstract val url: String
+    internal val url
+        get() = "http://localhost:${server.port()}"
+
+    abstract val entityPath: String
+
+    @BeforeAll
+    open fun start() {
+        every { entityRepository.get() } returns listOf(entity).toOk()
+        every { entityRepository.getById(any()) } returns entity.toOk()
+        every { entityRepository.insert(entity) } returns entity.toOk()
+        every { entityRepository.upsertById(entity, any()) } returns entity.toOk()
+
+        _server = buildRoutes(
+            listOf(
+                entityApi.makeRoutes()
+            )
+        ).asServer(Jetty(0))
+
+        server.start()
+    }
 
     @AfterAll
     fun cleanUp() {
@@ -43,7 +69,7 @@ abstract class BasicRoutesTest<T> {
     fun `get happy path`() {
         val request = Request(
             Method.GET,
-            url
+            "$url$entityPath"
         )
 
         val result = client(request)
@@ -56,7 +82,7 @@ abstract class BasicRoutesTest<T> {
     fun `getById happy path`() {
         val request = Request(
             Method.GET,
-            "$url/$randomUUID"
+            "$url$entityPath/$randomUUIDParameter"
         )
 
         val result = client(request)
@@ -69,7 +95,7 @@ abstract class BasicRoutesTest<T> {
     fun `insert happy path`() {
         val request = Request(
             Method.POST,
-            url
+            "$url$entityPath"
         ).with(entityApi.lens of entity)
 
         val result = client(request)
@@ -82,7 +108,7 @@ abstract class BasicRoutesTest<T> {
     fun `updateById happy path`() {
         val request = Request(
             Method.PUT,
-            "$url/$randomUUID"
+            "$url$entityPath/$randomUUIDParameter"
         ).with(entityApi.lens of entity)
 
         val result = client(request)
