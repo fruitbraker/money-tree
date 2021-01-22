@@ -1,20 +1,15 @@
 package moneytree.api
 
-import io.mockk.every
 import io.mockk.mockkClass
 import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeSummary
-import moneytree.libs.commons.result.toOk
-import moneytree.libs.http4k.buildRoutes
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.IncomeRepository
 import moneytree.validator.IncomeValidator
-import org.http4k.server.Jetty
-import org.http4k.server.asServer
 
 class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary>() {
 
@@ -48,26 +43,10 @@ class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary>() {
     )
 
     override val entityRepository = mockkClass(IncomeRepository::class)
+    override val entitySummaryRepository = entityRepository as SummaryRepository<IncomeSummary>
     override val entityValidator = IncomeValidator()
     override val entityApi = IncomeApi(entityRepository as SummaryRepository<IncomeSummary>, entityRepository, entityValidator)
 
-    override val server = buildRoutes(
-        listOf(
-            entityApi.makeRoutes()
-        )
-    ).asServer(Jetty(0))
-
-    override val url = setup()
-
-    override fun setup(): String {
-        every { entityRepository.get() } returns listOf(entity).toOk()
-        every { entityRepository.getById(any()) } returns entity.toOk()
-        every { entityRepository.insert(entity) } returns entity.toOk()
-        every { entityRepository.upsertById(entity, any()) } returns entity.toOk()
-        every { entityRepository.getSummary() } returns listOf(entitySummary).toOk()
-        every { entityRepository.getSummaryById(any()) } returns entitySummary.toOk()
-
-        server.start()
-        return "http://localhost:${server.port()}/income"
-    }
+    override val entityPath = "/income"
+    override val entitySummaryPath: String = "/income/summary"
 }

@@ -1,20 +1,15 @@
 package moneytree.api
 
-import io.mockk.every
 import io.mockk.mockkClass
 import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseSummary
-import moneytree.libs.commons.result.toOk
-import moneytree.libs.http4k.buildRoutes
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.ExpenseRepository
 import moneytree.validator.ExpenseValidator
-import org.http4k.server.Jetty
-import org.http4k.server.asServer
 
 class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary>() {
 
@@ -50,27 +45,13 @@ class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary>() {
         hide = hide
     )
 
+
     override val entityRepository = mockkClass(ExpenseRepository::class)
+    override val entitySummaryRepository = entityRepository as SummaryRepository<ExpenseSummary>
     override val entityValidator = ExpenseValidator()
-    override val entityApi = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary>, entityRepository, entityValidator)
+    override val entityApi
+        get() = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary>, entityRepository, entityValidator)
 
-    override val server = buildRoutes(
-        listOf(
-            entityApi.makeRoutes()
-        )
-    ).asServer(Jetty(0))
-
-    override val url = setup()
-
-    override fun setup(): String {
-        every { entityRepository.get() } returns listOf(entity).toOk()
-        every { entityRepository.getById(any()) } returns entity.toOk()
-        every { entityRepository.insert(entity) } returns entity.toOk()
-        every { entityRepository.upsertById(entity, any()) } returns entity.toOk()
-        every { entityRepository.getSummary() } returns listOf(entitySummary).toOk()
-        every { entityRepository.getSummaryById(any()) } returns entitySummary.toOk()
-
-        server.start()
-        return "http://localhost:${server.port()}/expense"
-    }
+    override val entityPath: String = "/expense"
+    override val entitySummaryPath: String = "/expense/summary"
 }
