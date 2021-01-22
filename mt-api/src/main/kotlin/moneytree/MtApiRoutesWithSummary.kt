@@ -14,7 +14,7 @@ import org.http4k.lens.BiDiBodyLens
 abstract class MtApiRoutesWithSummary<T, S>(
     private val repository: Repository<T>,
     private val validator: Validator<T>
-): MtApiRoutes<T>(
+) : MtApiRoutes<T>(
     repository,
     validator
 ) {

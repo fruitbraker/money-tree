@@ -45,12 +45,10 @@ class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary>() {
         hide = hide
     )
 
-
     override val entityRepository = mockkClass(ExpenseRepository::class)
     override val entitySummaryRepository = entityRepository as SummaryRepository<ExpenseSummary>
     override val entityValidator = ExpenseValidator()
-    override val entityApi
-        get() = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary>, entityRepository, entityValidator)
+    override val entityApi = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary>, entityRepository, entityValidator)
 
     override val entityPath: String = "/expense"
     override val entitySummaryPath: String = "/expense/summary"
