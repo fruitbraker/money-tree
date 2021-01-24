@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(":libs:commons")
+    implementation project(":libs:test-commons")
+
+    api("com.typesafe:config:$typesafeConfigVersion")
+}
