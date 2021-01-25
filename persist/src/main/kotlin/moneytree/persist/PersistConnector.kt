@@ -18,7 +18,9 @@ class PersistConnector(
         val databaseName: String,
         val databaseUsername: String,
         val databasePassword: String,
-        val schema: String
+        val createSchema: Boolean,
+        val schema: String,
+        val createTables: Boolean
     )
 
     private var _dataSource: HikariDataSource? = null
@@ -44,6 +46,9 @@ class PersistConnector(
             )
         ).withExecuteLogging(true)
         _dslContext = DSL.using(dataSource, SQLDialect.POSTGRES, dslSettings)
+        if (config.createSchema)
+            dslContext.createSchemaIfNotExists(config.schema)
+
         dslContext.setSchema(config.schema)
     }
 
