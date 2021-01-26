@@ -1,6 +1,7 @@
 dependencies {
     implementation project(":libs:http4k")
     implementation project(":libs:commons")
+    implementation project(":libs:config")
     implementation project(":domain")
     implementation project(":persist")
     implementation project(":validator")

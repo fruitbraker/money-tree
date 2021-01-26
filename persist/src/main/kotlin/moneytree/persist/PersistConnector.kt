@@ -8,7 +8,20 @@ import org.jooq.conf.RenderMapping
 import org.jooq.conf.Settings
 import org.jooq.impl.DSL
 
-class PersistConnector : AutoCloseable {
+class PersistConnector(
+    config: PersistConnectorConfig
+) : AutoCloseable {
+
+    data class PersistConnectorConfig(
+        val host: String,
+        val port: Int,
+        val databaseName: String,
+        val databaseUsername: String,
+        val databasePassword: String,
+        val createSchema: Boolean,
+        val schema: String,
+        val createTables: Boolean
+    )
 
     private var _dataSource: HikariDataSource? = null
     private val dataSource: HikariDataSource
@@ -21,17 +34,22 @@ class PersistConnector : AutoCloseable {
     init {
         println("setting up hikari datasource")
         _dataSource = HikariDataSource()
-        dataSource.jdbcUrl = "jdbc:postgresql://localhost:15432/moneytree-dev?currentSchema=mtdev"
-        dataSource.username = "postgres"
-        dataSource.password = "password"
+
+        dataSource.jdbcUrl = "${config.host}:${config.port}/${config.databaseName}"
+        dataSource.username = config.databaseUsername
+        dataSource.password = config.databasePassword
 
         println("configuring dsl settings")
         val dslSettings = Settings().withRenderMapping(
             RenderMapping().withSchemata(
-                MappedSchema().withInput("mtdev").withOutput("mtdev")
+                MappedSchema().withInput(config.schema).withOutput(config.schema)
             )
         ).withExecuteLogging(true)
         _dslContext = DSL.using(dataSource, SQLDialect.POSTGRES, dslSettings)
+        if (config.createSchema)
+            dslContext.createSchemaIfNotExists(config.schema)
+
+        dslContext.setSchema(config.schema)
     }
 
     override fun close() {

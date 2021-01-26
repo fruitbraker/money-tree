@@ -1,5 +1,8 @@
 package moneytree
 
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
+import get
 import moneytree.api.ExpenseApi
 import moneytree.api.ExpenseCategoryApi
 import moneytree.api.IncomeApi
@@ -29,9 +32,13 @@ import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
-class MtApi : AutoCloseable {
+class MtApi(
+    private val config: Config
+) : AutoCloseable {
+    constructor(configName: String) : this(ConfigFactory.load(configName))
+
     // Database connector
-    private val persistConnector = PersistConnector()
+    private val persistConnector = PersistConnector(config.get("persist.connector"))
 
     // Data access
     private val expenseCategoryRepository = ExpenseCategoryRepository(
@@ -103,5 +110,5 @@ class MtApi : AutoCloseable {
 }
 
 fun main() {
-    MtApi().start()
+    MtApi("defaults.conf").start()
 }
