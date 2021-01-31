@@ -36,7 +36,8 @@ class IncomeApi(
             "/income" bind Method.GET to ::get,
             "/income/{id}" bind Method.GET to ::getById,
             "/income" bind Method.POST to ::insert,
-            "/income/{id}" bind Method.PUT to ::upsertById
+            "/income/{id}" bind Method.PUT to ::upsertById,
+            "/income/{id}" bind Method.DELETE to ::deleteById
         )
     }
 }

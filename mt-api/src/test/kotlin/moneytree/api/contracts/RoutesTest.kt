@@ -1,4 +1,4 @@
-package moneytree.api
+package moneytree.api.contracts
 
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -49,6 +49,7 @@ abstract class RoutesTest<T> {
         every { entityRepository.getById(any()) } returns entity.toOk()
         every { entityRepository.insert(entity) } returns entity.toOk()
         every { entityRepository.upsertById(entity, any()) } returns entity.toOk()
+        every { entityRepository.deleteById(any()) } returns Unit.toOk()
 
         _server = buildRoutes(
             listOf(
@@ -115,5 +116,17 @@ abstract class RoutesTest<T> {
 
         result.status shouldBe Status.OK
         result.bodyString() shouldBe entity?.toJson()
+    }
+
+    @Test
+    fun `deleteById happy path`() {
+        val request = Request(
+            Method.DELETE,
+            "$url$entityPath/$randomUUIDParameter"
+        ).with(entityApi.lens of entity)
+
+        val result = client(request)
+
+        result.status shouldBe Status.NO_CONTENT
     }
 }

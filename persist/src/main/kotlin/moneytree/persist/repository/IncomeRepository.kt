@@ -7,6 +7,7 @@ import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.IncomeSummary
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
+import moneytree.libs.commons.result.toOk
 import moneytree.persist.db.generated.tables.Income.INCOME
 import moneytree.persist.db.generated.tables.IncomeCategory.INCOME_CATEGORY
 import moneytree.persist.db.generated.tables.daos.IncomeDao
@@ -164,6 +165,17 @@ class IncomeRepository(
                 result.first().toSummaryDomain()
             else
                 null
+        }
+    }
+
+    override fun deleteById(uuid: UUID): Result<Unit, Throwable> {
+        return resultTry {
+            incomeDao.configuration().dsl()
+                .delete(INCOME)
+                .where(INCOME.ID.eq(uuid))
+                .execute()
+
+            Unit.toOk()
         }
     }
 }

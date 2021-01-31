@@ -426,6 +426,48 @@ class ExpenseRepositoryTest {
         nullResult.onOk { it shouldBe null }
     }
 
+    @Test
+    fun `deleteById successfully deletes`() {
+        val randomVendor = insertRandomVendor()
+        val randomExpenseCategory = insertRandomExpenseCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val vendorId = randomVendor.id ?: fail("Vendor id cannot be null!")
+        val expenseCategoryId = randomExpenseCategory.id ?: fail("Expense category id cannot be null!")
+        val notes = randomString()
+        val hide = false
+
+        val expense = Expense(
+            id = randomUUID,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            vendor = vendorId,
+            expenseCategory = expenseCategoryId,
+            notes = notes,
+            hide = hide
+        )
+
+        val insertResult = expenseRepository.insert(expense)
+        insertResult.shouldBeOk()
+
+        val deleteResult = expenseRepository.deleteById(randomUUID)
+        deleteResult.shouldBeOk()
+
+        val nullResult = expenseRepository.getById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
+    }
+
+    @Test
+    fun `deleteById does not error on nonexistent uuid`() {
+        val randomUUID = UUID.randomUUID()
+
+        val deleteResult = expenseRepository.deleteById(randomUUID)
+        deleteResult.shouldBeOk()
+    }
+
     private fun insertRandomVendor(): Vendor {
         val vendor = Vendor(
             id = UUID.randomUUID(),

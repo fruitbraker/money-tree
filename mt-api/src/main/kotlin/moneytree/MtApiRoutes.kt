@@ -60,4 +60,13 @@ abstract class MtApiRoutes<T>(
             ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
         }
     }
+
+    override fun deleteById(request: Request): Response {
+        val uuid = idLens(request)
+
+        return when (uuid.validateUUID()) {
+            ValidationResult.Accepted -> processDeleteByIdResult(repository.deleteById(UUID.fromString(uuid)))
+            ValidationResult.Rejected -> Response(Status.BAD_REQUEST)
+        }
+    }
 }

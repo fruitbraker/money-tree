@@ -2,6 +2,7 @@ package moneytree.api
 
 import io.mockk.mockkClass
 import java.util.UUID
+import moneytree.api.contracts.RoutesTest
 import moneytree.domain.entity.ExpenseCategory
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString

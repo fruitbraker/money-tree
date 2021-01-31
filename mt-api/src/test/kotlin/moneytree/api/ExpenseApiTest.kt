@@ -3,6 +3,7 @@ package moneytree.api
 import io.mockk.mockkClass
 import java.time.LocalDate
 import java.util.UUID
+import moneytree.api.contracts.RoutesWithSummaryTest
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseSummary

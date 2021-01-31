@@ -36,7 +36,8 @@ class ExpenseApi(
             "/expense" bind Method.GET to ::get,
             "/expense/{id}" bind Method.GET to ::getById,
             "/expense" bind Method.POST to ::insert,
-            "/expense/{id}" bind Method.PUT to ::upsertById
+            "/expense/{id}" bind Method.PUT to ::upsertById,
+            "/expense/{id}" bind Method.DELETE to ::deleteById
         )
     }
 }

@@ -44,3 +44,16 @@ fun <T, E> processUpsertResult(result: Result<T, E>, lens: BiDiBodyLens<T>): Res
         }
     }
 }
+
+fun <T, E> processDeleteByIdResult(result: Result<T, E>): Response {
+    return when (result) {
+        is Result.Ok -> Response(Status.NO_CONTENT)
+        is Result.Err -> {
+            val reason = result.error as Throwable
+            return if (reason.localizedMessage.contains(FOREIGN_KEY_CONSTRAINT_VIOLATION, ignoreCase = true))
+                Response(Status.CONFLICT)
+            else
+                Response(Status.BAD_REQUEST)
+        }
+    }
+}
