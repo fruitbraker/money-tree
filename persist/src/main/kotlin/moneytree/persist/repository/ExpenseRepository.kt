@@ -7,6 +7,7 @@ import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.ExpenseSummary
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
+import moneytree.libs.commons.result.toOk
 import moneytree.persist.db.generated.Tables.EXPENSE
 import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
 import moneytree.persist.db.generated.Tables.VENDOR
@@ -166,6 +167,17 @@ class ExpenseRepository(
                 result.first().toSummaryDomain()
             else
                 null
+        }
+    }
+
+    override fun deleteById(uuid: UUID): Result<Unit, Throwable> {
+        return resultTry {
+            expenseDao.configuration().dsl()
+                .delete(EXPENSE)
+                .where(EXPENSE.ID.eq(uuid))
+                .execute()
+
+            Unit.toOk()
         }
     }
 }

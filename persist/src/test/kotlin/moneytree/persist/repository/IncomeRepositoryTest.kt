@@ -335,6 +335,47 @@ class IncomeRepositoryTest {
         nullResult.onOk { it shouldBe null }
     }
 
+    @Test
+    fun `deleteById successfully deletes`() {
+        val randomIncomeCategory = insertRandomIncomeCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val randomSource = randomString()
+        val randomIncomeCategoryId = randomIncomeCategory.id ?: fail("Expense category id cannot be null!")
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val notes = randomString()
+        val hide = false
+
+        val income = Income(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategory = randomIncomeCategoryId,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val insertResult = incomeRepository.insert(income)
+        insertResult.shouldBeOk()
+
+        val deleteResult = incomeRepository.deleteById(randomUUID)
+        deleteResult.shouldBeOk()
+
+        val nullResult = incomeRepository.getSummaryById(randomUUID)
+        nullResult.shouldBeOk()
+        nullResult.onOk { it shouldBe null }
+    }
+
+    @Test
+    fun `deleteById should not error on nonexistent uuid`() {
+        val randomUUID = UUID.randomUUID()
+
+        val deleteResult = incomeRepository.deleteById(randomUUID)
+        deleteResult.shouldBeOk()
+    }
+
     private fun insertRandomIncomeCategory(): IncomeCategory {
         val incomeCategory = IncomeCategory(
             id = UUID.randomUUID(),

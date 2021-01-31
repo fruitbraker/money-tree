@@ -5,6 +5,7 @@ import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
+import moneytree.libs.commons.result.toOk
 import moneytree.persist.db.generated.Tables.VENDOR
 import moneytree.persist.db.generated.tables.daos.VendorDao
 import moneytree.persist.db.generated.tables.pojos.Vendor
@@ -82,6 +83,17 @@ class VendorRepository(
                 .execute()
 
             updatedEntity.copy(id = uuid)
+        }
+    }
+
+    override fun deleteById(uuid: UUID): Result<Unit, Throwable> {
+        return resultTry {
+            vendorDao.configuration().dsl()
+                .delete(VENDOR)
+                .where(VENDOR.ID.eq(uuid))
+                .execute()
+
+            Unit.toOk()
         }
     }
 }

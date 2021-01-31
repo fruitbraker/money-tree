@@ -9,6 +9,8 @@ interface Repository<T> {
 
     fun insert(newEntity: T): Result<T, Throwable>
     fun upsertById(updatedEntity: T, uuid: UUID): Result<T, Throwable>
+
+    fun deleteById(uuid: UUID): Result<Unit, Throwable>
 }
 
 interface SummaryRepository<S> {

@@ -5,6 +5,7 @@ import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
+import moneytree.libs.commons.result.toOk
 import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import moneytree.persist.db.generated.tables.pojos.ExpenseCategory
@@ -89,6 +90,17 @@ class ExpenseCategoryRepository(
                 .execute()
 
             updatedEntity.copy(id = uuid)
+        }
+    }
+
+    override fun deleteById(uuid: UUID): Result<Unit, Throwable> {
+        return resultTry {
+            expenseCategoryDao.configuration().dsl()
+                .delete(EXPENSE_CATEGORY)
+                .where(EXPENSE_CATEGORY.ID.eq(uuid))
+                .execute()
+
+            Unit.toOk()
         }
     }
 }
