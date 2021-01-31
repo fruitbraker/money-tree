@@ -1,4 +1,4 @@
-package moneytree.api
+package moneytree.api.contracts
 
 import io.kotest.matchers.shouldBe
 import io.mockk.every

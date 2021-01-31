@@ -27,7 +27,8 @@ class ExpenseCategoryApi(
             "/category/expense" bind Method.GET to ::get,
             "/category/expense/{id}" bind Method.GET to ::getById,
             "/category/expense" bind Method.POST to ::insert,
-            "/category/expense/{id}" bind Method.PUT to ::upsertById
+            "/category/expense/{id}" bind Method.PUT to ::upsertById,
+            "/category/expense/{id}" bind Method.DELETE to ::deleteById
         )
     }
 }

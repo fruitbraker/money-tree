@@ -27,7 +27,8 @@ class VendorApi(
             "/vendor" bind Method.GET to ::get,
             "/vendor/{id}" bind Method.GET to ::getById,
             "/vendor" bind Method.POST to ::insert,
-            "/vendor/{id}" bind Method.PUT to ::upsertById
+            "/vendor/{id}" bind Method.PUT to ::upsertById,
+            "/vendor/{id}" bind Method.DELETE to ::deleteById
         )
     }
 }

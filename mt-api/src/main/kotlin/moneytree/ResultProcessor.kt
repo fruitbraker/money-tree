@@ -44,3 +44,10 @@ fun <T, E> processUpsertResult(result: Result<T, E>, lens: BiDiBodyLens<T>): Res
         }
     }
 }
+
+fun <T, E> processDeleteByIdResult(result: Result<T, E>): Response {
+    return when (result) {
+        is Result.Ok -> Response(Status.NO_CONTENT)
+        is Result.Err -> Response(Status.BAD_REQUEST)
+    }
+}

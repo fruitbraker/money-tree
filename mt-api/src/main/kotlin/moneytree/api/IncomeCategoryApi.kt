@@ -27,7 +27,8 @@ class IncomeCategoryApi(
             "/category/income" bind Method.GET to ::get,
             "/category/income/{id}" bind Method.GET to ::getById,
             "/category/income" bind Method.POST to ::insert,
-            "/category/income/{id}" bind Method.PUT to ::upsertById
+            "/category/income/{id}" bind Method.PUT to ::upsertById,
+            "/category/income/{id}" bind Method.DELETE to ::deleteById
         )
     }
 }
