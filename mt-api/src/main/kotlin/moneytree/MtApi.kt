@@ -28,6 +28,9 @@ import moneytree.validator.ExpenseValidator
 import moneytree.validator.IncomeCategoryValidator
 import moneytree.validator.IncomeValidator
 import moneytree.validator.VendorValidator
+import org.http4k.core.then
+import org.http4k.filter.CorsPolicy
+import org.http4k.filter.ServerFilters
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
@@ -87,16 +90,18 @@ class MtApi(
         incomeRepository,
         incomeValidator
     )
-
-    private val http4kServer: Http4kServer = buildRoutes(
-        listOf(
-            expenseCategoryApi.makeRoutes(),
-            vendorApi.makeRoutes(),
-            expenseApi.makeRoutes(),
-            incomeCategoryApi.makeRoutes(),
-            incomeApi.makeRoutes()
-        )
-    ).asServer(Jetty(9000))
+    private val http4kServer: Http4kServer =
+        ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive).then(
+            buildRoutes(
+                listOf(
+                    expenseCategoryApi.makeRoutes(),
+                    vendorApi.makeRoutes(),
+                    expenseApi.makeRoutes(),
+                    incomeCategoryApi.makeRoutes(),
+                    incomeApi.makeRoutes()
+                )
+            )
+        ).asServer(Jetty(9000))
 
     fun start() {
         http4kServer.start()
