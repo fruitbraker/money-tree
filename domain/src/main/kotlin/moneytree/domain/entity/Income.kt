@@ -17,6 +17,7 @@ data class Income(
 data class IncomeSummary(
     val id: UUID,
     val source: String,
+    val incomeCategoryId: UUID,
     val incomeCategoryName: String,
     val transactionDate: LocalDate,
     val transactionAmount: BigDecimal,

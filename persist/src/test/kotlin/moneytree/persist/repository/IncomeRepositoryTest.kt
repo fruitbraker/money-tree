@@ -268,6 +268,7 @@ class IncomeRepositoryTest {
         val incomeSummary = IncomeSummary(
             id = randomUUID,
             source = randomSource,
+            incomeCategoryId = randomIncomeCategoryId,
             incomeCategoryName = randomIncomeCategory.name,
             transactionDate = todayLocalDate,
             transactionAmount = randomTransactionAmount,
@@ -311,6 +312,7 @@ class IncomeRepositoryTest {
         val incomeSummary = IncomeSummary(
             id = randomUUID,
             source = randomSource,
+            incomeCategoryId = randomIncomeCategoryId,
             incomeCategoryName = randomIncomeCategory.name,
             transactionDate = todayLocalDate,
             transactionAmount = randomTransactionAmount,

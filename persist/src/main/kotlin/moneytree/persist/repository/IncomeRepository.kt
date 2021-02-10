@@ -46,6 +46,7 @@ class IncomeRepository(
         return IncomeSummary(
             id = this[INCOME.ID],
             source = this[INCOME.SOURCE],
+            incomeCategoryId = this[INCOME_CATEGORY.ID],
             incomeCategoryName = this[INCOME_CATEGORY.NAME],
             transactionDate = this[INCOME.TRANSACTION_DATE],
             transactionAmount = this[INCOME.TRANSACTION_AMOUNT],

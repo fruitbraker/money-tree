@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "password"
-      POSTGRES_DB: "moneytree-dev"
+      POSTGRES_DB: "moneytree"
 
   moneytree_pgadmin:
     image: dpage/pgadmin4:latest

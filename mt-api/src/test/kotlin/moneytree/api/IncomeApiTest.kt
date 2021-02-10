@@ -36,6 +36,7 @@ class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary>() {
     override val entitySummary = IncomeSummary(
         id = randomUUID,
         source = randomSource,
+        incomeCategoryId = incomeCategoryId,
         incomeCategoryName = randomIncomeCategoryName,
         transactionDate = todayLocalDate,
         transactionAmount = randomTransactionAmount,
