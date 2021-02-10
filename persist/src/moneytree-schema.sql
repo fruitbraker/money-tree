@@ -2,18 +2,16 @@ CREATE SCHEMA IF NOT EXISTS mtdev;
 
 SET SCHEMA 'mtdev';
 
-CREATE EXTENSION "uuid-ossp";
-
 CREATE TABLE IF NOT EXISTS income_category
 (
-	id uuid DEFAULT uuid_generate_v4(),
+	id uuid NOT NULL,
 	name VARCHAR(256) NOT NULL,
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS expense_category
 (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id uuid NOT NULL,
     name VARCHAR(256) NOT NULL,
     target_amount DECIMAL(12,4) DEFAULT 0.00 NOT NULL,
 	PRIMARY KEY (id)
@@ -21,14 +19,14 @@ CREATE TABLE IF NOT EXISTS expense_category
 
 CREATE TABLE IF NOT EXISTS vendor
 (
-	id uuid DEFAULT uuid_generate_v4() NOT NULL,
+	id uuid NOT NULL,
 	name VARCHAR(256) NOT NULL,
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS expense
 (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id uuid NOT NULL,
     transaction_date DATE NOT NULL,
     transaction_amount DECIMAL(12,4) NOT NULL,
     vendor uuid REFERENCES vendor(id) NOT NULL,
@@ -40,7 +38,7 @@ CREATE TABLE IF NOT EXISTS expense
 
 CREATE TABLE IF NOT EXISTS income
 (
-	id uuid DEFAULT uuid_generate_v4() NOT NULL,
+	id uuid NOT NULL,
 	source VARCHAR(256) NOT NULL,
 	income_category uuid REFERENCES income_category(id) NOT NULL,
     transaction_amount DECIMAL(12,4) NOT NULL,
