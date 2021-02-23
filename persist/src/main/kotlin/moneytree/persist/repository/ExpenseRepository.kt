@@ -146,10 +146,11 @@ class ExpenseRepository(
                 .from(EXPENSE)
                 .join(VENDOR).on(EXPENSE.VENDOR.eq(VENDOR.ID))
                 .join(EXPENSE_CATEGORY).on(EXPENSE.EXPENSE_CATEGORY.eq(EXPENSE_CATEGORY.ID))
-                .limit(100)
+//                .limit(100)
                 .fetch()
 
             result.mapNotNull { it.toSummaryDomain() }
+                .sortedByDescending { it.transactionDate }
         }
     }
 

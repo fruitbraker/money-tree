@@ -39,7 +39,7 @@ class ExpenseCategoryRepository(
                 .limit(100)
                 .fetch()
 
-            result.mapNotNull { it.toDomain() }
+            result.mapNotNull { it.toDomain() }.sortedBy { it.name }
         }
     }
 

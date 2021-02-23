@@ -34,10 +34,10 @@ class VendorRepository(
             val result = vendorDao.configuration().dsl()
                 .select()
                 .from(VENDOR)
-                .limit(100)
+//                .limit(100)
                 .fetch()
 
-            result.mapNotNull { it.toDomain() }
+            result.mapNotNull { it.toDomain() }.sortedBy { it.name }
         }
     }
 

@@ -149,7 +149,7 @@ class IncomeRepository(
                 .limit(100)
                 .fetch()
 
-            result.mapNotNull { it.toSummaryDomain() }
+            result.mapNotNull { it.toSummaryDomain() }.sortedByDescending { it.transactionDate }
         }
     }
 
