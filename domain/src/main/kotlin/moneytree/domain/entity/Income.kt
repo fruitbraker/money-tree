@@ -24,3 +24,7 @@ data class IncomeSummary(
     val notes: String,
     val hide: Boolean
 )
+
+data class IncomeSummaryFilter(
+    val id: UUID
+): Filter()

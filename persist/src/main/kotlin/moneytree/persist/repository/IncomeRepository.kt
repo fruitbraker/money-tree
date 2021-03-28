@@ -5,6 +5,7 @@ import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.IncomeSummary
+import moneytree.domain.entity.IncomeSummaryFilter
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
 import moneytree.libs.commons.result.toOk
@@ -16,7 +17,7 @@ import org.jooq.Record
 
 class IncomeRepository(
     private val incomeDao: IncomeDao
-) : Repository<IncomeDomain>, SummaryRepository<IncomeSummary> {
+) : Repository<IncomeDomain>, SummaryRepository<IncomeSummary, IncomeSummaryFilter> {
 
     private fun Record.toDomain(): IncomeDomain {
         return IncomeDomain(
@@ -140,7 +141,7 @@ class IncomeRepository(
         }
     }
 
-    override fun getSummary(): Result<List<IncomeSummary>, Throwable> {
+    override fun getSummary(filter: IncomeSummaryFilter?): Result<List<IncomeSummary>, Throwable> {
         return resultTry {
             val result = incomeDao.configuration().dsl()
                 .select()

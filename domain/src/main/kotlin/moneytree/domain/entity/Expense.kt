@@ -25,3 +25,10 @@ data class ExpenseSummary(
     val notes: String,
     val hide: Boolean
 )
+
+data class ExpenseSummaryFilter(
+    val startDate: LocalDate?,
+    val endDate: LocalDate?,
+    val vendorIds: List<UUID>?,
+    val expenseCategoryIds: List<UUID>?
+) : Filter()

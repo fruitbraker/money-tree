@@ -1,6 +1,7 @@
 package moneytree.domain
 
 import java.util.UUID
+import moneytree.domain.entity.Filter
 import moneytree.libs.commons.result.Result
 
 interface Repository<T> {
@@ -13,7 +14,7 @@ interface Repository<T> {
     fun deleteById(uuid: UUID): Result<Unit, Throwable>
 }
 
-interface SummaryRepository<S> {
-    fun getSummary(): Result<List<S>, Throwable>
+interface SummaryRepository<S, F: Filter> {
+    fun getSummary(filter: F? = null): Result<List<S>, Throwable>
     fun getSummaryById(uuid: UUID): Result<S?, Throwable>
 }
