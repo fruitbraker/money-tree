@@ -1,20 +1,20 @@
 # Money Tree - Budgeting and Expense Tracker
 ![Money Tree](https://github.com/fruitbraker/money-tree/workflows/money-tree/badge.svg?event=push)
 
-See the frontend implementation [here](https://github.com/fruitbraker/money-tree-ui).
+See the frontend application [here](https://github.com/fruitbraker/money-tree-ui).
 
 # Running this application locally
 
-Please note that this is still under **active** development, so no releases yet. 
+Please note that this project is still under **active** development, so no releases yet. 
 You are welcome to download the source code and play around with the current state.
 
-For now, the steps are for those running on Windows. Ideally, you would have 
+For now, the following steps are for those running on Windows. Ideally, you would have 
 the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) V2 installed.
 For linux users, I trust that you can get it up and running in that environment. I don't have a Linux environment up and running 
 yet to write instructions. 
 
 
-## Prerequisites
+## Steps
 
 1. Install [Docker Desktop for Windows](https://docs.docker.com/docker-for-windows/install/)
 2. Install IntelliJ. We're going to have to run the backend server through this IDE for now.
@@ -22,9 +22,9 @@ yet to write instructions.
    If not, I recommend using [Insomnia](https://insomnia.rest/). [Postman]() is also a good option.
 4. Clone this repository
 5. Have IntelliJ open the `build.gradle` file and open is as project. Let it sit to install any dependencies.
-6. With Docker Desktop, open the `docker-compose.yml`
+6. With Docker Desktop, open the `docker-compose.yml` and hit play. This will spin up a Postgres server and pgAdmin.
 7. To run the project, click play when you open the `MtApiMain.kt` file in IntelliJ.
-8. Run free with Insomnia
+8. Run free with the RESTful lient you have installed. Alternatively, you can use your web browser but that's limited.
 
 ## Using the `mt-port.ipynb`
 
@@ -91,7 +91,7 @@ There are like a billion libraries to expose http endpoints. To name a few:
 1. SpringBoot - yes, this is also more than just exposing http endpoints
 2. Micronaut - same as Spring...
 3. ktor
-4. ??? - you're favorite one?
+4. ??? - your favorite one?
 
 I chose to go for http4k because it is incredibly easy to use and very lightweight. The functional aspect is very useful if 
 your service requires a lot of pre/post http request processing (through the use of filters).
@@ -108,4 +108,4 @@ Money-Tree has an [older implementation](https://github.com/fruitbraker/money-tr
 dependent on a third-party library, meaning any bugs present there would also be present in Money Tree. I did not like that because there was a bug that wasn't fixed until 
 the v5 release of `Guice`, which took forever. This isn't meant to discourage others from using Guice or any libraries, it's still a great library. 
 
-There are many paths to a waterfall...this particular implementaiton of Money Tree is just one of them.
+There are many paths to a waterfall...this particular implementation of Money Tree is just one of them.
