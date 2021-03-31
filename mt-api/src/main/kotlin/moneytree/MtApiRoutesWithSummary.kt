@@ -23,10 +23,7 @@ abstract class MtApiRoutesWithSummary<T, S, F: Filter>(
     abstract val summaryLens: BiDiBodyLens<S>
     abstract val summaryListLens: BiDiBodyLens<List<S>>
 
-    @Suppress("UNUSED_PARAMETER")
-    open fun getSummary(request: Request): Response {
-        return processGetResult(summaryRepository.getSummary(), summaryListLens)
-    }
+    abstract fun getSummary(request: Request): Response
 
     open fun getSummaryById(request: Request): Response {
         val uuid = idLens(request)

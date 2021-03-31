@@ -7,12 +7,13 @@ import moneytree.api.contracts.RoutesWithSummaryTest
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeSummary
+import moneytree.domain.entity.IncomeSummaryFilter
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.IncomeRepository
 import moneytree.validator.IncomeValidator
 
-class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary>() {
+class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary, IncomeSummaryFilter>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomSource = randomString()
@@ -45,10 +46,12 @@ class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary>() {
     )
 
     override val entityRepository = mockkClass(IncomeRepository::class)
-    override val entitySummaryRepository = entityRepository as SummaryRepository<IncomeSummary>
+    override val entitySummaryRepository = entityRepository as SummaryRepository<IncomeSummary, IncomeSummaryFilter>
     override val entityValidator = IncomeValidator()
-    override val entityApi = IncomeApi(entityRepository as SummaryRepository<IncomeSummary>, entityRepository, entityValidator)
+    override val entityApi = IncomeApi(entityRepository as SummaryRepository<IncomeSummary, IncomeSummaryFilter>, entityRepository, entityValidator)
 
     override val entityPath = "/income"
     override val entitySummaryPath: String = "/income/summary"
+
+    override val filter: IncomeSummaryFilter = IncomeSummaryFilter(id = entitySummary.id)
 }

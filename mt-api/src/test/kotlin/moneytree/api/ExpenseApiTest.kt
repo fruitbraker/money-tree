@@ -7,12 +7,13 @@ import moneytree.api.contracts.RoutesWithSummaryTest
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseSummary
+import moneytree.domain.entity.ExpenseSummaryFilter
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.ExpenseRepository
 import moneytree.validator.ExpenseValidator
 
-class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary>() {
+class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary, ExpenseSummaryFilter>() {
 
     private val randomUUID = UUID.randomUUID()
     private val todayLocalDate = LocalDate.now()
@@ -47,10 +48,17 @@ class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary>() {
     )
 
     override val entityRepository = mockkClass(ExpenseRepository::class)
-    override val entitySummaryRepository = entityRepository as SummaryRepository<ExpenseSummary>
+    override val entitySummaryRepository = entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>
     override val entityValidator = ExpenseValidator()
-    override val entityApi = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary>, entityRepository, entityValidator)
+    override val entityApi = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>, entityRepository, entityValidator)
 
     override val entityPath: String = "/expense"
     override val entitySummaryPath: String = "/expense/summary"
+
+    override val filter: ExpenseSummaryFilter = ExpenseSummaryFilter(
+        startDate = LocalDate.now().minusDays(1),
+        endDate = LocalDate.now(),
+        vendorIds = listOf(entitySummary.vendorId ),
+        expenseCategoryIds = listOf(entitySummary.expenseCategoryId)
+    )
 }

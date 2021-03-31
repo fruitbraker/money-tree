@@ -9,6 +9,7 @@ import java.util.UUID
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseCategory
 import moneytree.domain.entity.ExpenseSummary
+import moneytree.domain.entity.ExpenseSummaryFilter
 import moneytree.domain.entity.Vendor
 import moneytree.libs.commons.result.onErr
 import moneytree.libs.commons.result.onOk
@@ -361,10 +362,17 @@ class ExpenseRepositoryTest {
             hide = hide
         )
 
+        val expenseSummaryFilter = ExpenseSummaryFilter(
+            startDate = LocalDate.now().minusDays(1),
+            endDate = LocalDate.now(),
+            vendorIds = listOf(expense.vendor),
+            expenseCategoryIds = listOf(expense.expenseCategory)
+        )
+
         val insertResult = expenseRepository.insert(expense)
         insertResult.shouldBeOk()
 
-        val summaryResult = expenseRepository.getSummary()
+        val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
         summaryResult.shouldBeOk()
         summaryResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1

@@ -141,7 +141,7 @@ class IncomeRepository(
         }
     }
 
-    override fun getSummary(filter: IncomeSummaryFilter?): Result<List<IncomeSummary>, Throwable> {
+    override fun getSummary(filter: IncomeSummaryFilter): Result<List<IncomeSummary>, Throwable> {
         return resultTry {
             val result = incomeDao.configuration().dsl()
                 .select()
