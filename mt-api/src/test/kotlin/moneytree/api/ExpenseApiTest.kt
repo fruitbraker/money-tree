@@ -58,7 +58,7 @@ class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary, ExpenseSum
     override val filter: ExpenseSummaryFilter = ExpenseSummaryFilter(
         startDate = LocalDate.now().minusDays(1),
         endDate = LocalDate.now(),
-        vendorIds = listOf(entitySummary.vendorId ),
+        vendorIds = listOf(entitySummary.vendorId),
         expenseCategoryIds = listOf(entitySummary.expenseCategoryId)
     )
 }
