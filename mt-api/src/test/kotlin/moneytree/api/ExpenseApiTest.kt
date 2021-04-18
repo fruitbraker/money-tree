@@ -1,19 +1,28 @@
 package moneytree.api
 
+import io.kotest.matchers.shouldBe
+import io.mockk.every
 import io.mockk.mockkClass
 import java.time.LocalDate
 import java.util.UUID
-import moneytree.api.contracts.RoutesWithSummaryTest
+import moneytree.api.contracts.RoutesTest
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseSummary
 import moneytree.domain.entity.ExpenseSummaryFilter
+import moneytree.libs.commons.result.toOk
+import moneytree.libs.commons.serde.toJson
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.ExpenseRepository
 import moneytree.validator.ExpenseValidator
+import org.http4k.core.Method
+import org.http4k.core.Request
+import org.http4k.core.Status
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
-class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary, ExpenseSummaryFilter>() {
+class ExpenseApiTest : RoutesTest<Expense>() {
 
     private val randomUUID = UUID.randomUUID()
     private val todayLocalDate = LocalDate.now()
@@ -35,7 +44,7 @@ class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary, ExpenseSum
         hide = hide
     )
 
-    override val entitySummary = ExpenseSummary(
+    private val entitySummary = ExpenseSummary(
         id = randomUUID,
         transactionAmount = randomTransactionAmount,
         transactionDate = todayLocalDate,
@@ -48,17 +57,59 @@ class ExpenseApiTest : RoutesWithSummaryTest<Expense, ExpenseSummary, ExpenseSum
     )
 
     override val entityRepository = mockkClass(ExpenseRepository::class)
-    override val entitySummaryRepository = entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>
+    private val entitySummaryRepository = entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>
+
     override val entityValidator = ExpenseValidator()
     override val entityApi = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>, entityRepository, entityValidator)
 
     override val entityPath: String = "/expense"
-    override val entitySummaryPath: String = "/expense/summary"
+    private val entitySummaryPath: String = "/expense/summary"
 
-    override val filter: ExpenseSummaryFilter = ExpenseSummaryFilter(
+    private val summaryPath: String
+        get() = "$url$entitySummaryPath"
+
+    private val expenseSummaryFilter: ExpenseSummaryFilter = ExpenseSummaryFilter(
         startDate = LocalDate.now().minusDays(1),
         endDate = LocalDate.now(),
         vendorIds = listOf(entitySummary.vendorId),
         expenseCategoryIds = listOf(entitySummary.expenseCategoryId)
     )
+
+    @BeforeAll
+    override fun start() {
+        every { entitySummaryRepository.getSummary(expenseSummaryFilter) } returns listOf(entitySummary).toOk()
+        every { entitySummaryRepository.getSummaryById(any()) } returns entitySummary.toOk()
+
+        super.start()
+    }
+
+    @Test
+    fun `getSummary happy path`() {
+        val request = Request(
+            Method.GET,
+            "$summaryPath?startDate=${expenseSummaryFilter.startDate}&endDate=${expenseSummaryFilter.endDate}&vendors=${
+                expenseSummaryFilter.vendorIds?.joinToString(
+                    ","
+                )
+            }&expenseCategories=${expenseSummaryFilter.expenseCategoryIds?.joinToString(",")}"
+        )
+
+        val result = client(request)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe listOf(entitySummary).toJson()
+    }
+
+    @Test
+    fun `getSummaryById happy path`() {
+        val request = Request(
+            Method.GET,
+            "$summaryPath/$randomUUIDParameter"
+        )
+
+        val result = client(request)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe entitySummary.toJson()
+    }
 }

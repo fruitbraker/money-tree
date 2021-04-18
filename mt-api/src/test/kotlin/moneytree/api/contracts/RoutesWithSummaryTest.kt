@@ -22,45 +22,14 @@ abstract class RoutesWithSummaryTest<T, S, F : Filter> : RoutesTest<T>() {
 
     abstract val filter: F
 
-    private val summaryUrl
-        get() = "$url$entitySummaryPath"
+    abstract val summaryUrl: String
 
     @BeforeAll
-    override fun start() {
-        every { entitySummaryRepository.getSummary(filter) } returns listOf(entitySummary).toOk()
-        every { entitySummaryRepository.getSummaryById(any()) } returns entitySummary.toOk()
-
-        super.start()
-    }
+    abstract override fun start()
 
     @Test
-    fun `getSummary happy path`() {
-        val expenseSummaryFilter = filter as ExpenseSummaryFilter
-        val request = Request(
-            Method.GET,
-            "$summaryUrl?startDate=${expenseSummaryFilter.startDate}&endDate=${expenseSummaryFilter.endDate}&vendors=${
-                expenseSummaryFilter.vendorIds?.joinToString(
-                    ","
-                )
-            }&expenseCategories=${expenseSummaryFilter.expenseCategoryIds?.joinToString(",")}"
-        )
-
-        val result = client(request)
-
-        result.status shouldBe Status.OK
-        result.bodyString() shouldBe listOf(entitySummary).toJson()
-    }
+    abstract fun `getSummary happy path`()
 
     @Test
-    fun `getSummaryById happy path`() {
-        val request = Request(
-            Method.GET,
-            "$summaryUrl/$randomUUIDParameter"
-        )
-
-        val result = client(request)
-
-        result.status shouldBe Status.OK
-        result.bodyString() shouldBe entitySummary?.toJson()
-    }
+    abstract fun `getSummaryById happy path`()
 }
