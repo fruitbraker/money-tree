@@ -1,6 +1,7 @@
 package moneytree.persist.repository
 
 import moneytree.domain.entity.Income as IncomeDomain
+import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
@@ -13,7 +14,9 @@ import moneytree.persist.db.generated.tables.Income.INCOME
 import moneytree.persist.db.generated.tables.IncomeCategory.INCOME_CATEGORY
 import moneytree.persist.db.generated.tables.daos.IncomeDao
 import moneytree.persist.db.generated.tables.pojos.Income
+import org.jooq.Condition
 import org.jooq.Record
+import org.jooq.impl.DSL
 
 class IncomeRepository(
     private val incomeDao: IncomeDao
@@ -147,6 +150,7 @@ class IncomeRepository(
                 .select()
                 .from(INCOME)
                 .join(INCOME_CATEGORY).on(INCOME.INCOME_CATEGORY.eq(INCOME_CATEGORY.ID))
+                .where(filter.toWhereClause())
                 .limit(100)
                 .fetch()
 
@@ -179,5 +183,24 @@ class IncomeRepository(
 
             Unit.toOk()
         }
+    }
+
+    private fun IncomeSummaryFilter?.toWhereClause(): Condition {
+        var condition = DSL.noCondition()
+
+        if (this == null) return condition
+
+        condition = condition.and(
+            INCOME.TRANSACTION_DATE.between(
+                this.startDate ?: LocalDate.parse("1000-01-01"),
+                this.endDate ?: LocalDate.now()
+            )
+        )
+
+        this.incomeCategoryIds?.let {
+            condition = condition.and(INCOME.INCOME_CATEGORY.`in`(it))
+        }
+
+        return condition
     }
 }

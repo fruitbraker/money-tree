@@ -11,10 +11,14 @@ import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeSummary
 import moneytree.domain.entity.IncomeSummaryFilter
 import moneytree.libs.commons.result.toOk
+import moneytree.libs.commons.serde.toJson
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.IncomeRepository
 import moneytree.validator.IncomeValidator
+import org.http4k.core.Method
+import org.http4k.core.Request
+import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
@@ -57,9 +61,14 @@ class IncomeApiTest : RoutesTest<Income>() {
     override val entityApi = IncomeApi(entityRepository as SummaryRepository<IncomeSummary, IncomeSummaryFilter>, entityRepository, entityValidator)
 
     override val entityPath = "/income"
-    private val summaryPath: String = "/income/summary"
+    private val summaryPath: String
+        get() = "$url/income/summary"
 
-    private val incomeSummaryFilter: IncomeSummaryFilter = IncomeSummaryFilter(id = entitySummary.id)
+    private val incomeSummaryFilter: IncomeSummaryFilter = IncomeSummaryFilter(
+        startDate = LocalDate.now().minusDays(1),
+        endDate = LocalDate.now(),
+        incomeCategoryIds = listOf(entitySummary.incomeCategoryId)
+    )
 
     @BeforeAll
     override fun start() {
@@ -71,11 +80,29 @@ class IncomeApiTest : RoutesTest<Income>() {
 
     @Test
     fun `getSummary happy path`() {
-        true shouldBe true
+        val request = org.http4k.core.Request(
+            Method.GET,
+            "$summaryPath?startDate=${incomeSummaryFilter.startDate}&" +
+                "endDate=${incomeSummaryFilter.endDate}&" +
+                "incomeCategories=${incomeSummaryFilter.incomeCategoryIds?.joinToString(",")}"
+        )
+
+        val result = client(request)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe listOf(entitySummary).toJson()
     }
 
     @Test
     fun `getSummaryById happy path`() {
-        true shouldBe true
+        val request = Request(
+            Method.GET,
+            "$summaryPath/$randomUUIDParameter"
+        )
+
+        val result = client(request)
+
+        result.status shouldBe Status.OK
+        result.bodyString() shouldBe entitySummary.toJson()
     }
 }

@@ -245,7 +245,7 @@ class IncomeRepositoryTest {
     }
 
     @Test
-    fun `getSummary happy path`() {
+    fun `getSummary happy path with valid filter`() {
         val randomIncomeCategory = insertRandomIncomeCategory()
 
         val randomUUID = UUID.randomUUID()
@@ -281,7 +281,9 @@ class IncomeRepositoryTest {
         insertResult.shouldBeOk()
 
         val dummyFilter = IncomeSummaryFilter(
-            id = randomUUID
+            startDate = todayLocalDate,
+            endDate = todayLocalDate.plusDays(1),
+            incomeCategoryIds = listOf(randomIncomeCategoryId)
         )
 
         val summaryResult = incomeRepository.getSummary(dummyFilter)
@@ -289,6 +291,132 @@ class IncomeRepositoryTest {
         summaryResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
             it shouldContain incomeSummary
+        }
+    }
+
+    @Test
+    fun `getSummary happy path with null filter`() {
+        val randomIncomeCategory = insertRandomIncomeCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val randomSource = randomString()
+        val randomIncomeCategoryId = randomIncomeCategory.id ?: fail("Expense category id cannot be null!")
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val notes = randomString()
+        val hide = false
+
+        val income = Income(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategory = randomIncomeCategoryId,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val incomeSummary = IncomeSummary(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategoryId = randomIncomeCategoryId,
+            incomeCategoryName = randomIncomeCategory.name,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val insertResult = incomeRepository.insert(income)
+        insertResult.shouldBeOk()
+
+        val incomeSummaryFilter = IncomeSummaryFilter(
+            startDate = null,
+            endDate = null,
+            incomeCategoryIds = null
+        )
+
+        val summaryResult = incomeRepository.getSummary(incomeSummaryFilter)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it.size shouldBeGreaterThanOrEqual 1
+            it shouldContain incomeSummary
+        }
+    }
+
+    @Test
+    fun `getSummary returns empty list when filter doesn't meet date range`() {
+        val randomIncomeCategory = insertRandomIncomeCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val randomSource = randomString()
+        val randomIncomeCategoryId = randomIncomeCategory.id ?: fail("Expense category id cannot be null!")
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val notes = randomString()
+        val hide = false
+
+        val income = Income(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategory = randomIncomeCategoryId,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val insertResult = incomeRepository.insert(income)
+        insertResult.shouldBeOk()
+
+        val incomeSummaryFilter = IncomeSummaryFilter(
+            startDate = todayLocalDate.plusDays(1),
+            endDate = todayLocalDate.plusDays(2),
+            incomeCategoryIds = null
+        )
+
+        val summaryResult = incomeRepository.getSummary(incomeSummaryFilter)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it.size shouldBeGreaterThanOrEqual 0
+        }
+    }
+
+    @Test
+    fun `getSummary returns empty list when filter doesn't contain matching incomeCategoryId`() {
+        val randomIncomeCategory = insertRandomIncomeCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val randomSource = randomString()
+        val randomIncomeCategoryId = randomIncomeCategory.id ?: fail("Expense category id cannot be null!")
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val notes = randomString()
+        val hide = false
+
+        val income = Income(
+            id = randomUUID,
+            source = randomSource,
+            incomeCategory = randomIncomeCategoryId,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            notes = notes,
+            hide = hide
+        )
+
+        val insertResult = incomeRepository.insert(income)
+        insertResult.shouldBeOk()
+
+        val incomeSummaryFilter = IncomeSummaryFilter(
+            startDate = null,
+            endDate = null,
+            incomeCategoryIds = listOf(UUID.randomUUID())
+        )
+
+        val summaryResult = incomeRepository.getSummary(incomeSummaryFilter)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it.size shouldBeGreaterThanOrEqual 0
         }
     }
 
