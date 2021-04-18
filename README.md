@@ -33,7 +33,7 @@ IntelliJ recently released an update that allows support with WSL2. However, it 
 Money-Tree is a Kotlin project, therefore, cannot run in WSL2. I tried.
 
 https://youtrack.jetbrains.com/issue/SCL-18837
-https://youtrack.jetbrains.com/issue/KTIJ-7617
+https://youtrack.jetbrains.com/issue/KTIJ-7617#focus=Comments-27-4828499.0-0
 
 ## Using the `mt-port.ipynb`
 
