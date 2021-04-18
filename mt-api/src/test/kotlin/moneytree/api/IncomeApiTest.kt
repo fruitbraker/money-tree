@@ -1,19 +1,24 @@
 package moneytree.api
 
+import io.kotest.matchers.shouldBe
+import io.mockk.every
 import io.mockk.mockkClass
 import java.time.LocalDate
 import java.util.UUID
-import moneytree.api.contracts.RoutesWithSummaryTest
+import moneytree.api.contracts.RoutesTest
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeSummary
 import moneytree.domain.entity.IncomeSummaryFilter
+import moneytree.libs.commons.result.toOk
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.IncomeRepository
 import moneytree.validator.IncomeValidator
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
-class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary, IncomeSummaryFilter>() {
+class IncomeApiTest : RoutesTest<Income>() {
 
     private val randomUUID = UUID.randomUUID()
     private val randomSource = randomString()
@@ -34,7 +39,7 @@ class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary, IncomeSummary
         hide = hide
     )
 
-    override val entitySummary = IncomeSummary(
+    private val entitySummary = IncomeSummary(
         id = randomUUID,
         source = randomSource,
         incomeCategoryId = incomeCategoryId,
@@ -46,12 +51,31 @@ class IncomeApiTest : RoutesWithSummaryTest<Income, IncomeSummary, IncomeSummary
     )
 
     override val entityRepository = mockkClass(IncomeRepository::class)
-    override val entitySummaryRepository = entityRepository as SummaryRepository<IncomeSummary, IncomeSummaryFilter>
+    private val entitySummaryRepository = entityRepository as SummaryRepository<IncomeSummary, IncomeSummaryFilter>
+
     override val entityValidator = IncomeValidator()
     override val entityApi = IncomeApi(entityRepository as SummaryRepository<IncomeSummary, IncomeSummaryFilter>, entityRepository, entityValidator)
 
     override val entityPath = "/income"
-    override val entitySummaryPath: String = "/income/summary"
+    private val summaryPath: String = "/income/summary"
 
-    override val filter: IncomeSummaryFilter = IncomeSummaryFilter(id = entitySummary.id)
+    private val incomeSummaryFilter: IncomeSummaryFilter = IncomeSummaryFilter(id = entitySummary.id)
+
+    @BeforeAll
+    override fun start() {
+        every { entitySummaryRepository.getSummary(incomeSummaryFilter) } returns listOf(entitySummary).toOk()
+        every { entitySummaryRepository.getSummaryById(any()) } returns entitySummary.toOk()
+
+        super.start()
+    }
+
+    @Test
+    fun `getSummary happy path`() {
+        true shouldBe true
+    }
+
+    @Test
+    fun `getSummaryById happy path`() {
+        true shouldBe true
+    }
 }

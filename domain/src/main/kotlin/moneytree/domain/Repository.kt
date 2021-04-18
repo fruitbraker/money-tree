@@ -14,7 +14,7 @@ interface Repository<T> {
     fun deleteById(uuid: UUID): Result<Unit, Throwable>
 }
 
-interface SummaryRepository<S, F: Filter> {
+interface SummaryRepository<S, F : Filter> {
     fun getSummary(filter: F): Result<List<S>, Throwable>
     fun getSummaryById(uuid: UUID): Result<S?, Throwable>
 }

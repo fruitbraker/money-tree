@@ -27,4 +27,4 @@ data class IncomeSummary(
 
 data class IncomeSummaryFilter(
     val id: UUID?
-): Filter()
+) : Filter()

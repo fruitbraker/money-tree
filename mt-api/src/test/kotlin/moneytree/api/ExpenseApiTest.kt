@@ -60,7 +60,11 @@ class ExpenseApiTest : RoutesTest<Expense>() {
     private val entitySummaryRepository = entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>
 
     override val entityValidator = ExpenseValidator()
-    override val entityApi = ExpenseApi(entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>, entityRepository, entityValidator)
+    override val entityApi = ExpenseApi(
+        entityRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>,
+        entityRepository,
+        entityValidator
+    )
 
     override val entityPath: String = "/expense"
     private val entitySummaryPath: String = "/expense/summary"
@@ -87,11 +91,10 @@ class ExpenseApiTest : RoutesTest<Expense>() {
     fun `getSummary happy path`() {
         val request = Request(
             Method.GET,
-            "$summaryPath?startDate=${expenseSummaryFilter.startDate}&endDate=${expenseSummaryFilter.endDate}&vendors=${
-                expenseSummaryFilter.vendorIds?.joinToString(
-                    ","
-                )
-            }&expenseCategories=${expenseSummaryFilter.expenseCategoryIds?.joinToString(",")}"
+            "$summaryPath?startDate=${expenseSummaryFilter.startDate}" +
+                "&endDate=${expenseSummaryFilter.endDate}&" +
+                "vendors=${expenseSummaryFilter.vendorIds?.joinToString(",")}&" +
+                "expenseCategories=${expenseSummaryFilter.expenseCategoryIds?.joinToString(",")}"
         )
 
         val result = client(request)

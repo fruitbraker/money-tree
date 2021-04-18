@@ -12,7 +12,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.lens.BiDiBodyLens
 
-abstract class MtApiRoutesWithSummary<T, S, F: Filter>(
+abstract class MtApiRoutesWithSummary<T, S, F : Filter>(
     private val repository: Repository<T>,
     private val validator: Validator<T>
 ) : MtApiRoutes<T>(

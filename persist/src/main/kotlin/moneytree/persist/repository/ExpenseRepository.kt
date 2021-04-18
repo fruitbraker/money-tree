@@ -192,16 +192,19 @@ class ExpenseRepository(
 
         if (this == null) return condition
 
-        val timeCondition = DSL.and(EXPENSE.TRANSACTION_DATE.between(
-            this.startDate ?: LocalDate.parse("1000-01-01"),
-            this.endDate ?: LocalDate.now()))
+        condition = condition.and(
+            EXPENSE.TRANSACTION_DATE.between(
+                this.startDate ?: LocalDate.parse("1000-01-01"),
+                this.endDate ?: LocalDate.now()
+            )
+        )
 
         this.expenseCategoryIds?.let {
-            condition = condition.or(EXPENSE.EXPENSE_CATEGORY.`in`(it).and(timeCondition))
+            condition = condition.and(EXPENSE.EXPENSE_CATEGORY.`in`(it))
         }
 
         this.vendorIds?.let {
-            condition = condition.or(EXPENSE.VENDOR.`in`(it).and(timeCondition))
+            condition = condition.and(EXPENSE.VENDOR.`in`(it))
         }
 
         return condition
