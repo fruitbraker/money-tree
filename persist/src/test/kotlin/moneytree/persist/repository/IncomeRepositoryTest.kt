@@ -9,6 +9,7 @@ import java.util.UUID
 import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeCategory
 import moneytree.domain.entity.IncomeSummary
+import moneytree.domain.entity.IncomeSummaryFilter
 import moneytree.libs.commons.result.onErr
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeErr
@@ -279,7 +280,11 @@ class IncomeRepositoryTest {
         val insertResult = incomeRepository.insert(income)
         insertResult.shouldBeOk()
 
-        val summaryResult = incomeRepository.getSummary()
+        val dummyFilter = IncomeSummaryFilter(
+            id = randomUUID
+        )
+
+        val summaryResult = incomeRepository.getSummary(dummyFilter)
         summaryResult.shouldBeOk()
         summaryResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1

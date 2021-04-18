@@ -10,7 +10,9 @@ import moneytree.api.IncomeCategoryApi
 import moneytree.api.VendorApi
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.ExpenseSummary
+import moneytree.domain.entity.ExpenseSummaryFilter
 import moneytree.domain.entity.IncomeSummary
+import moneytree.domain.entity.IncomeSummaryFilter
 import moneytree.libs.http4k.buildRoutes
 import moneytree.persist.PersistConnector
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
@@ -77,7 +79,7 @@ class MtApi(
         vendorValidator
     )
     private val expenseApi = ExpenseApi(
-        expenseRepository as SummaryRepository<ExpenseSummary>,
+        expenseRepository as SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>,
         expenseRepository,
         expenseValidator
     )
@@ -86,7 +88,7 @@ class MtApi(
         incomeCategoryValidator
     )
     private val incomeApi = IncomeApi(
-        incomeRepository as SummaryRepository<IncomeSummary>,
+        incomeRepository as SummaryRepository<IncomeSummary, IncomeSummaryFilter>,
         incomeRepository,
         incomeValidator
     )

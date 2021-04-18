@@ -1,13 +1,18 @@
 package moneytree.api
 
+import java.util.UUID
 import moneytree.MtApiRoutesWithSummary
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeSummary
+import moneytree.domain.entity.IncomeSummaryFilter
+import moneytree.processGetResult
 import moneytree.validator.Validator
 import org.http4k.core.Body
 import org.http4k.core.Method
+import org.http4k.core.Request
+import org.http4k.core.Response
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.BiDiBodyLens
 import org.http4k.routing.RoutingHttpHandler
@@ -15,10 +20,10 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 
 class IncomeApi(
-    incomeSummaryRepository: SummaryRepository<IncomeSummary>,
+    incomeSummaryRepository: SummaryRepository<IncomeSummary, IncomeSummaryFilter>,
     repository: Repository<Income>,
     validator: Validator<Income>
-) : MtApiRoutesWithSummary<Income, IncomeSummary>(
+) : MtApiRoutesWithSummary<Income, IncomeSummary, IncomeSummaryFilter>(
     repository,
     validator
 ) {
@@ -31,7 +36,7 @@ class IncomeApi(
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
-            "/income/summary" bind Method.GET to ::getSummary,
+            "/income/summary" bind Method.GET to this::getSummary,
             "/income/summary/{id}" bind Method.GET to ::getSummaryById,
             "/income" bind Method.GET to ::get,
             "/income/{id}" bind Method.GET to ::getById,
@@ -39,5 +44,10 @@ class IncomeApi(
             "/income/{id}" bind Method.PUT to ::upsertById,
             "/income/{id}" bind Method.DELETE to ::deleteById
         )
+    }
+
+    override fun getSummary(request: Request): Response {
+        val dummyFilter = IncomeSummaryFilter(id = UUID.randomUUID())
+        return processGetResult(summaryRepository.getSummary(dummyFilter), summaryListLens)
     }
 }

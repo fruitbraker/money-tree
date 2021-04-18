@@ -1,10 +1,12 @@
 package moneytree.persist.repository
 
 import moneytree.domain.entity.Expense as ExpenseDomain
+import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.ExpenseSummary
+import moneytree.domain.entity.ExpenseSummaryFilter
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
 import moneytree.libs.commons.result.toOk
@@ -13,11 +15,13 @@ import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
 import moneytree.persist.db.generated.Tables.VENDOR
 import moneytree.persist.db.generated.tables.daos.ExpenseDao
 import moneytree.persist.db.generated.tables.pojos.Expense
+import org.jooq.Condition
 import org.jooq.Record
+import org.jooq.impl.DSL
 
 class ExpenseRepository(
     private val expenseDao: ExpenseDao
-) : Repository<ExpenseDomain>, SummaryRepository<ExpenseSummary> {
+) : Repository<ExpenseDomain>, SummaryRepository<ExpenseSummary, ExpenseSummaryFilter> {
 
     private fun Record.toDomain(): ExpenseDomain {
         return ExpenseDomain(
@@ -139,14 +143,15 @@ class ExpenseRepository(
         }
     }
 
-    override fun getSummary(): Result<List<ExpenseSummary>, Throwable> {
+    override fun getSummary(filter: ExpenseSummaryFilter): Result<List<ExpenseSummary>, Throwable> {
         return resultTry {
             val result = expenseDao.configuration().dsl()
                 .select()
                 .from(EXPENSE)
                 .join(VENDOR).on(EXPENSE.VENDOR.eq(VENDOR.ID))
                 .join(EXPENSE_CATEGORY).on(EXPENSE.EXPENSE_CATEGORY.eq(EXPENSE_CATEGORY.ID))
-//                .limit(100)
+                .where(filter.toWhereClause())
+                .limit(100)
                 .fetch()
 
             result.mapNotNull { it.toSummaryDomain() }
@@ -180,5 +185,28 @@ class ExpenseRepository(
 
             Unit.toOk()
         }
+    }
+
+    private fun ExpenseSummaryFilter?.toWhereClause(): Condition {
+        var condition = DSL.noCondition()
+
+        if (this == null) return condition
+
+        condition = condition.and(
+            EXPENSE.TRANSACTION_DATE.between(
+                this.startDate ?: LocalDate.parse("1000-01-01"),
+                this.endDate ?: LocalDate.now()
+            )
+        )
+
+        this.expenseCategoryIds?.let {
+            condition = condition.and(EXPENSE.EXPENSE_CATEGORY.`in`(it))
+        }
+
+        this.vendorIds?.let {
+            condition = condition.and(EXPENSE.VENDOR.`in`(it))
+        }
+
+        return condition
     }
 }

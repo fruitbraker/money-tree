@@ -9,6 +9,7 @@ import java.util.UUID
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseCategory
 import moneytree.domain.entity.ExpenseSummary
+import moneytree.domain.entity.ExpenseSummaryFilter
 import moneytree.domain.entity.Vendor
 import moneytree.libs.commons.result.onErr
 import moneytree.libs.commons.result.onOk
@@ -327,7 +328,7 @@ class ExpenseRepositoryTest {
     }
 
     @Test
-    fun `getSummary happy path`() {
+    fun `getSummary happy path wtih valid filter`() {
         val randomVendor = insertRandomVendor()
         val randomExpenseCategory = insertRandomExpenseCategory()
 
@@ -361,14 +362,141 @@ class ExpenseRepositoryTest {
             hide = hide
         )
 
+        val expenseSummaryFilter = ExpenseSummaryFilter(
+            startDate = LocalDate.now().minusDays(1),
+            endDate = LocalDate.now(),
+            vendorIds = listOf(expense.vendor),
+            expenseCategoryIds = listOf(expense.expenseCategory)
+        )
+
         val insertResult = expenseRepository.insert(expense)
         insertResult.shouldBeOk()
 
-        val summaryResult = expenseRepository.getSummary()
+        val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
         summaryResult.shouldBeOk()
         summaryResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
             it shouldContain expenseSummary
+        }
+    }
+
+    @Test
+    fun `getSummary returns empty list when filter doesn't meet date range`() {
+        val randomVendor = insertRandomVendor()
+        val randomExpenseCategory = insertRandomExpenseCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val vendorId = randomVendor.id ?: fail("Vendor id cannot be null!")
+        val expenseCategoryId = randomExpenseCategory.id ?: fail("Expense category id cannot be null!")
+        val notes = randomString()
+        val hide = false
+
+        val expense = Expense(
+            id = randomUUID,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            vendor = vendorId,
+            expenseCategory = expenseCategoryId,
+            notes = notes,
+            hide = hide
+        )
+
+        val expenseSummaryFilter = ExpenseSummaryFilter(
+            startDate = todayLocalDate.plusDays(1),
+            endDate = todayLocalDate.plusDays(2),
+            vendorIds = null,
+            expenseCategoryIds = null
+        )
+
+        val insertResult = expenseRepository.insert(expense)
+        insertResult.shouldBeOk()
+
+        val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it shouldBe emptyList()
+        }
+    }
+
+    @Test
+    fun `getSummary returns empty list when filter doesn't contain vendorId`() {
+        val randomVendor = insertRandomVendor()
+        val randomExpenseCategory = insertRandomExpenseCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val vendorId = randomVendor.id ?: fail("Vendor id cannot be null!")
+        val expenseCategoryId = randomExpenseCategory.id ?: fail("Expense category id cannot be null!")
+        val notes = randomString()
+        val hide = false
+
+        val expense = Expense(
+            id = randomUUID,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            vendor = vendorId,
+            expenseCategory = expenseCategoryId,
+            notes = notes,
+            hide = hide
+        )
+
+        val expenseSummaryFilter = ExpenseSummaryFilter(
+            startDate = null,
+            endDate = null,
+            vendorIds = listOf(UUID.randomUUID()),
+            expenseCategoryIds = null
+        )
+
+        val insertResult = expenseRepository.insert(expense)
+        insertResult.shouldBeOk()
+
+        val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it shouldBe emptyList()
+        }
+    }
+
+    @Test
+    fun `getSummary returns empty list when filter doesn't contain expenseCategoryId`() {
+        val randomVendor = insertRandomVendor()
+        val randomExpenseCategory = insertRandomExpenseCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val vendorId = randomVendor.id ?: fail("Vendor id cannot be null!")
+        val expenseCategoryId = randomExpenseCategory.id ?: fail("Expense category id cannot be null!")
+        val notes = randomString()
+        val hide = false
+
+        val expense = Expense(
+            id = randomUUID,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            vendor = vendorId,
+            expenseCategory = expenseCategoryId,
+            notes = notes,
+            hide = hide
+        )
+
+        val expenseSummaryFilter = ExpenseSummaryFilter(
+            startDate = null,
+            endDate = null,
+            vendorIds = null,
+            expenseCategoryIds = listOf(UUID.randomUUID())
+        )
+
+        val insertResult = expenseRepository.insert(expense)
+        insertResult.shouldBeOk()
+
+        val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it shouldBe emptyList()
         }
     }
 
