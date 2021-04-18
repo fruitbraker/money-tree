@@ -26,6 +26,15 @@ yet to write instructions.
 7. To run the project, click play when you open the `MtApiMain.kt` file in IntelliJ.
 8. Run free with the RESTful lient you have installed. Alternatively, you can use your web browser but that's limited.
 
+## IntelliJ 2021.1
+
+IntelliJ recently released an update that allows support with WSL2. However, it looks like that this is only supported for Java applications, not Kotlin.
+
+Money-Tree is a Kotlin project, therefore, cannot run in WSL2. I tried.
+
+https://youtrack.jetbrains.com/issue/SCL-18837
+https://youtrack.jetbrains.com/issue/KTIJ-7617
+
 ## Using the `mt-port.ipynb`
 
 This notebook provides an easy way to port a `.tsv` file of existing expenses (like from Excel) into the database. 
