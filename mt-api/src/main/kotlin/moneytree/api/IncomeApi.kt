@@ -1,6 +1,5 @@
 package moneytree.api
 
-import java.util.UUID
 import moneytree.MtApiRoutesWithSummary
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
@@ -15,9 +14,13 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.BiDiBodyLens
+import org.http4k.lens.Query
+import org.http4k.lens.localDate
+import org.http4k.lens.string
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
+import toUUIDList
 
 class IncomeApi(
     incomeSummaryRepository: SummaryRepository<IncomeSummary, IncomeSummaryFilter>,
@@ -27,6 +30,10 @@ class IncomeApi(
     repository,
     validator
 ) {
+    private val queryStartDate = Query.localDate().optional("startDate")
+    private val queryEndDate = Query.localDate().optional("endDate")
+    private val queryIncomeCategories = Query.string().optional("incomeCategories")
+
     override val lens: BiDiBodyLens<Income> = Body.auto<Income>().toLens()
     override val listLens: BiDiBodyLens<List<Income>> = Body.auto<List<Income>>().toLens()
 
@@ -47,7 +54,12 @@ class IncomeApi(
     }
 
     override fun getSummary(request: Request): Response {
-        val dummyFilter = IncomeSummaryFilter(id = UUID.randomUUID())
-        return processGetResult(summaryRepository.getSummary(dummyFilter), summaryListLens)
+        val incomeSummaryFilter = IncomeSummaryFilter(
+            startDate = queryStartDate(request),
+            endDate = queryEndDate(request),
+            incomeCategoryIds = queryIncomeCategories(request)?.split(',')?.toUUIDList()
+        )
+
+        return processGetResult(summaryRepository.getSummary(incomeSummaryFilter), summaryListLens)
     }
 }

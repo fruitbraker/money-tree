@@ -328,7 +328,60 @@ class ExpenseRepositoryTest {
     }
 
     @Test
-    fun `getSummary happy path wtih valid filter`() {
+    fun `getSummary happy path with null filter`() {
+        val randomVendor = insertRandomVendor()
+        val randomExpenseCategory = insertRandomExpenseCategory()
+
+        val randomUUID = UUID.randomUUID()
+        val todayLocalDate = LocalDate.now()
+        val randomTransactionAmount = randomBigDecimal()
+        val vendorId = randomVendor.id ?: fail("Vendor id cannot be null!")
+        val expenseCategoryId = randomExpenseCategory.id ?: fail("Expense category id cannot be null!")
+        val notes = randomString()
+        val hide = false
+
+        val expense = Expense(
+            id = randomUUID,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            vendor = vendorId,
+            expenseCategory = expenseCategoryId,
+            notes = notes,
+            hide = hide
+        )
+
+        val expenseSummary = ExpenseSummary(
+            id = randomUUID,
+            transactionDate = todayLocalDate,
+            transactionAmount = randomTransactionAmount,
+            vendorId = vendorId,
+            vendorName = randomVendor.name,
+            expenseCategoryId = expenseCategoryId,
+            expenseCategoryName = randomExpenseCategory.name,
+            notes = notes,
+            hide = hide
+        )
+
+        val expenseSummaryFilter = ExpenseSummaryFilter(
+            startDate = null,
+            endDate = null,
+            vendorIds = null,
+            expenseCategoryIds = null
+        )
+
+        val insertResult = expenseRepository.insert(expense)
+        insertResult.shouldBeOk()
+
+        val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
+        summaryResult.shouldBeOk()
+        summaryResult.onOk {
+            it.size shouldBeGreaterThanOrEqual 1
+            it shouldContain expenseSummary
+        }
+    }
+
+    @Test
+    fun `getSummary happy path with valid filter`() {
         val randomVendor = insertRandomVendor()
         val randomExpenseCategory = insertRandomExpenseCategory()
 
@@ -421,7 +474,7 @@ class ExpenseRepositoryTest {
     }
 
     @Test
-    fun `getSummary returns empty list when filter doesn't contain vendorId`() {
+    fun `getSummary returns empty list when filter doesn't contain matching vendorId`() {
         val randomVendor = insertRandomVendor()
         val randomExpenseCategory = insertRandomExpenseCategory()
 

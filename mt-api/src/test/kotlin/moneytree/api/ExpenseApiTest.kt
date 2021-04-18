@@ -91,8 +91,8 @@ class ExpenseApiTest : RoutesTest<Expense>() {
     fun `getSummary happy path`() {
         val request = Request(
             Method.GET,
-            "$summaryPath?startDate=${expenseSummaryFilter.startDate}" +
-                "&endDate=${expenseSummaryFilter.endDate}&" +
+            "$summaryPath?startDate=${expenseSummaryFilter.startDate}&" +
+                "endDate=${expenseSummaryFilter.endDate}&" +
                 "vendors=${expenseSummaryFilter.vendorIds?.joinToString(",")}&" +
                 "expenseCategories=${expenseSummaryFilter.expenseCategoryIds?.joinToString(",")}"
         )

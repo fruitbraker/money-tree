@@ -30,12 +30,10 @@ class ExpenseApi(
     repository,
     validator
 ) {
-    companion object {
-        val QUERY_START_DATE = Query.localDate().optional("startDate")
-        val QUERY_END_DATE = Query.localDate().optional("endDate")
-        val QUERY_VENDORS = Query.string().optional("vendors")
-        val QUERY_EXPENSE_CATEGORIES = Query.string().optional("expenseCategories")
-    }
+    private val queryStartDate = Query.localDate().optional("startDate")
+    private val queryEndDate = Query.localDate().optional("endDate")
+    private val queryVendors = Query.string().optional("vendors")
+    private val queryExpenseCategories = Query.string().optional("expenseCategories")
 
     override val lens: BiDiBodyLens<Expense> = Body.auto<Expense>().toLens()
     override val listLens: BiDiBodyLens<List<Expense>> = Body.auto<List<Expense>>().toLens()
@@ -58,10 +56,10 @@ class ExpenseApi(
 
     override fun getSummary(request: Request): Response {
         val expenseSummaryFilter = ExpenseSummaryFilter(
-            startDate = QUERY_START_DATE(request),
-            endDate = QUERY_END_DATE(request),
-            vendorIds = QUERY_VENDORS(request)?.split(',')?.toUUIDList(),
-            expenseCategoryIds = QUERY_EXPENSE_CATEGORIES(request)?.split(',')?.toUUIDList()
+            startDate = queryStartDate(request),
+            endDate = queryEndDate(request),
+            vendorIds = queryVendors(request)?.split(',')?.toUUIDList(),
+            expenseCategoryIds = queryExpenseCategories(request)?.split(',')?.toUUIDList()
         )
 
         return processGetResult(summaryRepository.getSummary(expenseSummaryFilter), summaryListLens)
