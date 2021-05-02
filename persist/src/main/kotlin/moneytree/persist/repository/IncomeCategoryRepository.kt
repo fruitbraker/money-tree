@@ -58,7 +58,7 @@ class IncomeCategoryRepository(
                 )
                 .values(
                     newEntity.id ?: UUID.randomUUID(),
-                    newEntity.name,
+                    newEntity.name.trim(),
                 )
                 .returning()
                 .fetch()
@@ -80,10 +80,10 @@ class IncomeCategoryRepository(
                 )
                 .values(
                     uuid,
-                    updatedEntity.name
+                    updatedEntity.name.trim()
                 )
                 .onDuplicateKeyUpdate()
-                .set(Tables.INCOME_CATEGORY.NAME, updatedEntity.name)
+                .set(Tables.INCOME_CATEGORY.NAME, updatedEntity.name.trim())
                 .execute()
 
             updatedEntity.copy(id = uuid)

@@ -57,7 +57,7 @@ class VendorRepository(
                 )
                 .values(
                     newEntity.id ?: UUID.randomUUID(),
-                    newEntity.name
+                    newEntity.name.trim()
                 )
                 .returning()
                 .fetch()
@@ -76,10 +76,10 @@ class VendorRepository(
                 )
                 .values(
                     uuid,
-                    updatedEntity.name
+                    updatedEntity.name.trim()
                 )
                 .onDuplicateKeyUpdate()
-                .set(VENDOR.NAME, updatedEntity.name)
+                .set(VENDOR.NAME, updatedEntity.name.trim())
                 .execute()
 
             updatedEntity.copy(id = uuid)

@@ -98,7 +98,7 @@ class ExpenseRepository(
                     newEntity.transactionAmount,
                     newEntity.vendor,
                     newEntity.expenseCategory,
-                    newEntity.notes,
+                    newEntity.notes.trim(),
                     newEntity.hide
                 )
                 .returning()
@@ -127,7 +127,7 @@ class ExpenseRepository(
                     updatedEntity.transactionAmount,
                     updatedEntity.vendor,
                     updatedEntity.expenseCategory,
-                    updatedEntity.notes,
+                    updatedEntity.notes.trim(),
                     updatedEntity.hide
                 )
                 .onDuplicateKeyUpdate()
@@ -135,7 +135,7 @@ class ExpenseRepository(
                 .set(EXPENSE.TRANSACTION_AMOUNT, updatedEntity.transactionAmount)
                 .set(EXPENSE.VENDOR, updatedEntity.vendor)
                 .set(EXPENSE.EXPENSE_CATEGORY, updatedEntity.expenseCategory)
-                .set(EXPENSE.NOTES, updatedEntity.notes)
+                .set(EXPENSE.NOTES, updatedEntity.notes.trim())
                 .set(EXPENSE.HIDE, updatedEntity.hide)
                 .execute()
 

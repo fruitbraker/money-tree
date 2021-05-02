@@ -60,7 +60,7 @@ class ExpenseCategoryRepository(
                 )
                 .values(
                     newEntity.id ?: UUID.randomUUID(),
-                    newEntity.name,
+                    newEntity.name.trim(),
                     newEntity.targetAmount
                 )
                 .returning()
@@ -81,11 +81,11 @@ class ExpenseCategoryRepository(
                 )
                 .values(
                     uuid,
-                    updatedEntity.name,
+                    updatedEntity.name.trim(),
                     updatedEntity.targetAmount
                 )
                 .onDuplicateKeyUpdate()
-                .set(EXPENSE_CATEGORY.NAME, updatedEntity.name)
+                .set(EXPENSE_CATEGORY.NAME, updatedEntity.name.trim())
                 .set(EXPENSE_CATEGORY.TARGET_AMOUNT, updatedEntity.targetAmount)
                 .execute()
 
