@@ -1,8 +1,10 @@
 package moneytree.domain.entity
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
+import moneytree.libs.commons.serde.TrimStringDeserializer
 
 data class Expense(
     val id: UUID?,
@@ -10,6 +12,7 @@ data class Expense(
     val transactionAmount: BigDecimal,
     val vendor: UUID,
     val expenseCategory: UUID,
+    @JsonDeserialize(using = TrimStringDeserializer::class)
     val notes: String,
     val hide: Boolean
 )

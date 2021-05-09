@@ -1,5 +1,6 @@
 dependencies {
     implementation project(":libs:test-commons")
+    implementation project(":libs:commons")
 
     api group: "org.http4k", name: "http4k-core", version: "$http4kVersion"
     api group: "org.http4k", name: "http4k-server-jetty", version: "$http4kVersion"

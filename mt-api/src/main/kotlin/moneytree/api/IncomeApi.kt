@@ -6,13 +6,12 @@ import moneytree.domain.SummaryRepository
 import moneytree.domain.entity.Income
 import moneytree.domain.entity.IncomeSummary
 import moneytree.domain.entity.IncomeSummaryFilter
+import moneytree.libs.http4k.Http4kJackson
 import moneytree.processGetResult
 import moneytree.validator.Validator
-import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.format.Jackson.auto
 import org.http4k.lens.BiDiBodyLens
 import org.http4k.lens.Query
 import org.http4k.lens.localDate
@@ -34,12 +33,12 @@ class IncomeApi(
     private val queryEndDate = Query.localDate().optional("endDate")
     private val queryIncomeCategories = Query.string().optional("incomeCategories")
 
-    override val lens: BiDiBodyLens<Income> = Body.auto<Income>().toLens()
-    override val listLens: BiDiBodyLens<List<Income>> = Body.auto<List<Income>>().toLens()
+    override val lens: BiDiBodyLens<Income> = Http4kJackson.autoBody<Income>().toLens()
+    override val listLens: BiDiBodyLens<List<Income>> = Http4kJackson.autoBody<List<Income>>().toLens()
 
     override val summaryRepository = incomeSummaryRepository
-    override val summaryLens: BiDiBodyLens<IncomeSummary> = Body.auto<IncomeSummary>().toLens()
-    override val summaryListLens: BiDiBodyLens<List<IncomeSummary>> = Body.auto<List<IncomeSummary>>().toLens()
+    override val summaryLens: BiDiBodyLens<IncomeSummary> = Http4kJackson.autoBody<IncomeSummary>().toLens()
+    override val summaryListLens: BiDiBodyLens<List<IncomeSummary>> = Http4kJackson.autoBody<List<IncomeSummary>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
