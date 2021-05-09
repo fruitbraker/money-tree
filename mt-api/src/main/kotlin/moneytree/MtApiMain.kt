@@ -36,6 +36,7 @@ import org.http4k.filter.ServerFilters
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
+import org.http4k.server.http
 
 class MtApi(
     private val config: Config

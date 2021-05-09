@@ -96,7 +96,7 @@ class IncomeRepository(
                     newEntity.incomeCategory,
                     newEntity.transactionDate,
                     newEntity.transactionAmount,
-                    newEntity.notes.trim(),
+                    newEntity.notes,
                     newEntity.hide
                 )
                 .returning()
@@ -128,7 +128,7 @@ class IncomeRepository(
                     updatedEntity.incomeCategory,
                     updatedEntity.transactionDate,
                     updatedEntity.transactionAmount,
-                    updatedEntity.notes.trim(),
+                    updatedEntity.notes,
                     updatedEntity.hide
                 )
                 .onDuplicateKeyUpdate()
@@ -136,7 +136,7 @@ class IncomeRepository(
                 .set(INCOME.INCOME_CATEGORY, updatedEntity.incomeCategory)
                 .set(INCOME.TRANSACTION_DATE, updatedEntity.transactionDate)
                 .set(INCOME.TRANSACTION_AMOUNT, updatedEntity.transactionAmount)
-                .set(INCOME.NOTES, updatedEntity.notes.trim())
+                .set(INCOME.NOTES, updatedEntity.notes)
                 .set(INCOME.HIDE, updatedEntity.hide)
                 .execute()
 
