@@ -1,9 +1,11 @@
 package moneytree.libs.http4k
 
+import moneytree.libs.commons.serde.jackson
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
+import org.http4k.format.ConfigurableJackson
 import org.http4k.lens.BiDiBodyLens
 import org.http4k.lens.BiDiPathLens
 import org.http4k.lens.Path
@@ -14,6 +16,8 @@ import org.http4k.routing.routes
 import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
+
+object Http4kJackson : ConfigurableJackson(jackson)
 
 internal val healthCheck = "/health" bind Method.GET to {
     Response(Status.OK).body("Money tree is healthy.")

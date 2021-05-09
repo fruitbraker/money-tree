@@ -20,13 +20,11 @@ data class Income(
 
 data class IncomeSummary(
     val id: UUID,
-    @JsonDeserialize(using = TrimStringDeserializer::class)
     val source: String,
     val incomeCategoryId: UUID,
     val incomeCategoryName: String,
     val transactionDate: LocalDate,
     val transactionAmount: BigDecimal,
-    @JsonDeserialize(using = TrimStringDeserializer::class)
     val notes: String,
     val hide: Boolean
 )

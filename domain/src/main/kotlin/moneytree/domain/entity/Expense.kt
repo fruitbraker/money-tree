@@ -25,7 +25,6 @@ data class ExpenseSummary(
     val vendorName: String,
     val expenseCategoryId: UUID,
     val expenseCategoryName: String,
-    @JsonDeserialize(using = TrimStringDeserializer::class)
     val notes: String,
     val hide: Boolean
 )
