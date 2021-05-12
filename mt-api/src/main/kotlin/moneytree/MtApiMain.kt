@@ -13,6 +13,7 @@ import moneytree.domain.entity.ExpenseSummary
 import moneytree.domain.entity.ExpenseSummaryFilter
 import moneytree.domain.entity.IncomeSummary
 import moneytree.domain.entity.IncomeSummaryFilter
+import moneytree.filter.rateLimiterFilter
 import moneytree.libs.http4k.buildRoutes
 import moneytree.persist.PersistConnector
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
@@ -93,14 +94,16 @@ class MtApi(
         incomeValidator
     )
     private val http4kServer: Http4kServer =
-        ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive).then(
-            buildRoutes(
-                listOf(
-                    expenseCategoryApi.makeRoutes(),
-                    vendorApi.makeRoutes(),
-                    expenseApi.makeRoutes(),
-                    incomeCategoryApi.makeRoutes(),
-                    incomeApi.makeRoutes()
+        rateLimiterFilter.then(
+            ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive).then(
+                buildRoutes(
+                    listOf(
+                        expenseCategoryApi.makeRoutes(),
+                        vendorApi.makeRoutes(),
+                        expenseApi.makeRoutes(),
+                        incomeCategoryApi.makeRoutes(),
+                        incomeApi.makeRoutes()
+                    )
                 )
             )
         ).asServer(Jetty(9000))
