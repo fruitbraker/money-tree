@@ -1,27 +1,30 @@
 package moneytree.filter
 
-import io.kotest.assertions.timing.eventually
-import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import io.kotest.matchers.collections.shouldContain
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.then
+import org.junit.jupiter.api.Test
 
-@OptIn(ExperimentalTime::class)
-class RateLimiterFilterTest : ShouldSpec({
-    should("rate limit handler") {
+class RateLimiterFilterTest {
+
+    @Test
+    fun `Rate limits`() {
+        // This is so ugly. I'm sorry. There's ticket to look at this again.
+
         val handler = rateLimiterFilter.then { Response(Status.OK) }
 
-        eventually(Duration.seconds(1)) {
-            println("Hi")
+        val statusCodes = mutableListOf<Status>()
+        for (i in 1..100) {
             val response = handler(
                 Request(Method.GET, "/blah")
             )
-            response.status shouldBe Status.TOO_MANY_REQUESTS
+
+            statusCodes.add(response.status)
         }
+
+        statusCodes shouldContain Status.TOO_MANY_REQUESTS
     }
-})
+}
