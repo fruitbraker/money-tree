@@ -30,8 +30,8 @@ data class ExpenseSummary(
 )
 
 data class ExpenseSummaryFilter(
-    val startDate: LocalDate?,
-    val endDate: LocalDate?,
-    val vendorIds: List<UUID>?,
-    val expenseCategoryIds: List<UUID>?
+    val startDate: LocalDate,
+    val endDate: LocalDate,
+    val vendorIds: List<UUID>,
+    val expenseCategoryIds: List<UUID>
 ) : Filter()

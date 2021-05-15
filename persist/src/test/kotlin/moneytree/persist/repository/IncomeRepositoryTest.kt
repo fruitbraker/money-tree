@@ -295,56 +295,6 @@ class IncomeRepositoryTest {
     }
 
     @Test
-    fun `getSummary happy path with null filter`() {
-        val randomIncomeCategory = insertRandomIncomeCategory()
-
-        val randomUUID = UUID.randomUUID()
-        val randomSource = randomString()
-        val randomIncomeCategoryId = randomIncomeCategory.id ?: fail("Expense category id cannot be null!")
-        val todayLocalDate = LocalDate.now()
-        val randomTransactionAmount = randomBigDecimal()
-        val notes = randomString()
-        val hide = false
-
-        val income = Income(
-            id = randomUUID,
-            source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
-            transactionDate = todayLocalDate,
-            transactionAmount = randomTransactionAmount,
-            notes = notes,
-            hide = hide
-        )
-
-        val incomeSummary = IncomeSummary(
-            id = randomUUID,
-            source = randomSource,
-            incomeCategoryId = randomIncomeCategoryId,
-            incomeCategoryName = randomIncomeCategory.name,
-            transactionDate = todayLocalDate,
-            transactionAmount = randomTransactionAmount,
-            notes = notes,
-            hide = hide
-        )
-
-        val insertResult = incomeRepository.insert(income)
-        insertResult.shouldBeOk()
-
-        val incomeSummaryFilter = IncomeSummaryFilter(
-            startDate = null,
-            endDate = null,
-            incomeCategoryIds = null
-        )
-
-        val summaryResult = incomeRepository.getSummary(incomeSummaryFilter)
-        summaryResult.shouldBeOk()
-        summaryResult.onOk {
-            it.size shouldBeGreaterThanOrEqual 1
-            it shouldContain incomeSummary
-        }
-    }
-
-    @Test
     fun `getSummary returns empty list when filter doesn't meet date range`() {
         val randomIncomeCategory = insertRandomIncomeCategory()
 
@@ -372,7 +322,7 @@ class IncomeRepositoryTest {
         val incomeSummaryFilter = IncomeSummaryFilter(
             startDate = todayLocalDate.plusDays(1),
             endDate = todayLocalDate.plusDays(2),
-            incomeCategoryIds = null
+            incomeCategoryIds = emptyList()
         )
 
         val summaryResult = incomeRepository.getSummary(incomeSummaryFilter)
@@ -408,8 +358,8 @@ class IncomeRepositoryTest {
         insertResult.shouldBeOk()
 
         val incomeSummaryFilter = IncomeSummaryFilter(
-            startDate = null,
-            endDate = null,
+            startDate = todayLocalDate.minusDays(1),
+            endDate = todayLocalDate,
             incomeCategoryIds = listOf(UUID.randomUUID())
         )
 

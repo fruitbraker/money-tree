@@ -328,59 +328,6 @@ class ExpenseRepositoryTest {
     }
 
     @Test
-    fun `getSummary happy path with null filter`() {
-        val randomVendor = insertRandomVendor()
-        val randomExpenseCategory = insertRandomExpenseCategory()
-
-        val randomUUID = UUID.randomUUID()
-        val todayLocalDate = LocalDate.now()
-        val randomTransactionAmount = randomBigDecimal()
-        val vendorId = randomVendor.id ?: fail("Vendor id cannot be null!")
-        val expenseCategoryId = randomExpenseCategory.id ?: fail("Expense category id cannot be null!")
-        val notes = randomString()
-        val hide = false
-
-        val expense = Expense(
-            id = randomUUID,
-            transactionDate = todayLocalDate,
-            transactionAmount = randomTransactionAmount,
-            vendor = vendorId,
-            expenseCategory = expenseCategoryId,
-            notes = notes,
-            hide = hide
-        )
-
-        val expenseSummary = ExpenseSummary(
-            id = randomUUID,
-            transactionDate = todayLocalDate,
-            transactionAmount = randomTransactionAmount,
-            vendorId = vendorId,
-            vendorName = randomVendor.name,
-            expenseCategoryId = expenseCategoryId,
-            expenseCategoryName = randomExpenseCategory.name,
-            notes = notes,
-            hide = hide
-        )
-
-        val expenseSummaryFilter = ExpenseSummaryFilter(
-            startDate = null,
-            endDate = null,
-            vendorIds = null,
-            expenseCategoryIds = null
-        )
-
-        val insertResult = expenseRepository.insert(expense)
-        insertResult.shouldBeOk()
-
-        val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
-        summaryResult.shouldBeOk()
-        summaryResult.onOk {
-            it.size shouldBeGreaterThanOrEqual 1
-            it shouldContain expenseSummary
-        }
-    }
-
-    @Test
     fun `getSummary happy path with valid filter`() {
         val randomVendor = insertRandomVendor()
         val randomExpenseCategory = insertRandomExpenseCategory()
@@ -459,8 +406,8 @@ class ExpenseRepositoryTest {
         val expenseSummaryFilter = ExpenseSummaryFilter(
             startDate = todayLocalDate.plusDays(1),
             endDate = todayLocalDate.plusDays(2),
-            vendorIds = null,
-            expenseCategoryIds = null
+            vendorIds = emptyList(),
+            expenseCategoryIds = emptyList()
         )
 
         val insertResult = expenseRepository.insert(expense)
@@ -497,10 +444,10 @@ class ExpenseRepositoryTest {
         )
 
         val expenseSummaryFilter = ExpenseSummaryFilter(
-            startDate = null,
-            endDate = null,
+            startDate = todayLocalDate.minusDays(1),
+            endDate = todayLocalDate,
             vendorIds = listOf(UUID.randomUUID()),
-            expenseCategoryIds = null
+            expenseCategoryIds = emptyList()
         )
 
         val insertResult = expenseRepository.insert(expense)
@@ -537,9 +484,9 @@ class ExpenseRepositoryTest {
         )
 
         val expenseSummaryFilter = ExpenseSummaryFilter(
-            startDate = null,
-            endDate = null,
-            vendorIds = null,
+            startDate = todayLocalDate.minusDays(1),
+            endDate = todayLocalDate,
+            vendorIds = emptyList(),
             expenseCategoryIds = listOf(UUID.randomUUID())
         )
 

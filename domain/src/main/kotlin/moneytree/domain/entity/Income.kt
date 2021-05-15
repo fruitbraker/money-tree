@@ -30,7 +30,7 @@ data class IncomeSummary(
 )
 
 data class IncomeSummaryFilter(
-    val startDate: LocalDate?,
-    val endDate: LocalDate?,
-    val incomeCategoryIds: List<UUID>?
+    val startDate: LocalDate,
+    val endDate: LocalDate,
+    val incomeCategoryIds: List<UUID>
 ) : Filter()
