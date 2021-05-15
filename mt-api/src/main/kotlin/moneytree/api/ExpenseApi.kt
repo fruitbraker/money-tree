@@ -1,5 +1,6 @@
 package moneytree.api
 
+import java.time.LocalDate
 import moneytree.MtApiRoutesWithSummary
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
@@ -55,10 +56,10 @@ class ExpenseApi(
 
     override fun getSummary(request: Request): Response {
         val expenseSummaryFilter = ExpenseSummaryFilter(
-            startDate = queryStartDate(request),
-            endDate = queryEndDate(request),
-            vendorIds = queryVendors(request)?.split(',')?.toUUIDList(),
-            expenseCategoryIds = queryExpenseCategories(request)?.split(',')?.toUUIDList()
+            startDate = queryStartDate(request) ?: LocalDate.now().minusMonths(3),
+            endDate = queryEndDate(request) ?: LocalDate.now(),
+            vendorIds = queryVendors(request)?.split(',')?.toUUIDList() ?: emptyList(),
+            expenseCategoryIds = queryExpenseCategories(request)?.split(',')?.toUUIDList() ?: emptyList()
         )
 
         return processGetResult(summaryRepository.getSummary(expenseSummaryFilter), summaryListLens)

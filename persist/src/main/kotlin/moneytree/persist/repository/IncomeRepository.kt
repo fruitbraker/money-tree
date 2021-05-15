@@ -1,7 +1,6 @@
 package moneytree.persist.repository
 
 import moneytree.domain.entity.Income as IncomeDomain
-import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
@@ -185,21 +184,18 @@ class IncomeRepository(
         }
     }
 
-    private fun IncomeSummaryFilter?.toWhereClause(): Condition {
+    private fun IncomeSummaryFilter.toWhereClause(): Condition {
         var condition = DSL.noCondition()
-
-        if (this == null) return condition
 
         condition = condition.and(
             INCOME.TRANSACTION_DATE.between(
-                this.startDate ?: LocalDate.parse("1000-01-01"),
-                this.endDate ?: LocalDate.now()
+                this.startDate,
+                this.endDate
             )
         )
 
-        this.incomeCategoryIds?.let {
-            condition = condition.and(INCOME.INCOME_CATEGORY.`in`(it))
-        }
+        if (this.incomeCategoryIds.isNotEmpty())
+            condition = condition.and(INCOME.INCOME_CATEGORY.`in`(this.incomeCategoryIds))
 
         return condition
     }

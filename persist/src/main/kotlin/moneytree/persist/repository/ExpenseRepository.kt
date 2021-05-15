@@ -1,7 +1,6 @@
 package moneytree.persist.repository
 
 import moneytree.domain.entity.Expense as ExpenseDomain
-import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
@@ -187,25 +186,21 @@ class ExpenseRepository(
         }
     }
 
-    private fun ExpenseSummaryFilter?.toWhereClause(): Condition {
+    private fun ExpenseSummaryFilter.toWhereClause(): Condition {
         var condition = DSL.noCondition()
-
-        if (this == null) return condition
 
         condition = condition.and(
             EXPENSE.TRANSACTION_DATE.between(
-                this.startDate ?: LocalDate.parse("1000-01-01"),
-                this.endDate ?: LocalDate.now()
+                this.startDate,
+                this.endDate
             )
         )
 
-        this.expenseCategoryIds?.let {
-            condition = condition.and(EXPENSE.EXPENSE_CATEGORY.`in`(it))
-        }
+        if (this.expenseCategoryIds.isNotEmpty())
+            condition = condition.and(EXPENSE.EXPENSE_CATEGORY.`in`(this.expenseCategoryIds))
 
-        this.vendorIds?.let {
-            condition = condition.and(EXPENSE.VENDOR.`in`(it))
-        }
+        if (this.vendorIds.isNotEmpty())
+            condition = condition.and(EXPENSE.VENDOR.`in`(this.vendorIds))
 
         return condition
     }
