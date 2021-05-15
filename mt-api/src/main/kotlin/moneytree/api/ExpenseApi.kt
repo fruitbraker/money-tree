@@ -4,6 +4,7 @@ import java.time.LocalDate
 import moneytree.MtApiRoutesWithSummary
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
+import moneytree.domain.entity.DEFAULT_MINUS_MONTHS
 import moneytree.domain.entity.Expense
 import moneytree.domain.entity.ExpenseSummary
 import moneytree.domain.entity.ExpenseSummaryFilter
@@ -56,7 +57,7 @@ class ExpenseApi(
 
     override fun getSummary(request: Request): Response {
         val expenseSummaryFilter = ExpenseSummaryFilter(
-            startDate = queryStartDate(request) ?: LocalDate.now().minusMonths(3),
+            startDate = queryStartDate(request) ?: LocalDate.now().minusMonths(DEFAULT_MINUS_MONTHS),
             endDate = queryEndDate(request) ?: LocalDate.now(),
             vendorIds = queryVendors(request)?.split(',')?.toUUIDList() ?: emptyList(),
             expenseCategoryIds = queryExpenseCategories(request)?.split(',')?.toUUIDList() ?: emptyList()
