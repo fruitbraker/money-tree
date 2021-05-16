@@ -9,6 +9,8 @@ import moneytree.api.IncomeApi
 import moneytree.api.IncomeCategoryApi
 import moneytree.api.VendorApi
 import moneytree.domain.SummaryRepository
+import moneytree.domain.entity.ExpenseCategoryFilter
+import moneytree.domain.entity.ExpenseCategorySummary
 import moneytree.domain.entity.ExpenseSummary
 import moneytree.domain.entity.ExpenseSummaryFilter
 import moneytree.domain.entity.IncomeSummary
@@ -39,7 +41,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
 class MtApi(
-    private val config: Config
+    config: Config
 ) : AutoCloseable {
     constructor(configName: String) : this(ConfigFactory.load(configName))
 
@@ -72,6 +74,7 @@ class MtApi(
 
     // Routes for entities
     private val expenseCategoryApi = ExpenseCategoryApi(
+        expenseCategoryRepository as SummaryRepository<ExpenseCategorySummary, ExpenseCategoryFilter>,
         expenseCategoryRepository,
         expenseCategoryValidator
     )

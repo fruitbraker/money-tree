@@ -3,6 +3,9 @@ package moneytree.persist.repository
 import moneytree.domain.entity.ExpenseCategory as ExpenseCategoryDomain
 import java.util.UUID
 import moneytree.domain.Repository
+import moneytree.domain.SummaryRepository
+import moneytree.domain.entity.ExpenseCategoryFilter
+import moneytree.domain.entity.ExpenseCategorySummary
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
 import moneytree.libs.commons.result.toOk
@@ -13,7 +16,7 @@ import org.jooq.Record
 
 class ExpenseCategoryRepository(
     private val expenseCategoryDao: ExpenseCategoryDao
-) : Repository<ExpenseCategoryDomain> {
+) : Repository<ExpenseCategoryDomain>, SummaryRepository<ExpenseCategorySummary, ExpenseCategoryFilter> {
 
     private fun Record.toDomain(): ExpenseCategoryDomain {
         return ExpenseCategoryDomain(
@@ -102,5 +105,13 @@ class ExpenseCategoryRepository(
 
             Unit.toOk()
         }
+    }
+
+    override fun getSummary(filter: ExpenseCategoryFilter): Result<List<ExpenseCategorySummary>, Throwable> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSummaryById(uuid: UUID): Result<ExpenseCategorySummary?, Throwable> {
+        TODO("Not yet implemented")
     }
 }
