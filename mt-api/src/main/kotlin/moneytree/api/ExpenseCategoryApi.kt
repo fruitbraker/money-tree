@@ -9,11 +9,11 @@ import moneytree.domain.entity.ExpenseCategory
 import moneytree.domain.entity.ExpenseCategoryFilter
 import moneytree.domain.entity.ExpenseCategorySummary
 import moneytree.libs.http4k.Http4kJackson
+import moneytree.processGetResult
 import moneytree.validator.Validator
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status
 import org.http4k.lens.BiDiBodyLens
 import org.http4k.lens.Query
 import org.http4k.lens.localDate
@@ -60,6 +60,6 @@ class ExpenseCategoryApi(
             endDate = queryEndDate(request) ?: LocalDate.now()
         )
 
-        return Response(Status.OK).body(expenseCategoryFilter.toString())
+        return processGetResult(summaryRepository.getSummary(expenseCategoryFilter), summaryListLens)
     }
 }
