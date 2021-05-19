@@ -134,6 +134,7 @@ class ExpenseCategoryRepository(
         }
     }
 
+    // Not Applicable...will be removed https://github.com/fruitbraker/money-tree/issues/40
     override fun getSummaryById(uuid: UUID): Result<ExpenseCategorySummary?, Throwable> {
         TODO("Not yet implemented")
     }
@@ -150,7 +151,6 @@ class ExpenseCategoryRepository(
 
         if (this.ids.isNotEmpty())
             condition = condition.and(EXPENSE.EXPENSE_CATEGORY.`in`(this.ids))
-
 
         return condition
     }

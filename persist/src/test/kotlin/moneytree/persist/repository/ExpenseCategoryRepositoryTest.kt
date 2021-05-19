@@ -11,6 +11,8 @@ import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.PersistConnectorTestHarness
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
+import moneytree.persist.db.generated.tables.daos.ExpenseDao
+import moneytree.persist.db.generated.tables.daos.VendorDao
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -19,8 +21,16 @@ import org.junit.jupiter.api.TestInstance
 class ExpenseCategoryRepositoryTest {
 
     private val persistHarness = PersistConnectorTestHarness()
+    private val expenseRepository = ExpenseRepository(
+        ExpenseDao(persistHarness.dslContext.configuration())
+    )
+
     private val expenseCategoryRepository = ExpenseCategoryRepository(
         ExpenseCategoryDao(persistHarness.dslContext.configuration())
+    )
+
+    private val vendorRepository = VendorRepository(
+        VendorDao(persistHarness.dslContext.configuration())
     )
 
     @AfterAll
@@ -203,5 +213,10 @@ class ExpenseCategoryRepositoryTest {
 
         val deleteResult = expenseCategoryRepository.deleteById(randomUUID)
         deleteResult.shouldBeOk()
+    }
+
+    @Test
+    fun `getSummary for expense category aggregates similar categeory ids on transaction amount`() {
+
     }
 }

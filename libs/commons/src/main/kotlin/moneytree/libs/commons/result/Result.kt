@@ -71,7 +71,7 @@ inline fun <T, E> Result<T, E>.getOrElse(default: (E) -> T): T {
 inline fun <T, E> Result<T, E>.onOk(operation: (T) -> Unit): Result<T, E> {
     if (this is Result.Ok) {
         operation(value)
-    }
+    } else throw InvalidResultException("Expected result to be Ok but was Err.")
 
     return this
 }
@@ -80,7 +80,7 @@ inline fun <T, E> Result<T, E>.onOk(operation: (T) -> Unit): Result<T, E> {
 inline fun <T, E> Result<T, E>.onErr(operation: (E) -> Unit): Result<T, E> {
     if (this is Result.Err) {
         operation(error)
-    }
+    } else throw InvalidResultException("Expected result to be err but was Ok.")
 
     return this
 }
@@ -121,3 +121,11 @@ fun <T, E> Result<T, E>.shouldBeOk() {
 fun <T, E> Result<T, E>.shouldBeErr() {
     if (this is Result.Ok) throw RuntimeException("Expected Err, but got ${this.javaClass.simpleName}.")
 }
+
+fun <T, E> Result<T, E>.toOkValue(): T {
+    if (this is Result.Ok) {
+        return this.value
+    } else throw InvalidResultException("Expected result to be Ok but was Err.")
+}
+
+class InvalidResultException(msg: String?) : Throwable(msg)
