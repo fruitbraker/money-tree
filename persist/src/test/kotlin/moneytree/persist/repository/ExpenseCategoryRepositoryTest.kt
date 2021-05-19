@@ -3,39 +3,27 @@ package moneytree.persist.repository
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.entity.ExpenseCategory
+import moneytree.domain.entity.ExpenseCategoryFilter
+import moneytree.domain.entity.ExpenseCategorySummary
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
+import moneytree.libs.commons.result.toOkValue
 import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.PersistConnectorTestHarness
-import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
-import moneytree.persist.db.generated.tables.daos.ExpenseDao
-import moneytree.persist.db.generated.tables.daos.VendorDao
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ExpenseCategoryRepositoryTest {
-
-    private val persistHarness = PersistConnectorTestHarness()
-    private val expenseRepository = ExpenseRepository(
-        ExpenseDao(persistHarness.dslContext.configuration())
-    )
-
-    private val expenseCategoryRepository = ExpenseCategoryRepository(
-        ExpenseCategoryDao(persistHarness.dslContext.configuration())
-    )
-
-    private val vendorRepository = VendorRepository(
-        VendorDao(persistHarness.dslContext.configuration())
-    )
+class ExpenseCategoryRepositoryTest : PersistConnectorTestHarness() {
 
     @AfterAll
     fun clean() {
-        persistHarness.close()
+        super.close()
     }
 
     @Test
@@ -48,81 +36,52 @@ class ExpenseCategoryRepositoryTest {
 
     @Test
     fun `insert and getById happy path`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
-        val randomTargetAmount = randomBigDecimal()
+        val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
-        val expenseCategory = ExpenseCategory(
-            id = randomUUID,
-            name = randomString,
-            targetAmount = randomTargetAmount
+        val getById = expenseCategoryRepository.getById(
+            checkNotNull(randomExpenseCategory.id)
         )
 
-        val insertResult = expenseCategoryRepository.insert(expenseCategory)
-        insertResult.shouldBeOk()
-        insertResult.onOk {
-            it shouldBe expenseCategory
-        }
-
-        val retrieveResult = expenseCategoryRepository.getById(randomUUID)
-        retrieveResult.shouldBeOk()
-        retrieveResult.onOk {
-            it shouldBe expenseCategory
+        getById.shouldBeOk()
+        getById.onOk {
+            it shouldBe randomExpenseCategory
         }
     }
 
     @Test
     fun `generic get returns a list`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
-        val randomTargetAmount = randomBigDecimal()
-
-        val expenseCategory = ExpenseCategory(
-            id = randomUUID,
-            name = randomString,
-            targetAmount = randomTargetAmount
-        )
-
-        expenseCategoryRepository.insert(expenseCategory)
+        val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val getResult = expenseCategoryRepository.get()
         getResult.shouldBeOk()
         getResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
-            it shouldContain expenseCategory
+            it shouldContain randomExpenseCategory
         }
     }
 
     @Test
     fun `upsert updates existing entity`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
-        val randomTargetAmount = randomBigDecimal()
-
-        val expenseCategory = ExpenseCategory(
-            id = randomUUID,
-            name = randomString,
-            targetAmount = randomTargetAmount
-        )
-
-        expenseCategoryRepository.insert(expenseCategory)
+        val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
+        val randomExpenseCategoryId = checkNotNull(randomExpenseCategory.id)
 
         val newRandomString = randomString()
         val newRandomTargetAmount = randomBigDecimal()
 
         val updatedExpenseCategory = ExpenseCategory(
-            id = randomUUID,
+            id = randomExpenseCategoryId,
             name = newRandomString,
             targetAmount = newRandomTargetAmount
         )
 
-        val insertResult = expenseCategoryRepository.upsertById(updatedExpenseCategory, randomUUID)
-        insertResult.shouldBeOk()
-        insertResult.onOk {
+        val upsertResult =
+            expenseCategoryRepository.upsertById(updatedExpenseCategory, randomExpenseCategoryId)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk {
             it shouldBe updatedExpenseCategory
         }
 
-        val retrieveResult = expenseCategoryRepository.getById(randomUUID)
+        val retrieveResult = expenseCategoryRepository.getById(randomExpenseCategoryId)
         retrieveResult.shouldBeOk()
         retrieveResult.onOk {
             it shouldBe updatedExpenseCategory
@@ -182,27 +141,13 @@ class ExpenseCategoryRepositoryTest {
 
     @Test
     fun `deleteById deletes existing successfully`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
-        val randomTargetAmount = randomBigDecimal()
+        val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
+        val randomExpenseCategoryId = checkNotNull(randomExpenseCategory.id)
 
-        val expenseCategory = ExpenseCategory(
-            id = randomUUID,
-            name = randomString,
-            targetAmount = randomTargetAmount
-        )
-
-        val insertResult = expenseCategoryRepository.insert(expenseCategory)
-        insertResult.shouldBeOk()
-        insertResult.onOk {
-            it shouldBe expenseCategory
-        }
-        insertResult.shouldBeOk()
-
-        val deleteResult = expenseCategoryRepository.deleteById(randomUUID)
+        val deleteResult = expenseCategoryRepository.deleteById(randomExpenseCategoryId)
         deleteResult.shouldBeOk()
 
-        val nullResult = expenseCategoryRepository.getById(randomUUID)
+        val nullResult = expenseCategoryRepository.getById(randomExpenseCategoryId)
         nullResult.shouldBeOk()
         nullResult.onOk { it shouldBe null }
     }
@@ -216,7 +161,99 @@ class ExpenseCategoryRepositoryTest {
     }
 
     @Test
-    fun `getSummary for expense category aggregates similar categeory ids on transaction amount`() {
+    fun `getSummary for expense category aggregates transaction amount on expense category ids happy path`() {
+        val randomVendor = insertRandomVendor().toOkValue()
+        val randomVendorId = checkNotNull(randomVendor.id)
 
+        val randomExpenseCategory1 = insertRandomExpenseCategory().toOkValue()
+        val randomExpenseCategory1Id = checkNotNull(randomExpenseCategory1.id)
+        val randomExpense1WithExpenseCategory1 = insertRandomExpense(
+            randomVendorId,
+            randomExpenseCategory1Id
+        ).toOkValue()
+        val randomExpense2WithExpenseCategory1 = insertRandomExpense(
+            randomVendorId,
+            randomExpenseCategory1Id
+        ).toOkValue()
+
+        val randomExpenseCategory2 = insertRandomExpenseCategory().toOkValue()
+        val randomExpenseCategory2Id = checkNotNull(randomExpenseCategory2.id)
+        val randomExpense1WithExpenseCategory2 = insertRandomExpense(
+            randomVendorId,
+            randomExpenseCategory2Id
+        ).toOkValue()
+        val randomExpense2WithExpenseCategory2 = insertRandomExpense(
+            randomVendorId,
+            randomExpenseCategory2Id
+        ).toOkValue()
+
+        val expectedExpenseCategorySummary = listOf(
+            ExpenseCategorySummary(
+                id = randomExpenseCategory1Id,
+                name = randomExpenseCategory1.name,
+                totalAmount = randomExpense1WithExpenseCategory1.transactionAmount + randomExpense2WithExpenseCategory1.transactionAmount
+            ),
+            ExpenseCategorySummary(
+                id = randomExpenseCategory2Id,
+                name = randomExpenseCategory2.name,
+                totalAmount = randomExpense1WithExpenseCategory2.transactionAmount + randomExpense2WithExpenseCategory2.transactionAmount
+            )
+        )
+
+        val filter = ExpenseCategoryFilter(
+            ids = emptyList(),
+            startDate = LocalDate.now().minusDays(1),
+            endDate = LocalDate.now()
+        )
+
+        val getSummaryResult = expenseCategoryRepository.getSummary(filter)
+        getSummaryResult.shouldBeOk()
+        getSummaryResult.onOk {
+            it shouldBe expectedExpenseCategorySummary
+        }
+    }
+
+    @Test
+    fun `getSummary with filter on ids happy path`() {
+        val randomVendor = insertRandomVendor().toOkValue()
+        val randomVendorId = checkNotNull(randomVendor.id)
+
+        val randomExpenseCategory1 = insertRandomExpenseCategory().toOkValue()
+        val randomExpenseCategory1Id = checkNotNull(randomExpenseCategory1.id)
+        val randomExpense1WithExpenseCategory1 = insertRandomExpense(
+            randomVendorId,
+            randomExpenseCategory1Id
+        ).toOkValue()
+        val randomExpense2WithExpenseCategory1 = insertRandomExpense(
+            randomVendorId,
+            randomExpenseCategory1Id
+        ).toOkValue()
+
+        val randomExpenseCategory2 = insertRandomExpenseCategory().toOkValue()
+        val randomExpenseCategory2Id = checkNotNull(randomExpenseCategory2.id)
+        insertRandomExpense(
+            randomVendorId,
+            randomExpenseCategory2Id
+        )
+
+        val expectedExpenseCategorySummary = listOf(
+            ExpenseCategorySummary(
+                id = randomExpenseCategory1Id,
+                name = randomExpenseCategory1.name,
+                totalAmount = randomExpense1WithExpenseCategory1.transactionAmount + randomExpense2WithExpenseCategory1.transactionAmount
+            )
+        )
+
+        val filter = ExpenseCategoryFilter(
+            ids = listOf(checkNotNull(randomExpenseCategory1.id)),
+            startDate = LocalDate.now().minusDays(1),
+            endDate = LocalDate.now()
+        )
+
+        val getSummaryResult = expenseCategoryRepository.getSummary(filter)
+        getSummaryResult.shouldBeOk()
+        getSummaryResult.onOk {
+            it shouldBe expectedExpenseCategorySummary
+        }
     }
 }
