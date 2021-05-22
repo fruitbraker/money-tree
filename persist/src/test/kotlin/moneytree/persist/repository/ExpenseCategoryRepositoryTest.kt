@@ -1,6 +1,7 @@
 package moneytree.persist.repository
 
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
@@ -209,7 +210,7 @@ class ExpenseCategoryRepositoryTest : PersistConnectorTestHarness() {
         val getSummaryResult = expenseCategoryRepository.getSummary(filter)
         getSummaryResult.shouldBeOk()
         getSummaryResult.onOk {
-            it shouldBe expectedExpenseCategorySummary
+            it shouldContainAll expectedExpenseCategorySummary
         }
     }
 

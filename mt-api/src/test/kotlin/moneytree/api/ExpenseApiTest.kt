@@ -69,7 +69,7 @@ class ExpenseApiTest : RoutesTest<Expense>() {
     override val entityPath: String = "/expense"
     private val entitySummaryPath: String = "/expense/summary"
 
-    private val summaryPath: String
+    private val summaryPathUri: String
         get() = "$url$entitySummaryPath"
 
     private val expenseSummaryFilter: ExpenseSummaryFilter = ExpenseSummaryFilter(
@@ -91,10 +91,10 @@ class ExpenseApiTest : RoutesTest<Expense>() {
     fun `getSummary happy path`() {
         val request = Request(
             Method.GET,
-            "$summaryPath?startDate=${expenseSummaryFilter.startDate}&" +
+            "$summaryPathUri?startDate=${expenseSummaryFilter.startDate}&" +
                 "endDate=${expenseSummaryFilter.endDate}&" +
-                "vendors=${expenseSummaryFilter.vendorIds?.joinToString(",")}&" +
-                "expenseCategories=${expenseSummaryFilter.expenseCategoryIds?.joinToString(",")}"
+                "vendors=${expenseSummaryFilter.vendorIds.joinToString(",")}&" +
+                "expenseCategories=${expenseSummaryFilter.expenseCategoryIds.joinToString(",")}"
         )
 
         val result = client(request)
@@ -107,7 +107,7 @@ class ExpenseApiTest : RoutesTest<Expense>() {
     fun `getSummaryById happy path`() {
         val request = Request(
             Method.GET,
-            "$summaryPath/$randomUUIDParameter"
+            "$summaryPathUri/$randomUUIDParameter"
         )
 
         val result = client(request)

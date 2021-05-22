@@ -13,7 +13,8 @@ class RateLimiterFilterTest {
     @Test
     fun `Rate limits`() {
         // This is so ugly. I'm sorry. There's ticket to look at this again.
-
+        // I know there's an eventual thing KoTest has for deterministic tests. However, it's a coroutine (requires this function to be suspended)
+        // and I don't think I want that.
         val handler = rateLimiterFilter.then { Response(Status.OK) }
 
         val statusCodes = mutableListOf<Status>()

@@ -1,6 +1,7 @@
 package moneytree.persist.repository
 
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
@@ -170,7 +171,8 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
                 id = randomIncomeCategoryId1,
                 name = randomIncomeCategory1.name,
                 totalAmount = randomIncome1WithIncomeCategory1.transactionAmount + randomIncome2WithIncomeCategory1.transactionAmount
-            ), IncomeCategorySummary(
+            ),
+            IncomeCategorySummary(
                 id = randomIncomeCategoryId2,
                 name = randomIncomeCategory2.name,
                 totalAmount = randomIncome1WithIncomeCategory2.transactionAmount + randomIncome2WithIncomeCategory2.transactionAmount
@@ -186,7 +188,7 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
         val getSummaryResult = incomeCategoryRepository.getSummary(filter)
         getSummaryResult.shouldBeOk()
         getSummaryResult.onOk {
-            it shouldBe expectedIncomeCategorySummary
+            it shouldContainAll expectedIncomeCategorySummary
         }
     }
 
