@@ -13,6 +13,8 @@ import moneytree.domain.entity.ExpenseCategoryFilter
 import moneytree.domain.entity.ExpenseCategorySummary
 import moneytree.domain.entity.ExpenseSummary
 import moneytree.domain.entity.ExpenseSummaryFilter
+import moneytree.domain.entity.IncomeCategoryFilter
+import moneytree.domain.entity.IncomeCategorySummary
 import moneytree.domain.entity.IncomeSummary
 import moneytree.domain.entity.IncomeSummaryFilter
 import moneytree.filter.rateLimiterFilter
@@ -88,6 +90,7 @@ class MtApi(
         expenseValidator
     )
     private val incomeCategoryApi = IncomeCategoryApi(
+        incomeCategoryRepository as SummaryRepository<IncomeCategorySummary, IncomeCategoryFilter>,
         incomeCategoryRepository,
         incomeCategoryValidator
     )

@@ -231,10 +231,7 @@ class ExpenseCategoryRepositoryTest : PersistConnectorTestHarness() {
 
         val randomExpenseCategory2 = insertRandomExpenseCategory().toOkValue()
         val randomExpenseCategory2Id = checkNotNull(randomExpenseCategory2.id)
-        insertRandomExpense(
-            randomVendorId,
-            randomExpenseCategory2Id
-        )
+        insertRandomExpense(randomVendorId, randomExpenseCategory2Id)
 
         val expectedExpenseCategorySummary = listOf(
             ExpenseCategorySummary(

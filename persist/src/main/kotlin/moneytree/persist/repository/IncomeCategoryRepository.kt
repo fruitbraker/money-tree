@@ -3,18 +3,25 @@ package moneytree.persist.repository
 import moneytree.domain.entity.IncomeCategory as IncomeCategoryDomain
 import java.util.UUID
 import moneytree.domain.Repository
+import moneytree.domain.SummaryRepository
+import moneytree.domain.entity.IncomeCategoryFilter
+import moneytree.domain.entity.IncomeCategorySummary
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
 import moneytree.libs.commons.result.toOk
 import moneytree.persist.db.generated.Tables
+import moneytree.persist.db.generated.tables.Income.INCOME
 import moneytree.persist.db.generated.tables.IncomeCategory.INCOME_CATEGORY
 import moneytree.persist.db.generated.tables.daos.IncomeCategoryDao
 import moneytree.persist.db.generated.tables.pojos.IncomeCategory
+import org.jooq.Condition
 import org.jooq.Record
+import org.jooq.impl.DSL
+import org.jooq.impl.DSL.sum
 
 class IncomeCategoryRepository(
     private val incomeCategoryDao: IncomeCategoryDao
-) : Repository<IncomeCategoryDomain> {
+) : Repository<IncomeCategoryDomain>, SummaryRepository<IncomeCategorySummary, IncomeCategoryFilter> {
 
     private fun Record.toDomain(): IncomeCategoryDomain {
         return IncomeCategoryDomain(
@@ -27,6 +34,14 @@ class IncomeCategoryRepository(
         return IncomeCategoryDomain(
             id = this.id,
             name = this.name
+        )
+    }
+
+    private fun Record.toSummaryDomain(): IncomeCategorySummary {
+        return IncomeCategorySummary(
+            id = this[INCOME_CATEGORY.ID],
+            totalAmount = this[sum(INCOME.TRANSACTION_AMOUNT)],
+            name = this[INCOME_CATEGORY.NAME]
         )
     }
 
@@ -99,5 +114,41 @@ class IncomeCategoryRepository(
 
             Unit.toOk()
         }
+    }
+
+    override fun getSummary(filter: IncomeCategoryFilter): Result<List<IncomeCategorySummary>, Throwable> {
+        return resultTry {
+            val result = incomeCategoryDao.configuration().dsl()
+                .select(sum(INCOME.TRANSACTION_AMOUNT), INCOME_CATEGORY.ID, INCOME_CATEGORY.NAME)
+                .from(INCOME)
+                .join(INCOME_CATEGORY).on(INCOME.INCOME_CATEGORY.eq(INCOME_CATEGORY.ID))
+                .where(filter.toWhereClause())
+                .groupBy(INCOME_CATEGORY.ID)
+                .limit(100)
+                .fetch()
+
+            result.mapNotNull { it.toSummaryDomain() }
+        }
+    }
+
+    // Not Applicable...will be removed https://github.com/fruitbraker/money-tree/issues/40
+    override fun getSummaryById(uuid: UUID): Result<IncomeCategorySummary?, Throwable> {
+        TODO("Not yet implemented")
+    }
+
+    private fun IncomeCategoryFilter.toWhereClause(): Condition {
+        var condition = DSL.noCondition()
+
+        condition = condition.and(
+            INCOME.TRANSACTION_DATE.between(
+                this.startDate,
+                this.endDate
+            )
+        )
+
+        if (this.ids.isNotEmpty())
+            condition = condition.and(INCOME.INCOME_CATEGORY.`in`(this.ids))
+
+        return condition
     }
 }
