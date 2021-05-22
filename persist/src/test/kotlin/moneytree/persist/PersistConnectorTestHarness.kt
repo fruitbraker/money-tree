@@ -1,10 +1,29 @@
 package moneytree.persist
 
 import com.zaxxer.hikari.HikariDataSource
+import java.time.LocalDate
+import java.util.UUID
+import moneytree.domain.entity.Expense
+import moneytree.domain.entity.ExpenseCategory
+import moneytree.domain.entity.Income
+import moneytree.domain.entity.IncomeCategory
+import moneytree.domain.entity.Vendor
+import moneytree.libs.commons.result.Result
+import moneytree.libs.testcommons.randomBigDecimal
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
 import moneytree.persist.db.generated.Tables.INCOME_CATEGORY
 import moneytree.persist.db.generated.Tables.VENDOR
+import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
+import moneytree.persist.db.generated.tables.daos.ExpenseDao
+import moneytree.persist.db.generated.tables.daos.IncomeCategoryDao
+import moneytree.persist.db.generated.tables.daos.IncomeDao
+import moneytree.persist.db.generated.tables.daos.VendorDao
+import moneytree.persist.repository.ExpenseCategoryRepository
+import moneytree.persist.repository.ExpenseRepository
+import moneytree.persist.repository.IncomeCategoryRepository
+import moneytree.persist.repository.IncomeRepository
+import moneytree.persist.repository.VendorRepository
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.conf.MappedSchema
@@ -19,7 +38,7 @@ import org.jooq.impl.SQLDataType.LOCALDATE
 import org.jooq.impl.SQLDataType.UUID
 import org.jooq.impl.SQLDataType.VARCHAR
 
-class PersistConnectorTestHarness : AutoCloseable {
+open class PersistConnectorTestHarness : AutoCloseable {
 
     private var _dataSource: HikariDataSource? = null
     private val dataSource: HikariDataSource
@@ -30,6 +49,12 @@ class PersistConnectorTestHarness : AutoCloseable {
         get() = _dslContext ?: throw IllegalStateException("DSL Context cannot be null!")
 
     private var testSchema = "test-${randomString()}"
+
+    internal var expenseRepository: ExpenseRepository
+    internal var expenseCategoryRepository: ExpenseCategoryRepository
+    internal var vendorRepository: VendorRepository
+    internal var incomeCategoryRepository: IncomeCategoryRepository
+    internal var incomeRepository: IncomeRepository
 
     init {
         _dataSource = HikariDataSource()
@@ -52,6 +77,78 @@ class PersistConnectorTestHarness : AutoCloseable {
         dslContext.setSchema(testSchema).execute()
 
         createTables()
+
+        expenseRepository = ExpenseRepository(
+            ExpenseDao(dslContext.configuration())
+        )
+        expenseCategoryRepository = ExpenseCategoryRepository(
+            ExpenseCategoryDao(dslContext.configuration())
+        )
+        vendorRepository = VendorRepository(
+            VendorDao(dslContext.configuration())
+        )
+        incomeCategoryRepository = IncomeCategoryRepository(
+            IncomeCategoryDao(dslContext.configuration())
+        )
+        incomeRepository = IncomeRepository(
+            IncomeDao(dslContext.configuration())
+        )
+    }
+
+    fun insertRandomExpense(vendorId: UUID, expenseCategoryId: UUID): Result<Expense, Throwable> {
+        val expense = Expense(
+            id = java.util.UUID.randomUUID(),
+            transactionDate = LocalDate.now(),
+            transactionAmount = randomBigDecimal(),
+            vendor = vendorId,
+            expenseCategory = expenseCategoryId,
+            notes = randomString(),
+            hide = false
+        )
+
+        return expenseRepository.insert(expense)
+    }
+
+    fun insertRandomIncome(incomeCategoryId: UUID): Result<Income, Throwable> {
+        val income = Income(
+            id = java.util.UUID.randomUUID(),
+            source = randomString(),
+            incomeCategory = incomeCategoryId,
+            transactionDate = LocalDate.now(),
+            transactionAmount = randomBigDecimal(),
+            notes = randomString(),
+            hide = false
+        )
+
+        return incomeRepository.insert(income)
+    }
+
+    fun insertRandomVendor(): Result<Vendor, Throwable> {
+        val vendor = Vendor(
+            id = java.util.UUID.randomUUID(),
+            name = randomString()
+        )
+
+        return vendorRepository.insert(vendor)
+    }
+
+    fun insertRandomExpenseCategory(): Result<ExpenseCategory, Throwable> {
+        val expenseCategory = ExpenseCategory(
+            id = java.util.UUID.randomUUID(),
+            name = randomString(),
+            targetAmount = randomBigDecimal()
+        )
+
+        return expenseCategoryRepository.insert(expenseCategory)
+    }
+
+    fun insertRandomIncomeCategory(): Result<IncomeCategory, Throwable> {
+        val incomeCategory = IncomeCategory(
+            id = java.util.UUID.randomUUID(),
+            name = randomString()
+        )
+
+        return incomeCategoryRepository.insert(incomeCategory)
     }
 
     private fun createTables() {

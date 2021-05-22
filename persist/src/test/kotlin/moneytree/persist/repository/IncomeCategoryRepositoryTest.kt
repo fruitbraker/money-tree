@@ -1,30 +1,29 @@
 package moneytree.persist.repository
 
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
 import java.util.UUID
 import moneytree.domain.entity.IncomeCategory
+import moneytree.domain.entity.IncomeCategoryFilter
+import moneytree.domain.entity.IncomeCategorySummary
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
+import moneytree.libs.commons.result.toOkValue
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.PersistConnectorTestHarness
-import moneytree.persist.db.generated.tables.daos.IncomeCategoryDao
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class IncomeCategoryRepositoryTest {
-
-    private val persistHarness = PersistConnectorTestHarness()
-    private val incomeCategoryRepository = IncomeCategoryRepository(
-        IncomeCategoryDao(persistHarness.dslContext.configuration())
-    )
+class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
 
     @AfterAll
     fun clean() {
-        persistHarness.close()
+        super.close()
     }
 
     @Test
@@ -37,73 +36,48 @@ class IncomeCategoryRepositoryTest {
 
     @Test
     fun `insert and getById happy path`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
+        val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
 
-        val incomeCategory = IncomeCategory(
-            id = randomUUID,
-            name = randomString
+        val retrieveResult = incomeCategoryRepository.getById(
+            checkNotNull(randomIncomeCategory.id)
         )
-
-        val insertResult = incomeCategoryRepository.insert(incomeCategory)
-        insertResult.shouldBeOk()
-        insertResult.onOk {
-            it shouldBe incomeCategory
-        }
-
-        val retrieveResult = incomeCategoryRepository.getById(randomUUID)
         retrieveResult.shouldBeOk()
         retrieveResult.onOk {
-            it shouldBe incomeCategory
+            it shouldBe randomIncomeCategory
         }
     }
 
     @Test
     fun `generic get returns a list`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
-
-        val incomeCategory = IncomeCategory(
-            id = randomUUID,
-            name = randomString
-        )
-
-        incomeCategoryRepository.insert(incomeCategory)
+        val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
 
         val getResult = incomeCategoryRepository.get()
         getResult.shouldBeOk()
         getResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
-            it shouldContain incomeCategory
+            it shouldContain randomIncomeCategory
         }
     }
 
     @Test
     fun `upsert updates existing entity`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
-
-        val incomeCategory = IncomeCategory(
-            id = randomUUID,
-            name = randomString
-        )
-
-        incomeCategoryRepository.insert(incomeCategory)
+        val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
 
         val newRandomString = randomString()
 
         val updatedIncomeCategory = IncomeCategory(
-            id = randomUUID,
+            id = randomIncomeCategoryId,
             name = newRandomString
         )
 
-        val insertResult = incomeCategoryRepository.upsertById(updatedIncomeCategory, randomUUID)
-        insertResult.shouldBeOk()
-        insertResult.onOk {
+        val upsertResult = incomeCategoryRepository.upsertById(updatedIncomeCategory, randomIncomeCategoryId)
+        upsertResult.shouldBeOk()
+        upsertResult.onOk {
             it shouldBe updatedIncomeCategory
         }
 
-        val retrieveResult = incomeCategoryRepository.getById(randomUUID)
+        val retrieveResult = incomeCategoryRepository.getById(randomIncomeCategoryId)
         retrieveResult.shouldBeOk()
         retrieveResult.onOk {
             it shouldBe updatedIncomeCategory
@@ -159,21 +133,13 @@ class IncomeCategoryRepositoryTest {
 
     @Test
     fun `deleteById successfully deletes`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
+        val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
 
-        val incomeCategory = IncomeCategory(
-            id = randomUUID,
-            name = randomString
-        )
-
-        val insertResult = incomeCategoryRepository.insert(incomeCategory)
-        insertResult.shouldBeOk()
-
-        val deleteResult = incomeCategoryRepository.deleteById(randomUUID)
+        val deleteResult = incomeCategoryRepository.deleteById(randomIncomeCategoryId)
         deleteResult.shouldBeOk()
 
-        val nullResult = incomeCategoryRepository.getById(randomUUID)
+        val nullResult = incomeCategoryRepository.getById(randomIncomeCategoryId)
         nullResult.shouldBeOk()
         nullResult.onOk { it shouldBe null }
     }
@@ -184,5 +150,80 @@ class IncomeCategoryRepositoryTest {
 
         val deleteResult = incomeCategoryRepository.deleteById(randomUUID)
         deleteResult.shouldBeOk()
+    }
+
+    @Test
+    fun `getSummary for IncomeCategory aggregates transaction amount on incomeCategoryId`() {
+        val randomIncomeCategory1 = insertRandomIncomeCategory().toOkValue()
+        val randomIncomeCategoryId1 = checkNotNull(randomIncomeCategory1.id)
+
+        val randomIncomeCategory2 = insertRandomIncomeCategory().toOkValue()
+        val randomIncomeCategoryId2 = checkNotNull(randomIncomeCategory2.id)
+
+        val randomIncome1WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()
+        val randomIncome2WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()
+
+        val randomIncome1WithIncomeCategory2 = insertRandomIncome(randomIncomeCategoryId2).toOkValue()
+        val randomIncome2WithIncomeCategory2 = insertRandomIncome(randomIncomeCategoryId2).toOkValue()
+
+        val expectedIncomeCategorySummary = listOf(
+            IncomeCategorySummary(
+                id = randomIncomeCategoryId1,
+                name = randomIncomeCategory1.name,
+                totalAmount = randomIncome1WithIncomeCategory1.transactionAmount + randomIncome2WithIncomeCategory1.transactionAmount
+            ),
+            IncomeCategorySummary(
+                id = randomIncomeCategoryId2,
+                name = randomIncomeCategory2.name,
+                totalAmount = randomIncome1WithIncomeCategory2.transactionAmount + randomIncome2WithIncomeCategory2.transactionAmount
+            )
+        )
+
+        val filter = IncomeCategoryFilter(
+            ids = emptyList(),
+            startDate = LocalDate.now().minusDays(1),
+            endDate = LocalDate.now()
+        )
+
+        val getSummaryResult = incomeCategoryRepository.getSummary(filter)
+        getSummaryResult.shouldBeOk()
+        getSummaryResult.onOk {
+            it shouldContainAll expectedIncomeCategorySummary
+        }
+    }
+
+    @Test
+    fun `getSummary with filter on ids happy path`() {
+        val randomIncomeCategory1 = insertRandomIncomeCategory().toOkValue()
+        val randomIncomeCategoryId1 = checkNotNull(randomIncomeCategory1.id)
+
+        val randomIncomeCategory2 = insertRandomIncomeCategory().toOkValue()
+        val randomIncomeCategoryId2 = checkNotNull(randomIncomeCategory2.id)
+
+        val randomIncome1WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()
+        val randomIncome2WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()
+
+        insertRandomIncome(randomIncomeCategoryId2).toOkValue()
+        insertRandomIncome(randomIncomeCategoryId2).toOkValue()
+
+        val expectedIncomeCategorySummary = listOf(
+            IncomeCategorySummary(
+                id = randomIncomeCategoryId1,
+                name = randomIncomeCategory1.name,
+                totalAmount = randomIncome1WithIncomeCategory1.transactionAmount + randomIncome2WithIncomeCategory1.transactionAmount
+            )
+        )
+
+        val filter = IncomeCategoryFilter(
+            ids = listOf(randomIncomeCategoryId1),
+            startDate = LocalDate.now().minusDays(1),
+            endDate = LocalDate.now()
+        )
+
+        val getSummaryResult = incomeCategoryRepository.getSummary(filter)
+        getSummaryResult.shouldBeOk()
+        getSummaryResult.onOk {
+            it shouldBe expectedIncomeCategorySummary
+        }
     }
 }

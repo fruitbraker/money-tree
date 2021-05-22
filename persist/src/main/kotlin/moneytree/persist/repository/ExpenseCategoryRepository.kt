@@ -3,17 +3,24 @@ package moneytree.persist.repository
 import moneytree.domain.entity.ExpenseCategory as ExpenseCategoryDomain
 import java.util.UUID
 import moneytree.domain.Repository
+import moneytree.domain.SummaryRepository
+import moneytree.domain.entity.ExpenseCategoryFilter
+import moneytree.domain.entity.ExpenseCategorySummary
 import moneytree.libs.commons.result.Result
 import moneytree.libs.commons.result.resultTry
 import moneytree.libs.commons.result.toOk
+import moneytree.persist.db.generated.Tables.EXPENSE
 import moneytree.persist.db.generated.Tables.EXPENSE_CATEGORY
 import moneytree.persist.db.generated.tables.daos.ExpenseCategoryDao
 import moneytree.persist.db.generated.tables.pojos.ExpenseCategory
+import org.jooq.Condition
 import org.jooq.Record
+import org.jooq.impl.DSL
+import org.jooq.impl.DSL.sum
 
 class ExpenseCategoryRepository(
     private val expenseCategoryDao: ExpenseCategoryDao
-) : Repository<ExpenseCategoryDomain> {
+) : Repository<ExpenseCategoryDomain>, SummaryRepository<ExpenseCategorySummary, ExpenseCategoryFilter> {
 
     private fun Record.toDomain(): ExpenseCategoryDomain {
         return ExpenseCategoryDomain(
@@ -28,6 +35,14 @@ class ExpenseCategoryRepository(
             id = this.id,
             name = this.name,
             targetAmount = this.targetAmount
+        )
+    }
+
+    private fun Record.toSummaryDomain(): ExpenseCategorySummary {
+        return ExpenseCategorySummary(
+            id = this[EXPENSE_CATEGORY.ID],
+            totalAmount = this[sum(EXPENSE.TRANSACTION_AMOUNT)],
+            name = this[EXPENSE_CATEGORY.NAME]
         )
     }
 
@@ -102,5 +117,41 @@ class ExpenseCategoryRepository(
 
             Unit.toOk()
         }
+    }
+
+    override fun getSummary(filter: ExpenseCategoryFilter): Result<List<ExpenseCategorySummary>, Throwable> {
+        return resultTry {
+            val result = expenseCategoryDao.configuration().dsl()
+                .select(sum(EXPENSE.TRANSACTION_AMOUNT), EXPENSE_CATEGORY.ID, EXPENSE_CATEGORY.NAME)
+                .from(EXPENSE)
+                .join(EXPENSE_CATEGORY).on(EXPENSE.EXPENSE_CATEGORY.eq(EXPENSE_CATEGORY.ID))
+                .where(filter.toWhereClause())
+                .groupBy(EXPENSE_CATEGORY.ID)
+                .limit(100)
+                .fetch()
+
+            result.mapNotNull { it.toSummaryDomain() }
+        }
+    }
+
+    // Not Applicable...will be removed https://github.com/fruitbraker/money-tree/issues/40
+    override fun getSummaryById(uuid: UUID): Result<ExpenseCategorySummary?, Throwable> {
+        TODO("Not yet implemented")
+    }
+
+    private fun ExpenseCategoryFilter.toWhereClause(): Condition {
+        var condition = DSL.noCondition()
+
+        condition = condition.and(
+            EXPENSE.TRANSACTION_DATE.between(
+                this.startDate,
+                this.endDate
+            )
+        )
+
+        if (this.ids.isNotEmpty())
+            condition = condition.and(EXPENSE.EXPENSE_CATEGORY.`in`(this.ids))
+
+        return condition
     }
 }
