@@ -7,24 +7,19 @@ import java.util.UUID
 import moneytree.domain.entity.Vendor
 import moneytree.libs.commons.result.onOk
 import moneytree.libs.commons.result.shouldBeOk
+import moneytree.libs.commons.result.toOkValue
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.PersistConnectorTestHarness
-import moneytree.persist.db.generated.tables.daos.VendorDao
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class VendorRepositoryTest {
-
-    private val persistHarness = PersistConnectorTestHarness()
-    private val vendorRepository = VendorRepository(
-        VendorDao(persistHarness.dslContext.configuration())
-    )
+class VendorRepositoryTest : PersistConnectorTestHarness() {
 
     @AfterAll
     fun clean() {
-        persistHarness.close()
+        super.close()
     }
 
     @Test
@@ -37,67 +32,41 @@ class VendorRepositoryTest {
 
     @Test
     fun `insert and getById happy path`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
+        val randomVendor = insertRandomVendor().toOkValue()
 
-        val vendor = Vendor(
-            id = randomUUID,
-            name = randomString
+        val getResult = vendorRepository.getById(
+            checkNotNull(randomVendor.id)
         )
-
-        val insertResult = vendorRepository.insert(vendor)
-        insertResult.shouldBeOk()
-        insertResult.onOk { it shouldBe vendor }
-
-        val getResult = vendorRepository.getById(randomUUID)
         getResult.shouldBeOk()
-        getResult.onOk { it shouldBe vendor }
+        getResult.onOk { it shouldBe randomVendor }
     }
 
     @Test
     fun `generic get returns a list`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
-
-        val vendor = Vendor(
-            id = randomUUID,
-            name = randomString
-        )
-
-        vendorRepository.insert(vendor)
+        val randomVendor = insertRandomVendor().toOkValue()
 
         val getResult = vendorRepository.get()
         getResult.shouldBeOk()
         getResult.onOk {
             it.size shouldBeGreaterThanOrEqual 1
-            it shouldContain vendor
+            it shouldContain randomVendor
         }
     }
 
     @Test
     fun `upsertById updates existing entity`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
+        val randomVendor = insertRandomVendor().toOkValue()
+        val randomVendorId = checkNotNull(randomVendor.id)
 
-        val vendor = Vendor(
-            id = randomUUID,
-            name = randomString
+        val updatedVendor = randomVendor.copy(
+            name = randomString()
         )
 
-        vendorRepository.insert(vendor)
-
-        val newRandomString = randomString()
-
-        val updatedVendor = Vendor(
-            id = randomUUID,
-            name = newRandomString
-        )
-
-        val upsertResult = vendorRepository.upsertById(updatedVendor, randomUUID)
+        val upsertResult = vendorRepository.upsertById(updatedVendor, randomVendorId)
         upsertResult.shouldBeOk()
         upsertResult.onOk { it shouldBe updatedVendor }
 
-        val retrieveResult = vendorRepository.getById(randomUUID)
+        val retrieveResult = vendorRepository.getById(randomVendorId)
         retrieveResult.shouldBeOk()
         retrieveResult.onOk { it shouldBe updatedVendor }
     }
@@ -153,21 +122,13 @@ class VendorRepositoryTest {
 
     @Test
     fun `deleteById successfully deletes`() {
-        val randomUUID = UUID.randomUUID()
-        val randomString = randomString()
+        val randomVendor = insertRandomVendor().toOkValue()
+        val randomVendorId = checkNotNull(randomVendor.id)
 
-        val vendor = Vendor(
-            id = randomUUID,
-            name = randomString
-        )
-
-        val insertResult = vendorRepository.insert(vendor)
-        insertResult.shouldBeOk()
-
-        val deleteResult = vendorRepository.deleteById(randomUUID)
+        val deleteResult = vendorRepository.deleteById(randomVendorId)
         deleteResult.shouldBeOk()
 
-        val nullResult = vendorRepository.getById(randomUUID)
+        val nullResult = vendorRepository.getById(randomVendorId)
         nullResult.shouldBeOk()
         nullResult.onOk { it shouldBe null }
     }
