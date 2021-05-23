@@ -39,7 +39,6 @@ class ExpenseCategoryApi(
     override val listLens: BiDiBodyLens<List<ExpenseCategory>> = Http4kJackson.autoBody<List<ExpenseCategory>>().toLens()
 
     override val summaryRepository: SummaryRepository<ExpenseCategorySummary, ExpenseCategoryFilter> = expenseCategorySummaryRepository
-    override val summaryLens: BiDiBodyLens<ExpenseCategorySummary> = Http4kJackson.autoBody<ExpenseCategorySummary>().toLens()
     override val summaryListLens: BiDiBodyLens<List<ExpenseCategorySummary>> = Http4kJackson.autoBody<List<ExpenseCategorySummary>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {

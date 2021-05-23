@@ -39,13 +39,11 @@ class IncomeApi(
     override val listLens: BiDiBodyLens<List<Income>> = Http4kJackson.autoBody<List<Income>>().toLens()
 
     override val summaryRepository = incomeSummaryRepository
-    override val summaryLens: BiDiBodyLens<IncomeSummary> = Http4kJackson.autoBody<IncomeSummary>().toLens()
     override val summaryListLens: BiDiBodyLens<List<IncomeSummary>> = Http4kJackson.autoBody<List<IncomeSummary>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
             "/income/summary" bind Method.GET to this::getSummary,
-            "/income/summary/{id}" bind Method.GET to ::getSummaryById,
             "/income" bind Method.GET to ::get,
             "/income/{id}" bind Method.GET to ::getById,
             "/income" bind Method.POST to ::insert,

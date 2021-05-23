@@ -327,15 +327,6 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
     }
 
     @Test
-    fun `getSummaryById returns null on unknown id`() {
-        val randomUUID = UUID.randomUUID()
-
-        val nullResult = expenseRepository.getSummaryById(randomUUID)
-        nullResult.shouldBeOk()
-        nullResult.onOk { it shouldBe null }
-    }
-
-    @Test
     fun `deleteById successfully deletes`() {
         val randomVendor = insertRandomVendor().toOkValue()
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()

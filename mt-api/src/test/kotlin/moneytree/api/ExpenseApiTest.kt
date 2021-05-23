@@ -82,7 +82,6 @@ class ExpenseApiTest : RoutesTest<Expense>() {
     @BeforeAll
     override fun start() {
         every { entitySummaryRepository.getSummary(expenseSummaryFilter) } returns listOf(entitySummary).toOk()
-        every { entitySummaryRepository.getSummaryById(any()) } returns entitySummary.toOk()
 
         super.start()
     }
@@ -101,18 +100,5 @@ class ExpenseApiTest : RoutesTest<Expense>() {
 
         result.status shouldBe Status.OK
         result.bodyString() shouldBe listOf(entitySummary).toJson()
-    }
-
-    @Test
-    fun `getSummaryById happy path`() {
-        val request = Request(
-            Method.GET,
-            "$summaryPathUri/$randomUUIDParameter"
-        )
-
-        val result = client(request)
-
-        result.status shouldBe Status.OK
-        result.bodyString() shouldBe entitySummary.toJson()
     }
 }

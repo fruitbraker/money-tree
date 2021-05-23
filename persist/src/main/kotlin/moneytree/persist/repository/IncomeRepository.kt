@@ -157,22 +157,6 @@ class IncomeRepository(
         }
     }
 
-    override fun getSummaryById(uuid: UUID): Result<IncomeSummary?, Throwable> {
-        return resultTry {
-            val result = incomeDao.configuration().dsl()
-                .select()
-                .from(INCOME)
-                .join(INCOME_CATEGORY).on(INCOME.INCOME_CATEGORY.eq(INCOME_CATEGORY.ID))
-                .where(INCOME.ID.eq(uuid))
-                .fetch()
-
-            if (result.isNotEmpty)
-                result.first().toSummaryDomain()
-            else
-                null
-        }
-    }
-
     override fun deleteById(uuid: UUID): Result<Unit, Throwable> {
         return resultTry {
             incomeDao.configuration().dsl()

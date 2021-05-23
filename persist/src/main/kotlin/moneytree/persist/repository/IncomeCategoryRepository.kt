@@ -131,11 +131,6 @@ class IncomeCategoryRepository(
         }
     }
 
-    // Not Applicable...will be removed https://github.com/fruitbraker/money-tree/issues/40
-    override fun getSummaryById(uuid: UUID): Result<IncomeCategorySummary?, Throwable> {
-        TODO("Not yet implemented")
-    }
-
     private fun IncomeCategoryFilter.toWhereClause(): Condition {
         var condition = DSL.noCondition()
 

@@ -1,4 +1,4 @@
-package moneytree.api
+package moneytree
 
 import io.kotest.matchers.shouldBe
 import moneytree.libs.commons.result.toErr
@@ -6,10 +6,6 @@ import moneytree.libs.commons.result.toOk
 import moneytree.libs.commons.serde.toJson
 import moneytree.libs.testcommons.randomString
 import moneytree.persist.FOREIGN_KEY_CONSTRAINT_VIOLATION
-import moneytree.processGetByIdResult
-import moneytree.processGetResult
-import moneytree.processInsertResult
-import moneytree.processUpsertResult
 import org.http4k.core.Body
 import org.http4k.core.Status
 import org.http4k.format.Jackson.auto
