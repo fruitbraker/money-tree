@@ -158,23 +158,6 @@ class ExpenseRepository(
         }
     }
 
-    override fun getSummaryById(uuid: UUID): Result<ExpenseSummary?, Throwable> {
-        return resultTry {
-            val result = expenseDao.configuration().dsl()
-                .select()
-                .from(EXPENSE)
-                .join(VENDOR).on(EXPENSE.VENDOR.eq(VENDOR.ID))
-                .join(EXPENSE_CATEGORY).on(EXPENSE.EXPENSE_CATEGORY.eq(EXPENSE_CATEGORY.ID))
-                .where(EXPENSE.ID.eq(uuid))
-                .fetch()
-
-            if (result.isNotEmpty)
-                result.first().toSummaryDomain()
-            else
-                null
-        }
-    }
-
     override fun deleteById(uuid: UUID): Result<Unit, Throwable> {
         return resultTry {
             expenseDao.configuration().dsl()

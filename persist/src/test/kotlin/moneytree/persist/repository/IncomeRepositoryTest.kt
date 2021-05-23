@@ -234,39 +234,6 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     }
 
     @Test
-    fun `getSummaryById happy path`() {
-        val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
-
-        val randomIncome = insertRandomIncome(randomIncomeCategoryId).toOkValue()
-        val randomIncomeId = checkNotNull(randomIncome.id)
-
-        val incomeSummary = IncomeSummary(
-            id = randomIncomeId,
-            source = randomIncome.source,
-            incomeCategoryId = randomIncomeCategoryId,
-            incomeCategoryName = randomIncomeCategory.name,
-            transactionDate = randomIncome.transactionDate,
-            transactionAmount = randomIncome.transactionAmount,
-            notes = randomIncome.notes,
-            hide = randomIncome.hide
-        )
-
-        val summaryResult = incomeRepository.getSummaryById(randomIncomeId)
-        summaryResult.shouldBeOk()
-        summaryResult.onOk { it shouldBe incomeSummary }
-    }
-
-    @Test
-    fun `getSummaryById returns null on unknown uuid`() {
-        val randomUUID = UUID.randomUUID()
-
-        val nullResult = incomeRepository.getSummaryById(randomUUID)
-        nullResult.shouldBeOk()
-        nullResult.onOk { it shouldBe null }
-    }
-
-    @Test
     fun `deleteById successfully deletes`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
         val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
@@ -277,7 +244,7 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
         val deleteResult = incomeRepository.deleteById(randomIncomeId)
         deleteResult.shouldBeOk()
 
-        val nullResult = incomeRepository.getSummaryById(randomIncomeId)
+        val nullResult = incomeRepository.getById(randomIncomeId)
         nullResult.shouldBeOk()
         nullResult.onOk { it shouldBe null }
     }

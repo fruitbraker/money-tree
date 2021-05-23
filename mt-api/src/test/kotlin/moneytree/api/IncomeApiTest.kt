@@ -17,7 +17,6 @@ import moneytree.libs.testcommons.randomString
 import moneytree.persist.repository.IncomeRepository
 import moneytree.validator.IncomeValidator
 import org.http4k.core.Method
-import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -73,7 +72,6 @@ class IncomeApiTest : RoutesTest<Income>() {
     @BeforeAll
     override fun start() {
         every { entitySummaryRepository.getSummary(incomeSummaryFilter) } returns listOf(entitySummary).toOk()
-        every { entitySummaryRepository.getSummaryById(any()) } returns entitySummary.toOk()
 
         super.start()
     }
@@ -91,18 +89,5 @@ class IncomeApiTest : RoutesTest<Income>() {
 
         result.status shouldBe Status.OK
         result.bodyString() shouldBe listOf(entitySummary).toJson()
-    }
-
-    @Test
-    fun `getSummaryById happy path`() {
-        val request = Request(
-            Method.GET,
-            "$summaryPath/$randomUUIDParameter"
-        )
-
-        val result = client(request)
-
-        result.status shouldBe Status.OK
-        result.bodyString() shouldBe entitySummary.toJson()
     }
 }

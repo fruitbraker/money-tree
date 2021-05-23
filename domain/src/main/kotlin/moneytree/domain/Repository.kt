@@ -16,5 +16,4 @@ interface Repository<T> {
 
 interface SummaryRepository<S, F : Filter> {
     fun getSummary(filter: F): Result<List<S>, Throwable>
-    fun getSummaryById(uuid: UUID): Result<S?, Throwable>
 }

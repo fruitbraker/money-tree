@@ -40,13 +40,11 @@ class ExpenseApi(
     override val listLens: BiDiBodyLens<List<Expense>> = Http4kJackson.autoBody<List<Expense>>().toLens()
 
     override val summaryRepository: SummaryRepository<ExpenseSummary, ExpenseSummaryFilter> = expenseSummaryRepository
-    override val summaryLens: BiDiBodyLens<ExpenseSummary> = Http4kJackson.autoBody<ExpenseSummary>().toLens()
     override val summaryListLens: BiDiBodyLens<List<ExpenseSummary>> = Http4kJackson.autoBody<List<ExpenseSummary>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
             "/expense/summary" bind Method.GET to this::getSummary,
-            "/expense/summary/{id}" bind Method.GET to ::getSummaryById,
             "/expense" bind Method.GET to ::get,
             "/expense/{id}" bind Method.GET to ::getById,
             "/expense" bind Method.POST to ::insert,
