@@ -82,7 +82,7 @@ class IncomeApiTest : RoutesTest<Income>() {
             Method.GET,
             "$summaryPath?startDate=${incomeSummaryFilter.startDate}&" +
                 "endDate=${incomeSummaryFilter.endDate}&" +
-                "incomeCategories=${incomeSummaryFilter.incomeCategoryIds?.joinToString(",")}"
+                "incomeCategories=${incomeSummaryFilter.incomeCategoryIds.joinToString(",")}"
         )
 
         val result = client(request)

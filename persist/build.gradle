@@ -1,3 +1,5 @@
+import nu.studer.gradle.jooq.JooqEdition
+
 plugins {
     id 'nu.studer.jooq' version '5.2'
 }
@@ -18,7 +20,7 @@ dependencies {
 
 jooq {
     version = "${jooq_version}"
-    edition = nu.studer.gradle.jooq.JooqEdition.OSS
+    edition = JooqEdition.OSS
 
     configurations {
         main {
