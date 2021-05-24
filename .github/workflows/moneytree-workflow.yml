@@ -57,11 +57,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: lint
-        run: ./gradlew ktlintcheck
-
-      - name: test
-        run: ./gradlew test
+      - name: Run tests and build
+        run: ./gradlew build
         env:
           # The hostname used to communicate with the PostgreSQL service container
           POSTGRES_HOST: postgres
