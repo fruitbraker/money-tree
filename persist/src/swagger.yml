@@ -8,7 +8,7 @@ info:
     email: "test@test.com"
 host: "localhost"
 servers:
-  - url: "http://localhost:9000/v1"
+  - url: "http://localhost:9000"
 tags:
   - name: "Expense"
     description: "Everything you've spent money on"
@@ -141,6 +141,40 @@ paths:
           description: "Bad request."
         "404":
           description: "Expense not found."
+  /expense/summary:
+    get:
+      tags:
+        - "Expense"
+      summary: "Retrieve expense summaries"
+      description: "Retrieves list of expense summary."
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: "startDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "endDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "vendorIds"
+          schema:
+            type: "UUID list"
+        - in: query
+          name: "expenseCategoryIds"
+          schema:
+            type: "UUID list"
+      responses:
+        "200":
+          description: "Successful operation."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/ExpenseSummary"
 
   /category/expense:
     get:
@@ -158,7 +192,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/definitions/Expense_Category"
+                  $ref: "#/definitions/ExpenseCategory"
     post:
       tags:
         - "Expense Category"
@@ -173,14 +207,14 @@ paths:
           name: "body"
           required: true
           schema:
-            $ref: "#/definitions/Expense_Category"
+            $ref: "#/definitions/ExpenseCategory"
       responses:
         "201":
           description: "Resource successfully created."
           content:
             application/json:
               schema:
-                $ref: "#/definitions/Expense_Category"
+                $ref: "#/definitions/ExpenseCategory"
         "400":
           description: "Bad request."
 
@@ -206,7 +240,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/definitions/Expense_Category"
+                $ref: "#/definitions/ExpenseCategory"
         "400":
           description: "Bad request."
         "404":
@@ -233,7 +267,7 @@ paths:
           description: "Resource to be modified."
           required: true
           schema:
-            $ref: "#/definitions/Expense_Category"
+            $ref: "#/definitions/ExpenseCategory"
       responses:
         "204":
           description: "Resource successfully updated."
@@ -388,6 +422,23 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resource conflict."
+  /income/summary:
+    get:
+      tags:
+        - "Income"
+      summary: "Retrieve a list of income summary"
+      description: "Retrieve a list of income summary"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Successful operation."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/IncomeSummary"
 
   /category/income:
     get:
@@ -406,7 +457,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/definitions/Income_Category"
+                  $ref: "#/definitions/IncomeCategory"
     post:
       tags:
         - "Income Category"
@@ -421,14 +472,14 @@ paths:
           name: "body"
           required: true
           schema:
-            $ref: "#/definitions/Income_Category"
+            $ref: "#/definitions/IncomeCategory"
       responses:
         "201":
           description: "Resource successfully created."
           content:
             application/json:
               schema:
-                $ref: "#/definitions/Income_Category"
+                $ref: "#/definitions/IncomeCategory"
         "400":
           description: "Bad request."
 
@@ -455,7 +506,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/definitions/Income_Category"
+                $ref: "#/definitions/IncomeCategory"
         "400":
           description: "Bad request."
         "404":
@@ -482,7 +533,7 @@ paths:
           description: "Resource to be added."
           required: true
           schema:
-            $ref: "#/definitions/Income_Category"
+            $ref: "#/definitions/IncomeCategory"
       responses:
         "204":
           description: "Resource successfully updated."
@@ -642,7 +693,30 @@ paths:
 definitions:
   Expense:
     properties:
-      id:
+      expense_id:
+        type: "string"
+        format: "uuid"
+      transaction_date:
+        type: "string"
+        format: "date"
+      transaction_amount:
+        type: "number"
+        format: "double"
+      vendor_id:
+        type: "string"
+        format: "uuid"
+      expense_category_id:
+        type: "string"
+        format: "uuid"
+      notes:
+        type: "string"
+        example: "Notes about this expense"
+      hide:
+        type: "boolean"
+        description: "Should this not be calculated into the budgets?"
+  ExpenseSummary:
+    properties:
+      expense_id:
         type: "string"
         format: "uuid"
       transaction_date:
@@ -654,34 +728,46 @@ definitions:
       vendor:
         $ref: "#/definitions/Vendor"
       expense_category:
-        $ref: "#/definitions/Expense_Category"
+        $ref: "#/definitions/ExpenseCategory"
       notes:
         type: "string"
-        example: "what about this expense"
+        example: "Notes about this expense"
       hide:
         type: "boolean"
         description: "Should this not be calculated into the budgets?"
-  Expense_Category:
+  ExpenseCategory:
     properties:
-      id:
+      expense_category_id:
         type: "string"
         example: "uuid"
-      name:
+      expense_category_name:
         type: "string"
         example: "Restaurant"
       target_amount:
         type: "number"
         format: "double"
+  ExpenseCategorySummary:
+    properties:
+      expense_category_id:
+        type: "string"
+        example: "uuid"
+      expense_category_name:
+        type: "string"
+        example: "Restaurant"
+      total_amount:
+        type: "number"
+        format: "double"
   Income:
     properties:
-      id:
+      income_id:
         type: "string"
         format: "uuid"
       source:
         type: "string"
         example: "Company Inc"
-      income_category:
-        $ref: "#/definitions/Income_Category"
+      income_category_id:
+        type: "string"
+        format: "uuid"
       transaction_amount:
         type: "number"
         format: "double"
@@ -693,19 +779,51 @@ definitions:
         example: "what about this income"
       hide:
         type: "boolean"
-  Income_Category:
+  IncomeSummary:
     properties:
-      id:
+      income_id:
+        type: "string"
+        format: "uuid"
+      source:
+        type: "string"
+        example: "Company Inc"
+      income_category:
+        $ref: "#/definitions/IncomeCategory"
+      transaction_amount:
+        type: "number"
+        format: "double"
+      transaction_date:
+        type: "string"
+        format: "date"
+      notes:
+        type: "string"
+        example: "what about this income"
+      hide:
+        type: "boolean"
+  IncomeCategory:
+    properties:
+      income_category_id:
         type: "string"
         example: "uuid"
       name:
         type: "string"
         example: "Job"
+  IncomeCategorySummary:
+    properties:
+      income_category_id:
+        type: "string"
+        example: "uuid"
+      income_category_name:
+        type: "string"
+        example: "Restaurant"
+      target_amount:
+        type: "number"
+        format: "double"
   Vendor:
     properties:
-      id:
+      vendor_id:
         type: "string"
         format: "uuid"
-      name:
+      vendor_name:
         type: "string"
-        example: "A store's name"
+        example: "Vendor's name"
