@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
   description: "API for money tree"
-  version: "1.0.0"
+  version: "1.0.1"
   title: "Money Tree"
   # termsOfService: "http://swagger.io/terms/"
   contact:
@@ -11,13 +11,13 @@ servers:
   - url: "http://localhost:9000"
 tags:
   - name: "Expense"
-    description: "Everything you've spent money on"
+    description: "Everything money was spent on"
   - name: "Expense Category"
-    description: "The category an expense falls under with a monthly target spending"
+    description: "The category an expense falls under for a monthly target spending"
   - name: "Income"
-    description: "Information on your source of money"
+    description: "Information on your income"
   - name: "Income Category"
-    description: "The category this income falls under"
+    description: "The category an income falls under"
   - name: "Vendor"
     description: "Information about the vendor"
 
@@ -28,10 +28,26 @@ paths:
     get:
       tags:
         - "Expense"
-      summary: "Retrieve all expenses"
-      description: "Retrieves all expenses. Pagination implemented soon™️"
+      summary: "Retrieve expenses."
       produces:
         - "application/json"
+      parameters:
+        - in: query
+          name: "startDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "endDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "vendorIds"
+          schema:
+            type: "UUID list"
+        - in: query
+          name: "expenseCategoryIds"
+          schema:
+            type: "Comma separated UUID list"
       responses:
         "200":
           description: "Successful operation."
@@ -40,11 +56,11 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/definitions/Expense"
+                  $ref: "#/definitions/ExpenseSummary"
     post:
       tags:
         - "Expense"
-      summary: "Creates a new expense"
+      summary: "Create a new expense"
       consumes:
         - "application/json"
       produces:
@@ -52,7 +68,6 @@ paths:
       parameters:
         - in: "body"
           name: "body"
-          description: "Expense that is added to the list of expenses"
           required: true
           schema:
             $ref: "#/definitions/Expense"
@@ -76,7 +91,6 @@ paths:
       parameters:
         - name: id
           in: path
-          description: "ID of expense to return"
           required: true
           schema:
             type: "string"
@@ -87,13 +101,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/definitions/Expense"
+                $ref: "#/definitions/ExpenseSummary"
         "404":
           description: "Expense not found."
     put:
       tags:
         - "Expense"
-      summary: "Update expense by id"
+      summary: "Upsert expense by id"
       consumes:
         - "application/json"
       produces:
@@ -101,20 +115,18 @@ paths:
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of expense that needs to be updated."
           required: true
           schema:
             type: "string"
             format: "uuid"
         - in: "body"
           name: "body"
-          description: "Expense info to update to."
           required: true
           schema:
             $ref: "#/definitions/Expense"
       responses:
         "204":
-          description: "Expense successfully updated."
+          description: "Successful upsert."
         "400":
           description: "Bad request."
         "404":
@@ -123,13 +135,11 @@ paths:
       tags:
         - "Expense"
       summary: "Deletes an expense by id"
-      description: ""
       produces:
         - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "Expense id to delete"
           required: true
           schema:
             type: "string"
@@ -141,47 +151,12 @@ paths:
           description: "Bad request."
         "404":
           description: "Expense not found."
-  /expense/summary:
-    get:
-      tags:
-        - "Expense"
-      summary: "Retrieve expense summaries"
-      description: "Retrieves list of expense summary."
-      produces:
-        - "application/json"
-      parameters:
-        - in: query
-          name: "startDate"
-          schema:
-            type: "date"
-        - in: query
-          name: "endDate"
-          schema:
-            type: "date"
-        - in: query
-          name: "vendorIds"
-          schema:
-            type: "UUID list"
-        - in: query
-          name: "expenseCategoryIds"
-          schema:
-            type: "UUID list"
-      responses:
-        "200":
-          description: "Successful operation."
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/definitions/ExpenseSummary"
 
-  /category/expense:
+  /expense/category:
     get:
       tags:
         - "Expense Category"
-      summary: "Retrieve all expense categories."
-      description: ""
+      summary: "Retrieve expense categories."
       produces:
         - "application/json"
       responses:
@@ -196,8 +171,7 @@ paths:
     post:
       tags:
         - "Expense Category"
-      summary: "Creates a new expense category."
-      description: "Expense category"
+      summary: "Create a new expense category."
       consumes:
         - "application/json"
       produces:
@@ -218,18 +192,16 @@ paths:
         "400":
           description: "Bad request."
 
-  /category/expense/{id}:
+  /expense/category/{id}:
     get:
       tags:
         - "Expense Category"
-      summary: "Retrieves expense category by name"
-      description: "Returns a single expense cateory."
+      summary: "Retrieve expense category by id"
       produces:
         - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource target to return"
           required: true
           schema:
             type: "string"
@@ -248,8 +220,7 @@ paths:
     put:
       tags:
         - "Expense Category"
-      summary: "Updates expense category by name"
-      description: ""
+      summary: "Upsert expense category by id"
       consumes:
         - "application/json"
       produces:
@@ -257,20 +228,18 @@ paths:
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource that needs to be updated."
           required: true
           schema:
             type: "string"
             format: "uuid"
         - in: "body"
           name: "body"
-          description: "Resource to be modified."
           required: true
           schema:
             $ref: "#/definitions/ExpenseCategory"
       responses:
         "204":
-          description: "Resource successfully updated."
+          description: "Upsert success."
         "400":
           description: "Bad request."
         "404":
@@ -278,14 +247,12 @@ paths:
     delete:
       tags:
         - "Expense Category"
-      summary: "Deletes expense category by name"
-      description: ""
+      summary: "Delete expense category by id"
       produces:
         - "application/json"
       parameters:
-        - name: "category"
+        - name: "id"
           in: "path"
-          description: "Resource id to delete"
           required: true
           schema:
             type: "string"
@@ -299,15 +266,26 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resoruce conflict."
-
-  /income:
+  /expense/category/summary:
     get:
       tags:
-        - "Income"
-      summary: "Retrieve all income information."
-      description: ""
+        - "Expense Category"
+      summary: "Retrieve expense category summaries with aggregation options"
       produces:
         - "application/json"
+      parameters:
+        - in: query
+          name: "startDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "endDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "expenseCategoryIds"
+          schema:
+            type: "Comma separated UUID list"
       responses:
         "200":
           description: "Successful operation."
@@ -316,12 +294,41 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/definitions/Income"
+                  $ref: "#/definitions/ExpenseCategorySummary"
+
+  /income:
+    get:
+      tags:
+        - "Income"
+      summary: "Retrieve income."
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: "startDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "endDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "incomeCategoryIds"
+          schema:
+            type: "Comma separated UUID list"
+      responses:
+        "200":
+          description: "Successful operation."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/IncomeSummary"
     post:
       tags:
         - "Income"
-      summary: "Creates a new income data point."
-      description: "Income information"
+      summary: "Create a new income."
       consumes:
         - "application/json"
       produces:
@@ -347,14 +354,12 @@ paths:
     get:
       tags:
         - "Income"
-      summary: "Retrieves income data by id"
-      description: "Returns a single income."
+      summary: "Retrieve income by id"
       produces:
         - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource target to return"
           required: true
           schema:
             type: "string"
@@ -365,7 +370,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/definitions/Income"
+                $ref: "#/definitions/IncomeSummary"
         "400":
           description: "Bad request."
         "404":
@@ -373,8 +378,7 @@ paths:
     put:
       tags:
         - "Income"
-      summary: "Updates income data with id"
-      description: ""
+      summary: "Upsert income by id"
       consumes:
         - "application/json"
       produces:
@@ -382,33 +386,29 @@ paths:
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource that needs to be updated."
           required: true
           schema:
             type: "string"
             format: "uuid"
         - in: "body"
           name: "body"
-          description: "Resource to be added."
           required: true
           schema:
             $ref: "#/definitions/Income"
       responses:
         "204":
-          description: "Resource successfully updated."
+          description: "Upsert success."
         "400":
           description: "Bad request."
     delete:
       tags:
         - "Income"
-      summary: "Deletes income data by id"
-      description: ""
+      summary: "Delete income data by id"
       produces:
         - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "Resource id to delete"
           required: true
           schema:
             type: "string"
@@ -422,30 +422,12 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resource conflict."
-  /income/summary:
-    get:
-      tags:
-        - "Income"
-      summary: "Retrieve a list of income summary"
-      description: "Retrieve a list of income summary"
-      produces:
-        - "application/json"
-      responses:
-        "200":
-          description: "Successful operation."
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/definitions/IncomeSummary"
 
-  /category/income:
+  /income/category:
     get:
       tags:
         - "Income Category"
-      summary: "Retrieve all income categories."
-      description: ""
+      summary: "Retrieve income categories."
       operationId: "getIncomeCategory"
       produces:
         - "application/json"
@@ -461,8 +443,7 @@ paths:
     post:
       tags:
         - "Income Category"
-      summary: "Creates a new income category."
-      description: "Income category"
+      summary: "Create a new income category."
       consumes:
         - "application/json"
       produces:
@@ -484,18 +465,16 @@ paths:
           description: "Bad request."
 
 
-  /category/income/{id}:
+  /income/category/{id}:
     get:
       tags:
         - "Income Category"
-      summary: "Retrieves income category by id"
-      description: "Returns a single expense cateory."
+      summary: "Retrieve income category by id"
       produces:
         - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource target to return"
           required: true
           schema:
             type: "string"
@@ -514,8 +493,7 @@ paths:
     put:
       tags:
         - "Income Category"
-      summary: "Updates income category by id"
-      description: ""
+      summary: "Update income category by id"
       consumes:
         - "application/json"
       produces:
@@ -523,7 +501,6 @@ paths:
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource that needs to be updated."
           required: true
           schema:
             type: "string"
@@ -544,14 +521,12 @@ paths:
     delete:
       tags:
         - "Income Category"
-      summary: "Deletes income category by id"
-      description: ""
+      summary: "Delete income category by id"
       produces:
         - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "Resource id to delete"
           required: true
           schema:
             type: "string"
@@ -565,13 +540,41 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resource conflict"
+  /income/category/summary:
+    get:
+      tags:
+        - "Income Category"
+      summary: "Retrieve a list of income category with aggregation options"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: "startDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "endDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "incomeCategoryIds"
+          schema:
+            type: "Comma seaparted UUID list"
+      responses:
+        "200":
+          description: "Successful operation."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/IncomeCategorySummary"
 
   /vendor:
     get:
       tags:
         - "Vendor"
-      summary: "Retrieve all vendor information."
-      description: ""
+      summary: "Retrieve vendors."
       produces:
         - "application/json"
       responses:
@@ -586,8 +589,7 @@ paths:
     post:
       tags:
         - "Vendor"
-      summary: "Creates a new vendor data point."
-      description: "Vendor information"
+      summary: "Create a new vendor."
       consumes:
         - "application/json"
       produces:
@@ -612,14 +614,12 @@ paths:
     get:
       tags:
         - "Vendor"
-      summary: "Retrieves vendor data by id"
-      description: "Returns a single vendor."
+      summary: "Retrieve vendor by id"
       produces:
         - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource target to return"
           required: true
           schema:
             type: "string"
@@ -638,8 +638,7 @@ paths:
     put:
       tags:
         - "Vendor"
-      summary: "Updates vendor data by id"
-      description: ""
+      summary: "Upsert vendor by id"
       consumes:
         - "application/json"
       produces:
@@ -647,7 +646,6 @@ paths:
       parameters:
         - name: "id"
           in: "path"
-          description: "ID of resource that needs to be updated."
           required: true
           schema:
             type: "string"
@@ -660,7 +658,7 @@ paths:
             $ref: "#/definitions/Vendor"
       responses:
         "204":
-          description: "Resource successfully updated."
+          description: "Resource successfully upserted."
         "400":
           description: "Bad request."
         "404":
@@ -668,14 +666,12 @@ paths:
     delete:
       tags:
         - "Vendor"
-      summary: "Deletes vendor data with id"
-      description: ""
+      summary: "Delete vendor by id"
       produces:
         - "application/json"
       parameters:
         - name: "vendor_id"
           in: "path"
-          description: "Resource id to delete"
           required: true
           schema:
             type: "string"
@@ -689,6 +685,35 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resource conflict."
+  /vendor/summary:
+    get:
+      tags:
+        - "Vendor"
+      summary: "Retrieve aggregated vendors with options"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: "startDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "endDate"
+          schema:
+            type: "date"
+        - in: query
+          name: "vendorIds"
+          schema:
+            type: "Comma separated UUID list"
+      responses:
+        "200":
+          description: "Successful operation."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/VendorSummary"
 
 definitions:
   Expense:
@@ -739,7 +764,7 @@ definitions:
     properties:
       expense_category_id:
         type: "string"
-        example: "uuid"
+        format: "uuid"
       expense_category_name:
         type: "string"
         example: "Restaurant"
@@ -748,13 +773,18 @@ definitions:
         format: "double"
   ExpenseCategorySummary:
     properties:
-      expense_category_id:
+      startDate:
+        nullable: true
         type: "string"
-        example: "uuid"
-      expense_category_name:
+        format: "date"
+      endDate:
+        nullable: true
         type: "string"
-        example: "Restaurant"
+        format: "date"
+      expense_category:
+        $ref: "#/definitions/ExpenseCategory"
       total_amount:
+        nullable: true
         type: "number"
         format: "double"
   Income:
@@ -776,7 +806,7 @@ definitions:
         format: "date"
       notes:
         type: "string"
-        example: "what about this income"
+        example: "Notes about this income"
       hide:
         type: "boolean"
   IncomeSummary:
@@ -804,15 +834,21 @@ definitions:
     properties:
       income_category_id:
         type: "string"
-        example: "uuid"
+        format: "uuid"
       name:
         type: "string"
         example: "Job"
   IncomeCategorySummary:
     properties:
+      startDate:
+        type: "string"
+        format: "date"
+      endDate:
+        type: "string"
+        format: "date"
       income_category_id:
         type: "string"
-        example: "uuid"
+        format: "uuid"
       income_category_name:
         type: "string"
         example: "Restaurant"
@@ -827,3 +863,20 @@ definitions:
       vendor_name:
         type: "string"
         example: "Vendor's name"
+  VendorSummary:
+    properties:
+      startDate:
+        type: "string"
+        format: "date"
+      endDate:
+        type: "string"
+        format: "date"
+      vendor_id:
+        type: "string"
+        format: "uuid"
+      vendor_name:
+        type: "string"
+        example: "Store A"
+      total_amount:
+        type: "number"
+        format: "double"
