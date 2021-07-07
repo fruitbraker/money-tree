@@ -51,9 +51,9 @@ public class Expense extends TableImpl<ExpenseRecord> {
     }
 
     /**
-     * The column <code>mtdev.expense.id</code>.
+     * The column <code>mtdev.expense.expense_id</code>.
      */
-    public final TableField<ExpenseRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false).defaultValue(DSL.field("mtdev.uuid_generate_v4()", SQLDataType.UUID)), this, "");
+    public final TableField<ExpenseRecord, UUID> EXPENSE_ID = createField(DSL.name("expense_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>mtdev.expense.transaction_date</code>.
@@ -66,14 +66,14 @@ public class Expense extends TableImpl<ExpenseRecord> {
     public final TableField<ExpenseRecord, BigDecimal> TRANSACTION_AMOUNT = createField(DSL.name("transaction_amount"), SQLDataType.NUMERIC(12, 4).nullable(false), this, "");
 
     /**
-     * The column <code>mtdev.expense.vendor</code>.
+     * The column <code>mtdev.expense.vendor_id</code>.
      */
-    public final TableField<ExpenseRecord, UUID> VENDOR = createField(DSL.name("vendor"), SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<ExpenseRecord, UUID> VENDOR_ID = createField(DSL.name("vendor_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
-     * The column <code>mtdev.expense.expense_category</code>.
+     * The column <code>mtdev.expense.expense_category_id</code>.
      */
-    public final TableField<ExpenseRecord, UUID> EXPENSE_CATEGORY = createField(DSL.name("expense_category"), SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<ExpenseRecord, UUID> EXPENSE_CATEGORY_ID = createField(DSL.name("expense_category_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>mtdev.expense.notes</code>.
@@ -135,15 +135,24 @@ public class Expense extends TableImpl<ExpenseRecord> {
 
     @Override
     public List<ForeignKey<ExpenseRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<ExpenseRecord, ?>>asList(Keys.EXPENSE__EXPENSE_VENDOR_FKEY, Keys.EXPENSE__EXPENSE_EXPENSE_CATEGORY_FKEY);
+        return Arrays.<ForeignKey<ExpenseRecord, ?>>asList(Keys.EXPENSE__EXPENSE_VENDOR_ID_FKEY, Keys.EXPENSE__EXPENSE_EXPENSE_CATEGORY_ID_FKEY);
     }
 
+    private transient Vendor _vendor;
+    private transient ExpenseCategory _expenseCategory;
+
     public Vendor vendor() {
-        return new Vendor(this, Keys.EXPENSE__EXPENSE_VENDOR_FKEY);
+        if (_vendor == null)
+            _vendor = new Vendor(this, Keys.EXPENSE__EXPENSE_VENDOR_ID_FKEY);
+
+        return _vendor;
     }
 
     public ExpenseCategory expenseCategory() {
-        return new ExpenseCategory(this, Keys.EXPENSE__EXPENSE_EXPENSE_CATEGORY_FKEY);
+        if (_expenseCategory == null)
+            _expenseCategory = new ExpenseCategory(this, Keys.EXPENSE__EXPENSE_EXPENSE_CATEGORY_ID_FKEY);
+
+        return _expenseCategory;
     }
 
     @Override

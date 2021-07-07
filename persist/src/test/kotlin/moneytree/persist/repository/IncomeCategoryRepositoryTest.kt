@@ -39,7 +39,7 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
 
         val retrieveResult = incomeCategoryRepository.getById(
-            checkNotNull(randomIncomeCategory.id)
+            checkNotNull(randomIncomeCategory.incomeCategoryId)
         )
         retrieveResult.shouldBeOk()
         retrieveResult.onOk {
@@ -62,12 +62,12 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `upsert updates existing entity`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
 
         val newRandomString = randomString()
 
         val updatedIncomeCategory = IncomeCategory(
-            id = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             name = newRandomString
         )
 
@@ -90,7 +90,7 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
         val randomString = randomString()
 
         val incomeCategory = IncomeCategory(
-            id = randomUUID,
+            incomeCategoryId = randomUUID,
             name = randomString
         )
 
@@ -116,11 +116,11 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
         val randomString = randomString()
 
         val incomeCategory = IncomeCategory(
-            id = randomUUID,
+            incomeCategoryId = randomUUID,
             name = randomString
         )
 
-        val idParameterIncomeCategory = incomeCategory.copy(id = parameterId)
+        val idParameterIncomeCategory = incomeCategory.copy(incomeCategoryId = parameterId)
 
         val upsertResult = incomeCategoryRepository.upsertById(incomeCategory, parameterId)
         upsertResult.shouldBeOk()
@@ -134,7 +134,7 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `deleteById successfully deletes`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
 
         val deleteResult = incomeCategoryRepository.deleteById(randomIncomeCategoryId)
         deleteResult.shouldBeOk()
@@ -155,10 +155,10 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `getSummary for IncomeCategory aggregates transaction amount on incomeCategoryId`() {
         val randomIncomeCategory1 = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId1 = checkNotNull(randomIncomeCategory1.id)
+        val randomIncomeCategoryId1 = checkNotNull(randomIncomeCategory1.incomeCategoryId)
 
         val randomIncomeCategory2 = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId2 = checkNotNull(randomIncomeCategory2.id)
+        val randomIncomeCategoryId2 = checkNotNull(randomIncomeCategory2.incomeCategoryId)
 
         val randomIncome1WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()
         val randomIncome2WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()
@@ -195,10 +195,10 @@ class IncomeCategoryRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `getSummary with filter on ids happy path`() {
         val randomIncomeCategory1 = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId1 = checkNotNull(randomIncomeCategory1.id)
+        val randomIncomeCategoryId1 = checkNotNull(randomIncomeCategory1.incomeCategoryId)
 
         val randomIncomeCategory2 = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId2 = checkNotNull(randomIncomeCategory2.id)
+        val randomIncomeCategoryId2 = checkNotNull(randomIncomeCategory2.incomeCategoryId)
 
         val randomIncome1WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()
         val randomIncome2WithIncomeCategory1 = insertRandomIncome(randomIncomeCategoryId1).toOkValue()

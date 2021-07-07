@@ -18,7 +18,7 @@ class ExpenseCategoryValidatorTest {
         val randomTargetAmount = randomBigDecimal()
 
         val expenseCategory = ExpenseCategory(
-            id = randomUUID,
+            expenseCategoryId = randomUUID,
             name = randomName,
             targetAmount = randomTargetAmount
         )
@@ -35,7 +35,7 @@ class ExpenseCategoryValidatorTest {
         val randomTargetAmount = randomBigDecimal()
 
         val expenseCategory = ExpenseCategory(
-            id = randomUUID,
+            expenseCategoryId = randomUUID,
             name = randomName,
             targetAmount = randomTargetAmount
         )
@@ -52,7 +52,7 @@ class ExpenseCategoryValidatorTest {
         val randomTargetAmount = BigDecimal(Double.MAX_VALUE)
 
         val expenseCategory = ExpenseCategory(
-            id = randomUUID,
+            expenseCategoryId = randomUUID,
             name = randomName,
             targetAmount = randomTargetAmount
         )

@@ -28,7 +28,7 @@ class IncomeCategoryApiTest : RoutesTest<IncomeCategory>() {
     private val randomString = randomString()
 
     override val entity = IncomeCategory(
-        id = randomUUID,
+        incomeCategoryId = randomUUID,
         name = randomString,
     )
 

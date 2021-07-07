@@ -29,7 +29,7 @@ class ExpenseCategoryApiTest : RoutesTest<ExpenseCategory>() {
     private val randomBigDecimal = randomBigDecimal()
 
     override val entity = ExpenseCategory(
-        id = randomUUID,
+        expenseCategoryId = randomUUID,
         name = randomString,
         targetAmount = randomBigDecimal
     )

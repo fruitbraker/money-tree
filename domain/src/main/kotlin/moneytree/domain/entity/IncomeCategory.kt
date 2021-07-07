@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
+import moneytree.domain.Filter
 import moneytree.libs.commons.serde.TrimStringDeserializer
 
 data class IncomeCategory(
-    val id: UUID?,
+    val incomeCategoryId: UUID?,
     @JsonDeserialize(using = TrimStringDeserializer::class)
     val name: String
 )

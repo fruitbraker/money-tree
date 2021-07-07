@@ -17,40 +17,40 @@ public class ExpenseCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID       id;
+    private UUID       expenseCategoryId;
     private String     name;
     private BigDecimal targetAmount;
 
     public ExpenseCategory() {}
 
     public ExpenseCategory(ExpenseCategory value) {
-        this.id = value.id;
+        this.expenseCategoryId = value.expenseCategoryId;
         this.name = value.name;
         this.targetAmount = value.targetAmount;
     }
 
     public ExpenseCategory(
-        UUID       id,
+        UUID       expenseCategoryId,
         String     name,
         BigDecimal targetAmount
     ) {
-        this.id = id;
+        this.expenseCategoryId = expenseCategoryId;
         this.name = name;
         this.targetAmount = targetAmount;
     }
 
     /**
-     * Getter for <code>mtdev.expense_category.id</code>.
+     * Getter for <code>mtdev.expense_category.expense_category_id</code>.
      */
-    public UUID getId() {
-        return this.id;
+    public UUID getExpenseCategoryId() {
+        return this.expenseCategoryId;
     }
 
     /**
-     * Setter for <code>mtdev.expense_category.id</code>.
+     * Setter for <code>mtdev.expense_category.expense_category_id</code>.
      */
-    public ExpenseCategory setId(UUID id) {
-        this.id = id;
+    public ExpenseCategory setExpenseCategoryId(UUID expenseCategoryId) {
+        this.expenseCategoryId = expenseCategoryId;
         return this;
     }
 
@@ -88,7 +88,7 @@ public class ExpenseCategory implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("ExpenseCategory (");
 
-        sb.append(id);
+        sb.append(expenseCategoryId);
         sb.append(", ").append(name);
         sb.append(", ").append(targetAmount);
 

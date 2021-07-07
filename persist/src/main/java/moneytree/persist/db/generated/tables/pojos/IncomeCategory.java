@@ -16,36 +16,36 @@ public class IncomeCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID   id;
+    private UUID   incomeCategoryId;
     private String name;
 
     public IncomeCategory() {}
 
     public IncomeCategory(IncomeCategory value) {
-        this.id = value.id;
+        this.incomeCategoryId = value.incomeCategoryId;
         this.name = value.name;
     }
 
     public IncomeCategory(
-        UUID   id,
+        UUID   incomeCategoryId,
         String name
     ) {
-        this.id = id;
+        this.incomeCategoryId = incomeCategoryId;
         this.name = name;
     }
 
     /**
-     * Getter for <code>mtdev.income_category.id</code>.
+     * Getter for <code>mtdev.income_category.income_category_id</code>.
      */
-    public UUID getId() {
-        return this.id;
+    public UUID getIncomeCategoryId() {
+        return this.incomeCategoryId;
     }
 
     /**
-     * Setter for <code>mtdev.income_category.id</code>.
+     * Setter for <code>mtdev.income_category.income_category_id</code>.
      */
-    public IncomeCategory setId(UUID id) {
-        this.id = id;
+    public IncomeCategory setIncomeCategoryId(UUID incomeCategoryId) {
+        this.incomeCategoryId = incomeCategoryId;
         return this;
     }
 
@@ -68,7 +68,7 @@ public class IncomeCategory implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("IncomeCategory (");
 
-        sb.append(id);
+        sb.append(incomeCategoryId);
         sb.append(", ").append(name);
 
         sb.append(")");

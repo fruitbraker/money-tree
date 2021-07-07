@@ -15,7 +15,7 @@ class IncomeCategoryValidatorTest {
         val randomName = randomString()
 
         val incomeCategory = IncomeCategory(
-            id = randomUUID,
+            incomeCategoryId = randomUUID,
             name = randomName
         )
 
@@ -30,7 +30,7 @@ class IncomeCategoryValidatorTest {
         val randomName = randomString(999)
 
         val incomeCategory = IncomeCategory(
-            id = randomUUID,
+            incomeCategoryId = randomUUID,
             name = randomName
         )
 

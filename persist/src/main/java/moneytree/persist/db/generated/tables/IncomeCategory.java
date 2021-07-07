@@ -49,9 +49,9 @@ public class IncomeCategory extends TableImpl<IncomeCategoryRecord> {
     }
 
     /**
-     * The column <code>mtdev.income_category.id</code>.
+     * The column <code>mtdev.income_category.income_category_id</code>.
      */
-    public final TableField<IncomeCategoryRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false).defaultValue(DSL.field("mtdev.uuid_generate_v4()", SQLDataType.UUID)), this, "");
+    public final TableField<IncomeCategoryRecord, UUID> INCOME_CATEGORY_ID = createField(DSL.name("income_category_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>mtdev.income_category.name</code>.

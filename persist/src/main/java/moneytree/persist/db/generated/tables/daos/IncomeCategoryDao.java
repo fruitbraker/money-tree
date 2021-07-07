@@ -36,28 +36,28 @@ public class IncomeCategoryDao extends DAOImpl<IncomeCategoryRecord, moneytree.p
 
     @Override
     public UUID getId(moneytree.persist.db.generated.tables.pojos.IncomeCategory object) {
-        return object.getId();
+        return object.getIncomeCategoryId();
     }
 
     /**
-     * Fetch records that have <code>id BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>income_category_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.IncomeCategory> fetchRangeOfId(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(IncomeCategory.INCOME_CATEGORY.ID, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.IncomeCategory> fetchRangeOfIncomeCategoryId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(IncomeCategory.INCOME_CATEGORY.INCOME_CATEGORY_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>id IN (values)</code>
+     * Fetch records that have <code>income_category_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.IncomeCategory> fetchById(UUID... values) {
-        return fetch(IncomeCategory.INCOME_CATEGORY.ID, values);
+    public List<moneytree.persist.db.generated.tables.pojos.IncomeCategory> fetchByIncomeCategoryId(UUID... values) {
+        return fetch(IncomeCategory.INCOME_CATEGORY.INCOME_CATEGORY_ID, values);
     }
 
     /**
-     * Fetch a unique record that has <code>id = value</code>
+     * Fetch a unique record that has <code>income_category_id = value</code>
      */
-    public moneytree.persist.db.generated.tables.pojos.IncomeCategory fetchOneById(UUID value) {
-        return fetchOne(IncomeCategory.INCOME_CATEGORY.ID, value);
+    public moneytree.persist.db.generated.tables.pojos.IncomeCategory fetchOneByIncomeCategoryId(UUID value) {
+        return fetchOne(IncomeCategory.INCOME_CATEGORY.INCOME_CATEGORY_ID, value);
     }
 
     /**

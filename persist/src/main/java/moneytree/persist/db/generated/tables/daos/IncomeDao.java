@@ -38,28 +38,28 @@ public class IncomeDao extends DAOImpl<IncomeRecord, moneytree.persist.db.genera
 
     @Override
     public UUID getId(moneytree.persist.db.generated.tables.pojos.Income object) {
-        return object.getId();
+        return object.getIncomeId();
     }
 
     /**
-     * Fetch records that have <code>id BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>income_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchRangeOfId(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(Income.INCOME.ID, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchRangeOfIncomeId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(Income.INCOME.INCOME_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>id IN (values)</code>
+     * Fetch records that have <code>income_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchById(UUID... values) {
-        return fetch(Income.INCOME.ID, values);
+    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchByIncomeId(UUID... values) {
+        return fetch(Income.INCOME.INCOME_ID, values);
     }
 
     /**
-     * Fetch a unique record that has <code>id = value</code>
+     * Fetch a unique record that has <code>income_id = value</code>
      */
-    public moneytree.persist.db.generated.tables.pojos.Income fetchOneById(UUID value) {
-        return fetchOne(Income.INCOME.ID, value);
+    public moneytree.persist.db.generated.tables.pojos.Income fetchOneByIncomeId(UUID value) {
+        return fetchOne(Income.INCOME.INCOME_ID, value);
     }
 
     /**
@@ -77,17 +77,17 @@ public class IncomeDao extends DAOImpl<IncomeRecord, moneytree.persist.db.genera
     }
 
     /**
-     * Fetch records that have <code>income_category BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>income_category_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchRangeOfIncomeCategory(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(Income.INCOME.INCOME_CATEGORY, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchRangeOfIncomeCategoryId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(Income.INCOME.INCOME_CATEGORY_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>income_category IN (values)</code>
+     * Fetch records that have <code>income_category_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchByIncomeCategory(UUID... values) {
-        return fetch(Income.INCOME.INCOME_CATEGORY, values);
+    public List<moneytree.persist.db.generated.tables.pojos.Income> fetchByIncomeCategoryId(UUID... values) {
+        return fetch(Income.INCOME.INCOME_CATEGORY_ID, values);
     }
 
     /**

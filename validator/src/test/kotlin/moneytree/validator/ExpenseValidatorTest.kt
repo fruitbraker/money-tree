@@ -27,8 +27,8 @@ class ExpenseValidatorTest {
             id = randomUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
-            vendor = randomVendorId,
-            expenseCategory = randomExpenseCategoryId,
+            vendorId = randomVendorId,
+            expenseCategoryId = randomExpenseCategoryId,
             notes = randomNotes,
             hide = hide
         )
@@ -52,8 +52,8 @@ class ExpenseValidatorTest {
             id = randomUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
-            vendor = badUUID,
-            expenseCategory = randomExpenseCategoryId,
+            vendorId = badUUID,
+            expenseCategoryId = randomExpenseCategoryId,
             notes = randomNotes,
             hide = hide
         )
@@ -77,8 +77,8 @@ class ExpenseValidatorTest {
             id = randomUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
-            vendor = vendorId,
-            expenseCategory = badUUID,
+            vendorId = vendorId,
+            expenseCategoryId = badUUID,
             notes = randomNotes,
             hide = hide
         )
@@ -102,8 +102,8 @@ class ExpenseValidatorTest {
             id = randomUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
-            vendor = randomVendorId,
-            expenseCategory = randomExpenseCategoryId,
+            vendorId = randomVendorId,
+            expenseCategoryId = randomExpenseCategoryId,
             notes = randomNotes,
             hide = hide
         )
@@ -127,8 +127,8 @@ class ExpenseValidatorTest {
             id = randomUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
-            vendor = randomVendorId,
-            expenseCategory = randomExpenseCategoryId,
+            vendorId = randomVendorId,
+            expenseCategoryId = randomExpenseCategoryId,
             notes = randomNotes,
             hide = hide
         )
@@ -152,8 +152,8 @@ class ExpenseValidatorTest {
             id = randomUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
-            vendor = randomVendorId,
-            expenseCategory = randomExpenseCategoryId,
+            vendorId = randomVendorId,
+            expenseCategoryId = randomExpenseCategoryId,
             notes = randomNotes,
             hide = hide
         )

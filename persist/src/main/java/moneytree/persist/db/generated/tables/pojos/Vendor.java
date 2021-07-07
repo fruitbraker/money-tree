@@ -16,36 +16,36 @@ public class Vendor implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID   id;
+    private UUID   vendorId;
     private String name;
 
     public Vendor() {}
 
     public Vendor(Vendor value) {
-        this.id = value.id;
+        this.vendorId = value.vendorId;
         this.name = value.name;
     }
 
     public Vendor(
-        UUID   id,
+        UUID   vendorId,
         String name
     ) {
-        this.id = id;
+        this.vendorId = vendorId;
         this.name = name;
     }
 
     /**
-     * Getter for <code>mtdev.vendor.id</code>.
+     * Getter for <code>mtdev.vendor.vendor_id</code>.
      */
-    public UUID getId() {
-        return this.id;
+    public UUID getVendorId() {
+        return this.vendorId;
     }
 
     /**
-     * Setter for <code>mtdev.vendor.id</code>.
+     * Setter for <code>mtdev.vendor.vendor_id</code>.
      */
-    public Vendor setId(UUID id) {
-        this.id = id;
+    public Vendor setVendorId(UUID vendorId) {
+        this.vendorId = vendorId;
         return this;
     }
 
@@ -68,7 +68,7 @@ public class Vendor implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("Vendor (");
 
-        sb.append(id);
+        sb.append(vendorId);
         sb.append(", ").append(name);
 
         sb.append(")");

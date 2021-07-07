@@ -27,8 +27,8 @@ class ExpenseRepository(
             id = this[EXPENSE.ID],
             transactionDate = this[EXPENSE.TRANSACTION_DATE],
             transactionAmount = this[EXPENSE.TRANSACTION_AMOUNT],
-            vendor = this[EXPENSE.VENDOR],
-            expenseCategory = this[EXPENSE.EXPENSE_CATEGORY],
+            vendorId = this[EXPENSE.VENDOR],
+            expenseCategoryId = this[EXPENSE.EXPENSE_CATEGORY],
             notes = this[EXPENSE.NOTES],
             hide = this[EXPENSE.HIDE]
         )
@@ -39,8 +39,8 @@ class ExpenseRepository(
             id = this.id,
             transactionDate = this.transactionDate,
             transactionAmount = this.transactionAmount,
-            vendor = this.vendor,
-            expenseCategory = this.expenseCategory,
+            vendorId = this.vendor,
+            expenseCategoryId = this.expenseCategory,
             notes = this.notes,
             hide = this.hide
         )
@@ -95,8 +95,8 @@ class ExpenseRepository(
                     newEntity.id ?: UUID.randomUUID(),
                     newEntity.transactionDate,
                     newEntity.transactionAmount,
-                    newEntity.vendor,
-                    newEntity.expenseCategory,
+                    newEntity.vendorId,
+                    newEntity.expenseCategoryId,
                     newEntity.notes,
                     newEntity.hide
                 )
@@ -124,16 +124,16 @@ class ExpenseRepository(
                     uuid,
                     updatedEntity.transactionDate,
                     updatedEntity.transactionAmount,
-                    updatedEntity.vendor,
-                    updatedEntity.expenseCategory,
+                    updatedEntity.vendorId,
+                    updatedEntity.expenseCategoryId,
                     updatedEntity.notes,
                     updatedEntity.hide
                 )
                 .onDuplicateKeyUpdate()
                 .set(EXPENSE.TRANSACTION_DATE, updatedEntity.transactionDate)
                 .set(EXPENSE.TRANSACTION_AMOUNT, updatedEntity.transactionAmount)
-                .set(EXPENSE.VENDOR, updatedEntity.vendor)
-                .set(EXPENSE.EXPENSE_CATEGORY, updatedEntity.expenseCategory)
+                .set(EXPENSE.VENDOR, updatedEntity.vendorId)
+                .set(EXPENSE.EXPENSE_CATEGORY, updatedEntity.expenseCategoryId)
                 .set(EXPENSE.NOTES, updatedEntity.notes)
                 .set(EXPENSE.HIDE, updatedEntity.hide)
                 .execute()

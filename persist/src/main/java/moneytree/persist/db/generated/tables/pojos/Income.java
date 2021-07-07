@@ -18,9 +18,9 @@ public class Income implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID       id;
+    private UUID       incomeId;
     private String     source;
-    private UUID       incomeCategory;
+    private UUID       incomeCategoryId;
     private BigDecimal transactionAmount;
     private LocalDate  transactionDate;
     private String     notes;
@@ -29,9 +29,9 @@ public class Income implements Serializable {
     public Income() {}
 
     public Income(Income value) {
-        this.id = value.id;
+        this.incomeId = value.incomeId;
         this.source = value.source;
-        this.incomeCategory = value.incomeCategory;
+        this.incomeCategoryId = value.incomeCategoryId;
         this.transactionAmount = value.transactionAmount;
         this.transactionDate = value.transactionDate;
         this.notes = value.notes;
@@ -39,17 +39,17 @@ public class Income implements Serializable {
     }
 
     public Income(
-        UUID       id,
+        UUID       incomeId,
         String     source,
-        UUID       incomeCategory,
+        UUID       incomeCategoryId,
         BigDecimal transactionAmount,
         LocalDate  transactionDate,
         String     notes,
         Boolean    hide
     ) {
-        this.id = id;
+        this.incomeId = incomeId;
         this.source = source;
-        this.incomeCategory = incomeCategory;
+        this.incomeCategoryId = incomeCategoryId;
         this.transactionAmount = transactionAmount;
         this.transactionDate = transactionDate;
         this.notes = notes;
@@ -57,17 +57,17 @@ public class Income implements Serializable {
     }
 
     /**
-     * Getter for <code>mtdev.income.id</code>.
+     * Getter for <code>mtdev.income.income_id</code>.
      */
-    public UUID getId() {
-        return this.id;
+    public UUID getIncomeId() {
+        return this.incomeId;
     }
 
     /**
-     * Setter for <code>mtdev.income.id</code>.
+     * Setter for <code>mtdev.income.income_id</code>.
      */
-    public Income setId(UUID id) {
-        this.id = id;
+    public Income setIncomeId(UUID incomeId) {
+        this.incomeId = incomeId;
         return this;
     }
 
@@ -87,17 +87,17 @@ public class Income implements Serializable {
     }
 
     /**
-     * Getter for <code>mtdev.income.income_category</code>.
+     * Getter for <code>mtdev.income.income_category_id</code>.
      */
-    public UUID getIncomeCategory() {
-        return this.incomeCategory;
+    public UUID getIncomeCategoryId() {
+        return this.incomeCategoryId;
     }
 
     /**
-     * Setter for <code>mtdev.income.income_category</code>.
+     * Setter for <code>mtdev.income.income_category_id</code>.
      */
-    public Income setIncomeCategory(UUID incomeCategory) {
-        this.incomeCategory = incomeCategory;
+    public Income setIncomeCategoryId(UUID incomeCategoryId) {
+        this.incomeCategoryId = incomeCategoryId;
         return this;
     }
 
@@ -165,9 +165,9 @@ public class Income implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("Income (");
 
-        sb.append(id);
+        sb.append(incomeId);
         sb.append(", ").append(source);
-        sb.append(", ").append(incomeCategory);
+        sb.append(", ").append(incomeCategoryId);
         sb.append(", ").append(transactionAmount);
         sb.append(", ").append(transactionDate);
         sb.append(", ").append(notes);

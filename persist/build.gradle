@@ -1,5 +1,3 @@
-import nu.studer.gradle.jooq.JooqEdition
-
 plugins {
     id 'nu.studer.jooq' version '5.2'
 }
@@ -20,7 +18,7 @@ dependencies {
 
 jooq {
     version = "${jooq_version}"
-    edition = JooqEdition.OSS
+    edition = nu.studer.gradle.jooq.JooqEdition.OSS
 
     configurations {
         main {
@@ -29,7 +27,7 @@ jooq {
             generationTool {
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = 'jdbc:postgresql://localhost:1;?>5432/moneytree-dev'
+                    url = 'jdbc:postgresql://localhost:15432/moneytree-dev'
                     user = 'postgres'
                     password = 'password'
                 }

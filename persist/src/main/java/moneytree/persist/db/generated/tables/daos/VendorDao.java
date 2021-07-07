@@ -36,28 +36,28 @@ public class VendorDao extends DAOImpl<VendorRecord, moneytree.persist.db.genera
 
     @Override
     public UUID getId(moneytree.persist.db.generated.tables.pojos.Vendor object) {
-        return object.getId();
+        return object.getVendorId();
     }
 
     /**
-     * Fetch records that have <code>id BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>vendor_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Vendor> fetchRangeOfId(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(Vendor.VENDOR.ID, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.Vendor> fetchRangeOfVendorId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(Vendor.VENDOR.VENDOR_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>id IN (values)</code>
+     * Fetch records that have <code>vendor_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Vendor> fetchById(UUID... values) {
-        return fetch(Vendor.VENDOR.ID, values);
+    public List<moneytree.persist.db.generated.tables.pojos.Vendor> fetchByVendorId(UUID... values) {
+        return fetch(Vendor.VENDOR.VENDOR_ID, values);
     }
 
     /**
-     * Fetch a unique record that has <code>id = value</code>
+     * Fetch a unique record that has <code>vendor_id = value</code>
      */
-    public moneytree.persist.db.generated.tables.pojos.Vendor fetchOneById(UUID value) {
-        return fetchOne(Vendor.VENDOR.ID, value);
+    public moneytree.persist.db.generated.tables.pojos.Vendor fetchOneByVendorId(UUID value) {
+        return fetchOne(Vendor.VENDOR.VENDOR_ID, value);
     }
 
     /**

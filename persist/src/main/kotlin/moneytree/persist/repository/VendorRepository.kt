@@ -17,14 +17,14 @@ class VendorRepository(
 
     private fun Record.toDomain(): VendorDomain {
         return VendorDomain(
-            id = this[VENDOR.ID],
+            vendorId = this[VENDOR.ID],
             name = this[VENDOR.NAME]
         )
     }
 
     private fun Vendor.toDomain(): VendorDomain {
         return VendorDomain(
-            id = this.id,
+            vendorId = this.id,
             name = this.name
         )
     }
@@ -56,7 +56,7 @@ class VendorRepository(
                     VENDOR.NAME
                 )
                 .values(
-                    newEntity.id ?: UUID.randomUUID(),
+                    newEntity.vendorId ?: UUID.randomUUID(),
                     newEntity.name
                 )
                 .returning()
@@ -82,7 +82,7 @@ class VendorRepository(
                 .set(VENDOR.NAME, updatedEntity.name)
                 .execute()
 
-            updatedEntity.copy(id = uuid)
+            updatedEntity.copy(vendorId = uuid)
         }
     }
 

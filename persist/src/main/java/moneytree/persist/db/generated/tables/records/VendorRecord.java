@@ -24,17 +24,17 @@ public class VendorRecord extends UpdatableRecordImpl<VendorRecord> implements R
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>mtdev.vendor.id</code>.
+     * Setter for <code>mtdev.vendor.vendor_id</code>.
      */
-    public VendorRecord setId(UUID value) {
+    public VendorRecord setVendorId(UUID value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.vendor.id</code>.
+     * Getter for <code>mtdev.vendor.vendor_id</code>.
      */
-    public UUID getId() {
+    public UUID getVendorId() {
         return (UUID) get(0);
     }
 
@@ -78,7 +78,7 @@ public class VendorRecord extends UpdatableRecordImpl<VendorRecord> implements R
 
     @Override
     public Field<UUID> field1() {
-        return Vendor.VENDOR.ID;
+        return Vendor.VENDOR.VENDOR_ID;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class VendorRecord extends UpdatableRecordImpl<VendorRecord> implements R
 
     @Override
     public UUID component1() {
-        return getId();
+        return getVendorId();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class VendorRecord extends UpdatableRecordImpl<VendorRecord> implements R
 
     @Override
     public UUID value1() {
-        return getId();
+        return getVendorId();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class VendorRecord extends UpdatableRecordImpl<VendorRecord> implements R
 
     @Override
     public VendorRecord value1(UUID value) {
-        setId(value);
+        setVendorId(value);
         return this;
     }
 
@@ -139,10 +139,10 @@ public class VendorRecord extends UpdatableRecordImpl<VendorRecord> implements R
     /**
      * Create a detached, initialised VendorRecord
      */
-    public VendorRecord(UUID id, String name) {
+    public VendorRecord(UUID vendorId, String name) {
         super(Vendor.VENDOR);
 
-        setId(id);
+        setVendorId(vendorId);
         setName(name);
     }
 }

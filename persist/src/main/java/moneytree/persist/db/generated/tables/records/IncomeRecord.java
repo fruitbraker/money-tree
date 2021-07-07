@@ -26,17 +26,17 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>mtdev.income.id</code>.
+     * Setter for <code>mtdev.income.income_id</code>.
      */
-    public IncomeRecord setId(UUID value) {
+    public IncomeRecord setIncomeId(UUID value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.income.id</code>.
+     * Getter for <code>mtdev.income.income_id</code>.
      */
-    public UUID getId() {
+    public UUID getIncomeId() {
         return (UUID) get(0);
     }
 
@@ -56,17 +56,17 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
     }
 
     /**
-     * Setter for <code>mtdev.income.income_category</code>.
+     * Setter for <code>mtdev.income.income_category_id</code>.
      */
-    public IncomeRecord setIncomeCategory(UUID value) {
+    public IncomeRecord setIncomeCategoryId(UUID value) {
         set(2, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.income.income_category</code>.
+     * Getter for <code>mtdev.income.income_category_id</code>.
      */
-    public UUID getIncomeCategory() {
+    public UUID getIncomeCategoryId() {
         return (UUID) get(2);
     }
 
@@ -155,7 +155,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public Field<UUID> field1() {
-        return Income.INCOME.ID;
+        return Income.INCOME.INCOME_ID;
     }
 
     @Override
@@ -165,7 +165,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public Field<UUID> field3() {
-        return Income.INCOME.INCOME_CATEGORY;
+        return Income.INCOME.INCOME_CATEGORY_ID;
     }
 
     @Override
@@ -190,7 +190,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public UUID component1() {
-        return getId();
+        return getIncomeId();
     }
 
     @Override
@@ -200,7 +200,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public UUID component3() {
-        return getIncomeCategory();
+        return getIncomeCategoryId();
     }
 
     @Override
@@ -225,7 +225,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public UUID value1() {
-        return getId();
+        return getIncomeId();
     }
 
     @Override
@@ -235,7 +235,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public UUID value3() {
-        return getIncomeCategory();
+        return getIncomeCategoryId();
     }
 
     @Override
@@ -260,7 +260,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public IncomeRecord value1(UUID value) {
-        setId(value);
+        setIncomeId(value);
         return this;
     }
 
@@ -272,7 +272,7 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
 
     @Override
     public IncomeRecord value3(UUID value) {
-        setIncomeCategory(value);
+        setIncomeCategoryId(value);
         return this;
     }
 
@@ -326,12 +326,12 @@ public class IncomeRecord extends UpdatableRecordImpl<IncomeRecord> implements R
     /**
      * Create a detached, initialised IncomeRecord
      */
-    public IncomeRecord(UUID id, String source, UUID incomeCategory, BigDecimal transactionAmount, LocalDate transactionDate, String notes, Boolean hide) {
+    public IncomeRecord(UUID incomeId, String source, UUID incomeCategoryId, BigDecimal transactionAmount, LocalDate transactionDate, String notes, Boolean hide) {
         super(Income.INCOME);
 
-        setId(id);
+        setIncomeId(incomeId);
         setSource(source);
-        setIncomeCategory(incomeCategory);
+        setIncomeCategoryId(incomeCategoryId);
         setTransactionAmount(transactionAmount);
         setTransactionDate(transactionDate);
         setNotes(notes);

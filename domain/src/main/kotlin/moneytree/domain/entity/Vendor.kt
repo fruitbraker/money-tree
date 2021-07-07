@@ -5,7 +5,7 @@ import java.util.UUID
 import moneytree.libs.commons.serde.TrimStringDeserializer
 
 data class Vendor(
-    val id: UUID?,
+    val vendorId: UUID?,
     @JsonDeserialize(using = TrimStringDeserializer::class)
     val name: String
 )

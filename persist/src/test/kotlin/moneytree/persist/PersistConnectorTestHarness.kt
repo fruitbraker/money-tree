@@ -100,8 +100,8 @@ open class PersistConnectorTestHarness : AutoCloseable {
             id = java.util.UUID.randomUUID(),
             transactionDate = LocalDate.now(),
             transactionAmount = randomBigDecimal(),
-            vendor = vendorId,
-            expenseCategory = expenseCategoryId,
+            vendorId = vendorId,
+            expenseCategoryId = expenseCategoryId,
             notes = randomString(),
             hide = false
         )
@@ -111,9 +111,9 @@ open class PersistConnectorTestHarness : AutoCloseable {
 
     fun insertRandomIncome(incomeCategoryId: UUID): Result<Income, Throwable> {
         val income = Income(
-            id = java.util.UUID.randomUUID(),
+            incomeId = java.util.UUID.randomUUID(),
             source = randomString(),
-            incomeCategory = incomeCategoryId,
+            incomeCategoryId = incomeCategoryId,
             transactionDate = LocalDate.now(),
             transactionAmount = randomBigDecimal(),
             notes = randomString(),
@@ -125,7 +125,7 @@ open class PersistConnectorTestHarness : AutoCloseable {
 
     fun insertRandomVendor(): Result<Vendor, Throwable> {
         val vendor = Vendor(
-            id = java.util.UUID.randomUUID(),
+            vendorId = java.util.UUID.randomUUID(),
             name = randomString()
         )
 
@@ -134,7 +134,7 @@ open class PersistConnectorTestHarness : AutoCloseable {
 
     fun insertRandomExpenseCategory(): Result<ExpenseCategory, Throwable> {
         val expenseCategory = ExpenseCategory(
-            id = java.util.UUID.randomUUID(),
+            expenseCategoryId = java.util.UUID.randomUUID(),
             name = randomString(),
             targetAmount = randomBigDecimal()
         )
@@ -144,7 +144,7 @@ open class PersistConnectorTestHarness : AutoCloseable {
 
     fun insertRandomIncomeCategory(): Result<IncomeCategory, Throwable> {
         val incomeCategory = IncomeCategory(
-            id = java.util.UUID.randomUUID(),
+            incomeCategoryId = java.util.UUID.randomUUID(),
             name = randomString()
         )
 

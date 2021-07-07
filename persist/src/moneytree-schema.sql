@@ -4,46 +4,41 @@ SET SCHEMA 'mtdev';
 
 CREATE TABLE IF NOT EXISTS income_category
 (
-	id uuid NOT NULL,
-	name VARCHAR(256) NOT NULL,
-	PRIMARY KEY (id)
+	income_category_id uuid PRIMARY KEY,
+	name VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS expense_category
 (
-    id uuid NOT NULL,
+    expense_category_id uuid PRIMARY KEY,
     name VARCHAR(256) NOT NULL,
-    target_amount DECIMAL(12,4) DEFAULT 0.00 NOT NULL,
-	PRIMARY KEY (id)
+    target_amount DECIMAL(12,4) DEFAULT 0.00 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS vendor
 (
-	id uuid NOT NULL,
-	name VARCHAR(256) NOT NULL,
-	PRIMARY KEY (id)
+	vendor_id uuid PRIMARY KEY,
+	name VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS expense
 (
-    id uuid NOT NULL,
+    expense_id uuid PRIMARY KEY,
     transaction_date DATE NOT NULL,
     transaction_amount DECIMAL(12,4) NOT NULL,
-    vendor uuid REFERENCES vendor(id) NOT NULL,
-    expense_category uuid REFERENCES expense_category(id) NOT NULL,
+    vendor_id uuid REFERENCES vendor(vendor_id) NOT NULL,
+    expense_category_id uuid REFERENCES expense_category(expense_category_id) NOT NULL,
     notes VARCHAR(256) NOT NULL,
-    hide boolean DEFAULT false NOT NULL,
-	PRIMARY KEY (id)
+    hide boolean DEFAULT false NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS income
 (
-	id uuid NOT NULL,
+	income_id uuid PRIMARY KEY,
 	source VARCHAR(256) NOT NULL,
-	income_category uuid REFERENCES income_category(id) NOT NULL,
+	income_category_id uuid REFERENCES income_category(income_category_id) NOT NULL,
     transaction_amount DECIMAL(12,4) NOT NULL,
     transaction_date DATE NOT NULL,
 	notes VARCHAR(256) NOT NULL,
-	hide boolean DEFAULT false NOT NULL,
-	PRIMARY KEY (id)
+	hide boolean DEFAULT false NOT NULL
 );

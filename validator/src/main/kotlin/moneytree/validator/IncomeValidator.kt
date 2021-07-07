@@ -5,11 +5,11 @@ import moneytree.domain.validation.schema.IncomeValidationSchema
 
 class IncomeValidator : Validator<Income> {
     override fun validate(input: Income): ValidationResult {
-        input.id?.let { uuid ->
+        input.incomeId?.let { uuid ->
             if (uuid.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
         }
 
-        if (input.incomeCategory.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
+        if (input.incomeCategoryId.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
 
         if (input.transactionAmount < IncomeValidationSchema.INCOME_AMOUNT_MIN ||
             input.transactionAmount > IncomeValidationSchema.INCOME_AMOUNT_MAX
