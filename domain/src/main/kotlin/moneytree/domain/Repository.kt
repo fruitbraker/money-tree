@@ -1,7 +1,6 @@
 package moneytree.domain
 
 import java.util.UUID
-import moneytree.domain.entity.Filter
 import moneytree.libs.commons.result.Result
 
 interface Repository<T> {

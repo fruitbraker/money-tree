@@ -25,14 +25,14 @@ class IncomeCategoryRepository(
 
     private fun Record.toDomain(): IncomeCategoryDomain {
         return IncomeCategoryDomain(
-            id = this[INCOME_CATEGORY.ID],
+            incomeCategoryId = this[INCOME_CATEGORY.ID],
             name = this[INCOME_CATEGORY.NAME]
         )
     }
 
     private fun IncomeCategory.toDomain(): IncomeCategoryDomain {
         return IncomeCategoryDomain(
-            id = this.id,
+            incomeCategoryId = this.id,
             name = this.name
         )
     }
@@ -72,7 +72,7 @@ class IncomeCategoryRepository(
                     Tables.INCOME_CATEGORY.NAME,
                 )
                 .values(
-                    newEntity.id ?: UUID.randomUUID(),
+                    newEntity.incomeCategoryId ?: UUID.randomUUID(),
                     newEntity.name,
                 )
                 .returning()
@@ -101,7 +101,7 @@ class IncomeCategoryRepository(
                 .set(Tables.INCOME_CATEGORY.NAME, updatedEntity.name)
                 .execute()
 
-            updatedEntity.copy(id = uuid)
+            updatedEntity.copy(incomeCategoryId = uuid)
         }
     }
 

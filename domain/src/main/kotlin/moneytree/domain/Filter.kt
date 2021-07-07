@@ -1,4 +1,4 @@
-package moneytree.domain.entity
+package moneytree.domain
 
 open class Filter
 

@@ -24,9 +24,9 @@ class IncomeValidatorTest {
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
             notes = randomNotes,
@@ -49,9 +49,9 @@ class IncomeValidatorTest {
         val hide = false
 
         val income = Income(
-            id = badUUID,
+            incomeId = badUUID,
             source = randomSource,
-            incomeCategory = randomUUID,
+            incomeCategoryId = randomUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
             notes = randomNotes,
@@ -74,9 +74,9 @@ class IncomeValidatorTest {
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = badUUID,
+            incomeCategoryId = badUUID,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
             notes = randomNotes,
@@ -99,9 +99,9 @@ class IncomeValidatorTest {
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
             notes = randomNotes,
@@ -124,9 +124,9 @@ class IncomeValidatorTest {
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
             notes = randomNotes,
@@ -149,9 +149,9 @@ class IncomeValidatorTest {
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
             notes = randomNotes,
@@ -174,9 +174,9 @@ class IncomeValidatorTest {
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             transactionDate = todayDate,
             transactionAmount = randomTransactionAmount,
             notes = randomNotes,

@@ -50,9 +50,9 @@ public class ExpenseCategory extends TableImpl<ExpenseCategoryRecord> {
     }
 
     /**
-     * The column <code>mtdev.expense_category.id</code>.
+     * The column <code>mtdev.expense_category.expense_category_id</code>.
      */
-    public final TableField<ExpenseCategoryRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false).defaultValue(DSL.field("mtdev.uuid_generate_v4()", SQLDataType.UUID)), this, "");
+    public final TableField<ExpenseCategoryRecord, UUID> EXPENSE_CATEGORY_ID = createField(DSL.name("expense_category_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>mtdev.expense_category.name</code>.

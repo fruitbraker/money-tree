@@ -44,8 +44,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val getResult = expenseRepository.getById(checkNotNull(randomExpense.id))
@@ -60,7 +60,7 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
 
         val insertResult = insertRandomExpense(
             vendorId,
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         )
 
         insertResult.shouldBeErr()
@@ -73,7 +73,7 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val expenseCategoryId = UUID.randomUUID()
 
         val insertResult = insertRandomExpense(
-            checkNotNull(randomVendor.id),
+            checkNotNull(randomVendor.vendorId),
             expenseCategoryId
         )
 
@@ -87,8 +87,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val getResult = expenseRepository.get()
@@ -105,16 +105,16 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val newRandomVendor = insertRandomVendor().toOkValue()
         val newRandomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val updatedExpense = randomExpense.copy(
-            vendor = checkNotNull(newRandomVendor.id),
-            expenseCategory = checkNotNull(newRandomExpenseCategory.id)
+            vendorId = checkNotNull(newRandomVendor.vendorId),
+            expenseCategoryId = checkNotNull(newRandomExpenseCategory.expenseCategoryId)
         )
 
         val upsertResult = expenseRepository.upsertById(updatedExpense, checkNotNull(randomExpense.id))
@@ -130,8 +130,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomUUID = UUID.randomUUID()
         val todayLocalDate = LocalDate.now()
         val randomTransactionAmount = randomBigDecimal()
-        val vendorId = checkNotNull(randomVendor.id)
-        val expenseCategoryId = checkNotNull(randomExpenseCategory.id)
+        val vendorId = checkNotNull(randomVendor.vendorId)
+        val expenseCategoryId = checkNotNull(randomExpenseCategory.expenseCategoryId)
         val notes = randomString()
         val hide = false
 
@@ -139,8 +139,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
             id = randomUUID,
             transactionDate = todayLocalDate,
             transactionAmount = randomTransactionAmount,
-            vendor = vendorId,
-            expenseCategory = expenseCategoryId,
+            vendorId = vendorId,
+            expenseCategoryId = expenseCategoryId,
             notes = notes,
             hide = hide
         )
@@ -167,8 +167,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomUUID = UUID.randomUUID()
         val todayLocalDate = LocalDate.now()
         val randomTransactionAmount = randomBigDecimal()
-        val vendorId = checkNotNull(randomVendor.id)
-        val expenseCategoryId = checkNotNull(randomExpenseCategory.id)
+        val vendorId = checkNotNull(randomVendor.vendorId)
+        val expenseCategoryId = checkNotNull(randomExpenseCategory.expenseCategoryId)
         val notes = randomString()
         val hide = false
 
@@ -176,8 +176,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
             id = randomUUID,
             transactionDate = todayLocalDate,
             transactionAmount = randomTransactionAmount,
-            vendor = vendorId,
-            expenseCategory = expenseCategoryId,
+            vendorId = vendorId,
+            expenseCategoryId = expenseCategoryId,
             notes = notes,
             hide = hide
         )
@@ -203,11 +203,11 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val expense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
-        val updatedExpense = expense.copy(vendor = UUID.randomUUID(), expenseCategory = UUID.randomUUID())
+        val updatedExpense = expense.copy(vendorId = UUID.randomUUID(), expenseCategoryId = UUID.randomUUID())
 
         val upsertResult = expenseRepository.upsertById(
             updatedExpense,
@@ -223,17 +223,17 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val expenseSummary = ExpenseSummary(
             id = checkNotNull(randomExpense.id),
             transactionDate = randomExpense.transactionDate,
             transactionAmount = randomExpense.transactionAmount,
-            vendorId = randomExpense.vendor,
+            vendorId = randomExpense.vendorId,
             vendorName = randomVendor.name,
-            expenseCategoryId = randomExpense.expenseCategory,
+            expenseCategoryId = randomExpense.expenseCategoryId,
             expenseCategoryName = randomExpenseCategory.name,
             notes = randomExpense.notes,
             hide = randomExpense.hide
@@ -242,8 +242,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val expenseSummaryFilter = ExpenseSummaryFilter(
             startDate = LocalDate.now().minusDays(1),
             endDate = LocalDate.now(),
-            vendorIds = listOf(randomExpense.vendor),
-            expenseCategoryIds = listOf(randomExpense.expenseCategory)
+            vendorIds = listOf(randomExpense.vendorId),
+            expenseCategoryIds = listOf(randomExpense.expenseCategoryId)
         )
 
         val summaryResult = expenseRepository.getSummary(expenseSummaryFilter)
@@ -260,8 +260,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val expenseSummaryFilter = ExpenseSummaryFilter(
@@ -284,8 +284,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val expenseSummaryFilter = ExpenseSummaryFilter(
@@ -308,8 +308,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val expenseSummaryFilter = ExpenseSummaryFilter(
@@ -332,8 +332,8 @@ class ExpenseRepositoryTest : PersistConnectorTestHarness() {
         val randomExpenseCategory = insertRandomExpenseCategory().toOkValue()
 
         val randomExpense = insertRandomExpense(
-            checkNotNull(randomVendor.id),
-            checkNotNull(randomExpenseCategory.id)
+            checkNotNull(randomVendor.vendorId),
+            checkNotNull(randomExpenseCategory.expenseCategoryId)
         ).toOkValue()
 
         val randomExpenseId = checkNotNull(randomExpense.id)

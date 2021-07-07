@@ -51,9 +51,9 @@ public class Income extends TableImpl<IncomeRecord> {
     }
 
     /**
-     * The column <code>mtdev.income.id</code>.
+     * The column <code>mtdev.income.income_id</code>.
      */
-    public final TableField<IncomeRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false).defaultValue(DSL.field("mtdev.uuid_generate_v4()", SQLDataType.UUID)), this, "");
+    public final TableField<IncomeRecord, UUID> INCOME_ID = createField(DSL.name("income_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>mtdev.income.source</code>.
@@ -61,9 +61,9 @@ public class Income extends TableImpl<IncomeRecord> {
     public final TableField<IncomeRecord, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(256).nullable(false), this, "");
 
     /**
-     * The column <code>mtdev.income.income_category</code>.
+     * The column <code>mtdev.income.income_category_id</code>.
      */
-    public final TableField<IncomeRecord, UUID> INCOME_CATEGORY = createField(DSL.name("income_category"), SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<IncomeRecord, UUID> INCOME_CATEGORY_ID = createField(DSL.name("income_category_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>mtdev.income.transaction_amount</code>.
@@ -135,11 +135,16 @@ public class Income extends TableImpl<IncomeRecord> {
 
     @Override
     public List<ForeignKey<IncomeRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<IncomeRecord, ?>>asList(Keys.INCOME__INCOME_INCOME_CATEGORY_FKEY);
+        return Arrays.<ForeignKey<IncomeRecord, ?>>asList(Keys.INCOME__INCOME_INCOME_CATEGORY_ID_FKEY);
     }
 
+    private transient IncomeCategory _incomeCategory;
+
     public IncomeCategory incomeCategory() {
-        return new IncomeCategory(this, Keys.INCOME__INCOME_INCOME_CATEGORY_FKEY);
+        if (_incomeCategory == null)
+            _incomeCategory = new IncomeCategory(this, Keys.INCOME__INCOME_INCOME_CATEGORY_ID_FKEY);
+
+        return _incomeCategory;
     }
 
     @Override

@@ -18,56 +18,56 @@ public class Expense implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID       id;
+    private UUID       expenseId;
     private LocalDate  transactionDate;
     private BigDecimal transactionAmount;
-    private UUID       vendor;
-    private UUID       expenseCategory;
+    private UUID       vendorId;
+    private UUID       expenseCategoryId;
     private String     notes;
     private Boolean    hide;
 
     public Expense() {}
 
     public Expense(Expense value) {
-        this.id = value.id;
+        this.expenseId = value.expenseId;
         this.transactionDate = value.transactionDate;
         this.transactionAmount = value.transactionAmount;
-        this.vendor = value.vendor;
-        this.expenseCategory = value.expenseCategory;
+        this.vendorId = value.vendorId;
+        this.expenseCategoryId = value.expenseCategoryId;
         this.notes = value.notes;
         this.hide = value.hide;
     }
 
     public Expense(
-        UUID       id,
+        UUID       expenseId,
         LocalDate  transactionDate,
         BigDecimal transactionAmount,
-        UUID       vendor,
-        UUID       expenseCategory,
+        UUID       vendorId,
+        UUID       expenseCategoryId,
         String     notes,
         Boolean    hide
     ) {
-        this.id = id;
+        this.expenseId = expenseId;
         this.transactionDate = transactionDate;
         this.transactionAmount = transactionAmount;
-        this.vendor = vendor;
-        this.expenseCategory = expenseCategory;
+        this.vendorId = vendorId;
+        this.expenseCategoryId = expenseCategoryId;
         this.notes = notes;
         this.hide = hide;
     }
 
     /**
-     * Getter for <code>mtdev.expense.id</code>.
+     * Getter for <code>mtdev.expense.expense_id</code>.
      */
-    public UUID getId() {
-        return this.id;
+    public UUID getExpenseId() {
+        return this.expenseId;
     }
 
     /**
-     * Setter for <code>mtdev.expense.id</code>.
+     * Setter for <code>mtdev.expense.expense_id</code>.
      */
-    public Expense setId(UUID id) {
-        this.id = id;
+    public Expense setExpenseId(UUID expenseId) {
+        this.expenseId = expenseId;
         return this;
     }
 
@@ -102,32 +102,32 @@ public class Expense implements Serializable {
     }
 
     /**
-     * Getter for <code>mtdev.expense.vendor</code>.
+     * Getter for <code>mtdev.expense.vendor_id</code>.
      */
-    public UUID getVendor() {
-        return this.vendor;
+    public UUID getVendorId() {
+        return this.vendorId;
     }
 
     /**
-     * Setter for <code>mtdev.expense.vendor</code>.
+     * Setter for <code>mtdev.expense.vendor_id</code>.
      */
-    public Expense setVendor(UUID vendor) {
-        this.vendor = vendor;
+    public Expense setVendorId(UUID vendorId) {
+        this.vendorId = vendorId;
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.expense.expense_category</code>.
+     * Getter for <code>mtdev.expense.expense_category_id</code>.
      */
-    public UUID getExpenseCategory() {
-        return this.expenseCategory;
+    public UUID getExpenseCategoryId() {
+        return this.expenseCategoryId;
     }
 
     /**
-     * Setter for <code>mtdev.expense.expense_category</code>.
+     * Setter for <code>mtdev.expense.expense_category_id</code>.
      */
-    public Expense setExpenseCategory(UUID expenseCategory) {
-        this.expenseCategory = expenseCategory;
+    public Expense setExpenseCategoryId(UUID expenseCategoryId) {
+        this.expenseCategoryId = expenseCategoryId;
         return this;
     }
 
@@ -165,11 +165,11 @@ public class Expense implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("Expense (");
 
-        sb.append(id);
+        sb.append(expenseId);
         sb.append(", ").append(transactionDate);
         sb.append(", ").append(transactionAmount);
-        sb.append(", ").append(vendor);
-        sb.append(", ").append(expenseCategory);
+        sb.append(", ").append(vendorId);
+        sb.append(", ").append(expenseCategoryId);
         sb.append(", ").append(notes);
         sb.append(", ").append(hide);
 

@@ -23,9 +23,9 @@ class IncomeRepository(
 
     private fun Record.toDomain(): IncomeDomain {
         return IncomeDomain(
-            id = this[INCOME.ID],
+            incomeId = this[INCOME.ID],
             source = this[INCOME.SOURCE],
-            incomeCategory = this[INCOME.INCOME_CATEGORY],
+            incomeCategoryId = this[INCOME.INCOME_CATEGORY],
             transactionDate = this[INCOME.TRANSACTION_DATE],
             transactionAmount = this[INCOME.TRANSACTION_AMOUNT],
             notes = this[INCOME.NOTES],
@@ -35,9 +35,9 @@ class IncomeRepository(
 
     private fun Income.toDomain(): IncomeDomain {
         return IncomeDomain(
-            id = this.id,
+            incomeId = this.id,
             source = this.source,
-            incomeCategory = this.incomeCategory,
+            incomeCategoryId = this.incomeCategory,
             transactionDate = this.transactionDate,
             transactionAmount = this.transactionAmount,
             notes = this.notes,
@@ -90,9 +90,9 @@ class IncomeRepository(
                     INCOME.HIDE
                 )
                 .values(
-                    newEntity.id ?: UUID.randomUUID(),
+                    newEntity.incomeId ?: UUID.randomUUID(),
                     newEntity.source,
-                    newEntity.incomeCategory,
+                    newEntity.incomeCategoryId,
                     newEntity.transactionDate,
                     newEntity.transactionAmount,
                     newEntity.notes,
@@ -124,7 +124,7 @@ class IncomeRepository(
                 .values(
                     uuid,
                     updatedEntity.source,
-                    updatedEntity.incomeCategory,
+                    updatedEntity.incomeCategoryId,
                     updatedEntity.transactionDate,
                     updatedEntity.transactionAmount,
                     updatedEntity.notes,
@@ -132,14 +132,14 @@ class IncomeRepository(
                 )
                 .onDuplicateKeyUpdate()
                 .set(INCOME.SOURCE, updatedEntity.source)
-                .set(INCOME.INCOME_CATEGORY, updatedEntity.incomeCategory)
+                .set(INCOME.INCOME_CATEGORY, updatedEntity.incomeCategoryId)
                 .set(INCOME.TRANSACTION_DATE, updatedEntity.transactionDate)
                 .set(INCOME.TRANSACTION_AMOUNT, updatedEntity.transactionAmount)
                 .set(INCOME.NOTES, updatedEntity.notes)
                 .set(INCOME.HIDE, updatedEntity.hide)
                 .execute()
 
-            updatedEntity.copy(id = uuid)
+            updatedEntity.copy(incomeId = uuid)
         }
     }
 

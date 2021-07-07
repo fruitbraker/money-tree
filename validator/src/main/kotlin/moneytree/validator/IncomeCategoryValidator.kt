@@ -5,7 +5,7 @@ import moneytree.domain.validation.schema.IncomeCategoryValidationSchema
 
 class IncomeCategoryValidator : Validator<IncomeCategory> {
     override fun validate(input: IncomeCategory): ValidationResult {
-        input.id?.let { uuid ->
+        input.incomeCategoryId?.let { uuid ->
             if (uuid.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
         }
 

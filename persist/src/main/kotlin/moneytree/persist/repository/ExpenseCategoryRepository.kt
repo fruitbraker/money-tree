@@ -24,7 +24,7 @@ class ExpenseCategoryRepository(
 
     private fun Record.toDomain(): ExpenseCategoryDomain {
         return ExpenseCategoryDomain(
-            id = this[EXPENSE_CATEGORY.ID],
+            expenseCategoryId = this[EXPENSE_CATEGORY.ID],
             name = this[EXPENSE_CATEGORY.NAME],
             targetAmount = this[EXPENSE_CATEGORY.TARGET_AMOUNT]
         )
@@ -32,7 +32,7 @@ class ExpenseCategoryRepository(
 
     private fun ExpenseCategory.toDomain(): ExpenseCategoryDomain {
         return ExpenseCategoryDomain(
-            id = this.id,
+            expenseCategoryId = this.id,
             name = this.name,
             targetAmount = this.targetAmount
         )
@@ -74,7 +74,7 @@ class ExpenseCategoryRepository(
                     EXPENSE_CATEGORY.TARGET_AMOUNT
                 )
                 .values(
-                    newEntity.id ?: UUID.randomUUID(),
+                    newEntity.expenseCategoryId ?: UUID.randomUUID(),
                     newEntity.name,
                     newEntity.targetAmount
                 )
@@ -104,7 +104,7 @@ class ExpenseCategoryRepository(
                 .set(EXPENSE_CATEGORY.TARGET_AMOUNT, updatedEntity.targetAmount)
                 .execute()
 
-            updatedEntity.copy(id = uuid)
+            updatedEntity.copy(expenseCategoryId = uuid)
         }
     }
 

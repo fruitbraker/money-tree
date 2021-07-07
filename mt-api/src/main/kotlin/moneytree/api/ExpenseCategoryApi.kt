@@ -2,9 +2,9 @@ package moneytree.api
 
 import java.time.LocalDate
 import moneytree.MtApiRoutesWithSummary
+import moneytree.domain.DEFAULT_MINUS_MONTHS
 import moneytree.domain.Repository
 import moneytree.domain.SummaryRepository
-import moneytree.domain.entity.DEFAULT_MINUS_MONTHS
 import moneytree.domain.entity.ExpenseCategory
 import moneytree.domain.entity.ExpenseCategoryFilter
 import moneytree.domain.entity.ExpenseCategorySummary

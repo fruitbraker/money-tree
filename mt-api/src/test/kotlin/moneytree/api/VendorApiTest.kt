@@ -14,7 +14,7 @@ class VendorApiTest : RoutesTest<Vendor>() {
     private val randomString = randomString()
 
     override val entity = Vendor(
-        id = randomUUID,
+        vendorId = randomUUID,
         name = randomString
     )
 

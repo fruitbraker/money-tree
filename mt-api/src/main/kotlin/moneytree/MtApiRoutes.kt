@@ -11,7 +11,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 
 abstract class MtApiRoutes<T>(
-    private val repository: Repository<T>,
+    val repository: Repository<T>,
     private val validator: Validator<T>
 ) : HttpRouting<T> {
 

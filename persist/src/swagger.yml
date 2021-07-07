@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
   description: "API for money tree"
-  version: "1.0.1"
+  version: "1.0.0"
   title: "Money Tree"
   # termsOfService: "http://swagger.io/terms/"
   contact:
@@ -57,6 +57,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/definitions/ExpenseSummary"
+        "400":
+          description: "Bad request."
+
     post:
       tags:
         - "Expense"
@@ -152,7 +155,7 @@ paths:
         "404":
           description: "Expense not found."
 
-  /expense/category:
+  /category/expense:
     get:
       tags:
         - "Expense Category"
@@ -192,7 +195,7 @@ paths:
         "400":
           description: "Bad request."
 
-  /expense/category/{id}:
+  /category/expense/{id}:
     get:
       tags:
         - "Expense Category"
@@ -266,7 +269,7 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resoruce conflict."
-  /expense/category/summary:
+  /category/expense/summary:
     get:
       tags:
         - "Expense Category"
@@ -465,7 +468,7 @@ paths:
           description: "Bad request."
 
 
-  /income/category/{id}:
+  /category/income/{id}:
     get:
       tags:
         - "Income Category"
@@ -540,7 +543,7 @@ paths:
           description: "Resource not found."
         "409":
           description: "Resource conflict"
-  /income/category/summary:
+  /category/income/summary:
     get:
       tags:
         - "Income Category"

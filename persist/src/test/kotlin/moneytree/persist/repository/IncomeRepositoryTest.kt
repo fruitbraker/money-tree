@@ -42,10 +42,10 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     fun `insert and getById happy path`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
         val randomIncome = insertRandomIncome(
-            checkNotNull(randomIncomeCategory.id)
+            checkNotNull(randomIncomeCategory.incomeCategoryId)
         ).toOkValue()
 
-        val getResult = incomeRepository.getById(checkNotNull(randomIncome.id))
+        val getResult = incomeRepository.getById(checkNotNull(randomIncome.incomeId))
         getResult.shouldBeOk()
         getResult.onOk { it shouldBe randomIncome }
     }
@@ -62,7 +62,7 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     fun `generic get returns list of income`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
         val randomIncome = insertRandomIncome(
-            checkNotNull(randomIncomeCategory.id)
+            checkNotNull(randomIncomeCategory.incomeCategoryId)
         ).toOkValue()
 
         val getResult = incomeRepository.get()
@@ -77,12 +77,12 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     fun `upsertById updates existing entity`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
         val randomIncome = insertRandomIncome(
-            checkNotNull(randomIncomeCategory.id)
+            checkNotNull(randomIncomeCategory.incomeCategoryId)
         ).toOkValue()
 
         val updatedIncome = randomIncome.copy(notes = randomString())
 
-        val upsertResult = incomeRepository.upsertById(updatedIncome, checkNotNull(randomIncome.id))
+        val upsertResult = incomeRepository.upsertById(updatedIncome, checkNotNull(randomIncome.incomeId))
         upsertResult.shouldBeOk()
         upsertResult.onOk { it shouldBe updatedIncome }
     }
@@ -93,16 +93,16 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
 
         val randomUUID = UUID.randomUUID()
         val randomSource = randomString()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
         val todayLocalDate = LocalDate.now()
         val randomTransactionAmount = randomBigDecimal()
         val notes = randomString()
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             transactionDate = todayLocalDate,
             transactionAmount = randomTransactionAmount,
             notes = notes,
@@ -129,23 +129,23 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
         val parameterId = UUID.randomUUID()
         val randomUUID = UUID.randomUUID()
         val randomSource = randomString()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
         val todayLocalDate = LocalDate.now()
         val randomTransactionAmount = randomBigDecimal()
         val notes = randomString()
         val hide = false
 
         val income = Income(
-            id = randomUUID,
+            incomeId = randomUUID,
             source = randomSource,
-            incomeCategory = randomIncomeCategoryId,
+            incomeCategoryId = randomIncomeCategoryId,
             transactionDate = todayLocalDate,
             transactionAmount = randomTransactionAmount,
             notes = notes,
             hide = hide
         )
 
-        val idParameterIncome = income.copy(id = parameterId)
+        val idParameterIncome = income.copy(incomeId = parameterId)
 
         val upsertResult = incomeRepository.upsertById(income, parameterId)
         upsertResult.shouldBeOk()
@@ -163,10 +163,10 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `getSummary happy path with valid filter`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
 
         val randomIncome = insertRandomIncome(randomIncomeCategoryId).toOkValue()
-        val randomIncomeId = checkNotNull(randomIncome.id)
+        val randomIncomeId = checkNotNull(randomIncome.incomeId)
 
         val incomeSummary = IncomeSummary(
             id = randomIncomeId,
@@ -196,7 +196,7 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `getSummary returns empty list when filter doesn't meet date range`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
 
         val randomIncome = insertRandomIncome(randomIncomeCategoryId).toOkValue()
 
@@ -216,7 +216,7 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `getSummary returns empty list when filter doesn't contain matching incomeCategoryId`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
 
         val randomIncome = insertRandomIncome(randomIncomeCategoryId).toOkValue()
 
@@ -236,10 +236,10 @@ class IncomeRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `deleteById successfully deletes`() {
         val randomIncomeCategory = insertRandomIncomeCategory().toOkValue()
-        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.id)
+        val randomIncomeCategoryId = checkNotNull(randomIncomeCategory.incomeCategoryId)
 
         val randomIncome = insertRandomIncome(randomIncomeCategoryId).toOkValue()
-        val randomIncomeId = checkNotNull(randomIncome.id)
+        val randomIncomeId = checkNotNull(randomIncome.incomeId)
 
         val deleteResult = incomeRepository.deleteById(randomIncomeId)
         deleteResult.shouldBeOk()

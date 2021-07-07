@@ -49,9 +49,9 @@ public class Vendor extends TableImpl<VendorRecord> {
     }
 
     /**
-     * The column <code>mtdev.vendor.id</code>.
+     * The column <code>mtdev.vendor.vendor_id</code>.
      */
-    public final TableField<VendorRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false).defaultValue(DSL.field("mtdev.uuid_generate_v4()", SQLDataType.UUID)), this, "");
+    public final TableField<VendorRecord, UUID> VENDOR_ID = createField(DSL.name("vendor_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>mtdev.vendor.name</code>.

@@ -25,17 +25,17 @@ public class ExpenseCategoryRecord extends UpdatableRecordImpl<ExpenseCategoryRe
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>mtdev.expense_category.id</code>.
+     * Setter for <code>mtdev.expense_category.expense_category_id</code>.
      */
-    public ExpenseCategoryRecord setId(UUID value) {
+    public ExpenseCategoryRecord setExpenseCategoryId(UUID value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.expense_category.id</code>.
+     * Getter for <code>mtdev.expense_category.expense_category_id</code>.
      */
-    public UUID getId() {
+    public UUID getExpenseCategoryId() {
         return (UUID) get(0);
     }
 
@@ -94,7 +94,7 @@ public class ExpenseCategoryRecord extends UpdatableRecordImpl<ExpenseCategoryRe
 
     @Override
     public Field<UUID> field1() {
-        return ExpenseCategory.EXPENSE_CATEGORY.ID;
+        return ExpenseCategory.EXPENSE_CATEGORY.EXPENSE_CATEGORY_ID;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ExpenseCategoryRecord extends UpdatableRecordImpl<ExpenseCategoryRe
 
     @Override
     public UUID component1() {
-        return getId();
+        return getExpenseCategoryId();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class ExpenseCategoryRecord extends UpdatableRecordImpl<ExpenseCategoryRe
 
     @Override
     public UUID value1() {
-        return getId();
+        return getExpenseCategoryId();
     }
 
     @Override
@@ -139,7 +139,7 @@ public class ExpenseCategoryRecord extends UpdatableRecordImpl<ExpenseCategoryRe
 
     @Override
     public ExpenseCategoryRecord value1(UUID value) {
-        setId(value);
+        setExpenseCategoryId(value);
         return this;
     }
 
@@ -177,10 +177,10 @@ public class ExpenseCategoryRecord extends UpdatableRecordImpl<ExpenseCategoryRe
     /**
      * Create a detached, initialised ExpenseCategoryRecord
      */
-    public ExpenseCategoryRecord(UUID id, String name, BigDecimal targetAmount) {
+    public ExpenseCategoryRecord(UUID expenseCategoryId, String name, BigDecimal targetAmount) {
         super(ExpenseCategory.EXPENSE_CATEGORY);
 
-        setId(id);
+        setExpenseCategoryId(expenseCategoryId);
         setName(name);
         setTargetAmount(targetAmount);
     }

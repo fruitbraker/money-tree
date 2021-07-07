@@ -5,7 +5,7 @@ import moneytree.domain.validation.schema.VendorValidationSchema
 
 class VendorValidator : Validator<Vendor> {
     override fun validate(input: Vendor): ValidationResult {
-        input.id?.let { uuid ->
+        input.vendorId?.let { uuid ->
             if (uuid.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
         }
 

@@ -9,8 +9,8 @@ class ExpenseValidator : Validator<Expense> {
             if (uuid.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
         }
 
-        if (input.vendor.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
-        if (input.expenseCategory.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
+        if (input.vendorId.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
+        if (input.expenseCategoryId.validateUUID() is ValidationResult.Rejected) return ValidationResult.Rejected
 
         if (input.transactionAmount < ExpenseValidationSchema.EXPENSE_AMOUNT_MIN ||
             input.transactionAmount > ExpenseValidationSchema.EXPENSE_AMOUNT_MAX

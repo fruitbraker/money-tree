@@ -24,17 +24,17 @@ public class IncomeCategoryRecord extends UpdatableRecordImpl<IncomeCategoryReco
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>mtdev.income_category.id</code>.
+     * Setter for <code>mtdev.income_category.income_category_id</code>.
      */
-    public IncomeCategoryRecord setId(UUID value) {
+    public IncomeCategoryRecord setIncomeCategoryId(UUID value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.income_category.id</code>.
+     * Getter for <code>mtdev.income_category.income_category_id</code>.
      */
-    public UUID getId() {
+    public UUID getIncomeCategoryId() {
         return (UUID) get(0);
     }
 
@@ -78,7 +78,7 @@ public class IncomeCategoryRecord extends UpdatableRecordImpl<IncomeCategoryReco
 
     @Override
     public Field<UUID> field1() {
-        return IncomeCategory.INCOME_CATEGORY.ID;
+        return IncomeCategory.INCOME_CATEGORY.INCOME_CATEGORY_ID;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class IncomeCategoryRecord extends UpdatableRecordImpl<IncomeCategoryReco
 
     @Override
     public UUID component1() {
-        return getId();
+        return getIncomeCategoryId();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class IncomeCategoryRecord extends UpdatableRecordImpl<IncomeCategoryReco
 
     @Override
     public UUID value1() {
-        return getId();
+        return getIncomeCategoryId();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class IncomeCategoryRecord extends UpdatableRecordImpl<IncomeCategoryReco
 
     @Override
     public IncomeCategoryRecord value1(UUID value) {
-        setId(value);
+        setIncomeCategoryId(value);
         return this;
     }
 
@@ -139,10 +139,10 @@ public class IncomeCategoryRecord extends UpdatableRecordImpl<IncomeCategoryReco
     /**
      * Create a detached, initialised IncomeCategoryRecord
      */
-    public IncomeCategoryRecord(UUID id, String name) {
+    public IncomeCategoryRecord(UUID incomeCategoryId, String name) {
         super(IncomeCategory.INCOME_CATEGORY);
 
-        setId(id);
+        setIncomeCategoryId(incomeCategoryId);
         setName(name);
     }
 }

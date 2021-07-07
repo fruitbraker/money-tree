@@ -33,9 +33,9 @@ class IncomeApiTest : RoutesTest<Income>() {
     private val hide = false
 
     override val entity = Income(
-        id = randomUUID,
+        incomeId = randomUUID,
         source = randomSource,
-        incomeCategory = incomeCategoryId,
+        incomeCategoryId = incomeCategoryId,
         transactionDate = todayLocalDate,
         transactionAmount = randomTransactionAmount,
         notes = notes,

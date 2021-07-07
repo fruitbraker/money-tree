@@ -38,28 +38,28 @@ public class ExpenseDao extends DAOImpl<ExpenseRecord, moneytree.persist.db.gene
 
     @Override
     public UUID getId(moneytree.persist.db.generated.tables.pojos.Expense object) {
-        return object.getId();
+        return object.getExpenseId();
     }
 
     /**
-     * Fetch records that have <code>id BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>expense_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchRangeOfId(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(Expense.EXPENSE.ID, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchRangeOfExpenseId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(Expense.EXPENSE.EXPENSE_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>id IN (values)</code>
+     * Fetch records that have <code>expense_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchById(UUID... values) {
-        return fetch(Expense.EXPENSE.ID, values);
+    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchByExpenseId(UUID... values) {
+        return fetch(Expense.EXPENSE.EXPENSE_ID, values);
     }
 
     /**
-     * Fetch a unique record that has <code>id = value</code>
+     * Fetch a unique record that has <code>expense_id = value</code>
      */
-    public moneytree.persist.db.generated.tables.pojos.Expense fetchOneById(UUID value) {
-        return fetchOne(Expense.EXPENSE.ID, value);
+    public moneytree.persist.db.generated.tables.pojos.Expense fetchOneByExpenseId(UUID value) {
+        return fetchOne(Expense.EXPENSE.EXPENSE_ID, value);
     }
 
     /**
@@ -91,31 +91,31 @@ public class ExpenseDao extends DAOImpl<ExpenseRecord, moneytree.persist.db.gene
     }
 
     /**
-     * Fetch records that have <code>vendor BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>vendor_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchRangeOfVendor(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(Expense.EXPENSE.VENDOR, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchRangeOfVendorId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(Expense.EXPENSE.VENDOR_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>vendor IN (values)</code>
+     * Fetch records that have <code>vendor_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchByVendor(UUID... values) {
-        return fetch(Expense.EXPENSE.VENDOR, values);
+    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchByVendorId(UUID... values) {
+        return fetch(Expense.EXPENSE.VENDOR_ID, values);
     }
 
     /**
-     * Fetch records that have <code>expense_category BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>expense_category_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchRangeOfExpenseCategory(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(Expense.EXPENSE.EXPENSE_CATEGORY, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchRangeOfExpenseCategoryId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(Expense.EXPENSE.EXPENSE_CATEGORY_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>expense_category IN (values)</code>
+     * Fetch records that have <code>expense_category_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchByExpenseCategory(UUID... values) {
-        return fetch(Expense.EXPENSE.EXPENSE_CATEGORY, values);
+    public List<moneytree.persist.db.generated.tables.pojos.Expense> fetchByExpenseCategoryId(UUID... values) {
+        return fetch(Expense.EXPENSE.EXPENSE_CATEGORY_ID, values);
     }
 
     /**

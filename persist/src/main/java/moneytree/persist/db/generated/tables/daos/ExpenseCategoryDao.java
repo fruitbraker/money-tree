@@ -37,28 +37,28 @@ public class ExpenseCategoryDao extends DAOImpl<ExpenseCategoryRecord, moneytree
 
     @Override
     public UUID getId(moneytree.persist.db.generated.tables.pojos.ExpenseCategory object) {
-        return object.getId();
+        return object.getExpenseCategoryId();
     }
 
     /**
-     * Fetch records that have <code>id BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>expense_category_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.ExpenseCategory> fetchRangeOfId(UUID lowerInclusive, UUID upperInclusive) {
-        return fetchRange(ExpenseCategory.EXPENSE_CATEGORY.ID, lowerInclusive, upperInclusive);
+    public List<moneytree.persist.db.generated.tables.pojos.ExpenseCategory> fetchRangeOfExpenseCategoryId(UUID lowerInclusive, UUID upperInclusive) {
+        return fetchRange(ExpenseCategory.EXPENSE_CATEGORY.EXPENSE_CATEGORY_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>id IN (values)</code>
+     * Fetch records that have <code>expense_category_id IN (values)</code>
      */
-    public List<moneytree.persist.db.generated.tables.pojos.ExpenseCategory> fetchById(UUID... values) {
-        return fetch(ExpenseCategory.EXPENSE_CATEGORY.ID, values);
+    public List<moneytree.persist.db.generated.tables.pojos.ExpenseCategory> fetchByExpenseCategoryId(UUID... values) {
+        return fetch(ExpenseCategory.EXPENSE_CATEGORY.EXPENSE_CATEGORY_ID, values);
     }
 
     /**
-     * Fetch a unique record that has <code>id = value</code>
+     * Fetch a unique record that has <code>expense_category_id = value</code>
      */
-    public moneytree.persist.db.generated.tables.pojos.ExpenseCategory fetchOneById(UUID value) {
-        return fetchOne(ExpenseCategory.EXPENSE_CATEGORY.ID, value);
+    public moneytree.persist.db.generated.tables.pojos.ExpenseCategory fetchOneByExpenseCategoryId(UUID value) {
+        return fetchOne(ExpenseCategory.EXPENSE_CATEGORY.EXPENSE_CATEGORY_ID, value);
     }
 
     /**

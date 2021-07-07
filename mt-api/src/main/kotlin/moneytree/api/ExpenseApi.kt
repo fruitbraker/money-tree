@@ -1,13 +1,12 @@
 package moneytree.api
 
 import java.time.LocalDate
-import moneytree.MtApiRoutesWithSummary
+import moneytree.MtApiRoutes
+import moneytree.domain.DEFAULT_MINUS_MONTHS
 import moneytree.domain.Repository
-import moneytree.domain.SummaryRepository
-import moneytree.domain.entity.DEFAULT_MINUS_MONTHS
-import moneytree.domain.entity.Expense
-import moneytree.domain.entity.ExpenseSummary
-import moneytree.domain.entity.ExpenseSummaryFilter
+import moneytree.domain.expense.Expense
+import moneytree.domain.expense.ExpenseSummary
+import moneytree.domain.expense.ExpenseSummaryFilter
 import moneytree.libs.http4k.Http4kJackson
 import moneytree.processGetResult
 import moneytree.validator.Validator
@@ -24,10 +23,9 @@ import org.http4k.routing.routes
 import toUUIDList
 
 class ExpenseApi(
-    expenseSummaryRepository: SummaryRepository<ExpenseSummary, ExpenseSummaryFilter>,
     repository: Repository<Expense>,
     validator: Validator<Expense>
-) : MtApiRoutesWithSummary<Expense, ExpenseSummary, ExpenseSummaryFilter>(
+) : MtApiRoutes<Expense>(
     repository,
     validator
 ) {
@@ -39,13 +37,11 @@ class ExpenseApi(
     override val lens: BiDiBodyLens<Expense> = Http4kJackson.autoBody<Expense>().toLens()
     override val listLens: BiDiBodyLens<List<Expense>> = Http4kJackson.autoBody<List<Expense>>().toLens()
 
-    override val summaryRepository: SummaryRepository<ExpenseSummary, ExpenseSummaryFilter> = expenseSummaryRepository
-    override val summaryListLens: BiDiBodyLens<List<ExpenseSummary>> = Http4kJackson.autoBody<List<ExpenseSummary>>().toLens()
+    private val summaryListLens: BiDiBodyLens<List<ExpenseSummary>> = Http4kJackson.autoBody<List<ExpenseSummary>>().toLens()
 
     override fun makeRoutes(): RoutingHttpHandler {
         return routes(
-            "/expense/summary" bind Method.GET to this::getSummary,
-            "/expense" bind Method.GET to ::get,
+            "/expense" bind Method.GET to this::get,
             "/expense/{id}" bind Method.GET to ::getById,
             "/expense" bind Method.POST to ::insert,
             "/expense/{id}" bind Method.PUT to ::upsertById,
@@ -53,7 +49,7 @@ class ExpenseApi(
         )
     }
 
-    override fun getSummary(request: Request): Response {
+    override fun get(request: Request): Response {
         val expenseSummaryFilter = ExpenseSummaryFilter(
             startDate = queryStartDate(request) ?: LocalDate.now().minusMonths(DEFAULT_MINUS_MONTHS),
             endDate = queryEndDate(request) ?: LocalDate.now(),
@@ -61,6 +57,6 @@ class ExpenseApi(
             expenseCategoryIds = queryExpenseCategories(request)?.split(',')?.toUUIDList() ?: emptyList()
         )
 
-        return processGetResult(summaryRepository.getSummary(expenseSummaryFilter), summaryListLens)
+        return processGetResult(repository.get(expenseSummaryFilter), summaryListLens)
     }
 }

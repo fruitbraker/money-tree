@@ -35,7 +35,7 @@ class VendorRepositoryTest : PersistConnectorTestHarness() {
         val randomVendor = insertRandomVendor().toOkValue()
 
         val getResult = vendorRepository.getById(
-            checkNotNull(randomVendor.id)
+            checkNotNull(randomVendor.vendorId)
         )
         getResult.shouldBeOk()
         getResult.onOk { it shouldBe randomVendor }
@@ -56,7 +56,7 @@ class VendorRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `upsertById updates existing entity`() {
         val randomVendor = insertRandomVendor().toOkValue()
-        val randomVendorId = checkNotNull(randomVendor.id)
+        val randomVendorId = checkNotNull(randomVendor.vendorId)
 
         val updatedVendor = randomVendor.copy(
             name = randomString()
@@ -77,7 +77,7 @@ class VendorRepositoryTest : PersistConnectorTestHarness() {
         val randomString = randomString()
 
         val vendor = Vendor(
-            id = randomUUID,
+            vendorId = randomUUID,
             name = randomString
         )
 
@@ -101,11 +101,11 @@ class VendorRepositoryTest : PersistConnectorTestHarness() {
         val randomString = randomString()
 
         val vendor = Vendor(
-            id = randomUUID,
+            vendorId = randomUUID,
             name = randomString
         )
 
-        val idParameterVendor = vendor.copy(id = parameterId)
+        val idParameterVendor = vendor.copy(vendorId = parameterId)
 
         val upsertResult = vendorRepository.upsertById(vendor, parameterId)
         upsertResult.shouldBeOk()
@@ -123,7 +123,7 @@ class VendorRepositoryTest : PersistConnectorTestHarness() {
     @Test
     fun `deleteById successfully deletes`() {
         val randomVendor = insertRandomVendor().toOkValue()
-        val randomVendorId = checkNotNull(randomVendor.id)
+        val randomVendorId = checkNotNull(randomVendor.vendorId)
 
         val deleteResult = vendorRepository.deleteById(randomVendorId)
         deleteResult.shouldBeOk()

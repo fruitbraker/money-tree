@@ -38,8 +38,8 @@ class ExpenseApiTest : RoutesTest<Expense>() {
         id = randomUUID,
         transactionAmount = randomTransactionAmount,
         transactionDate = todayLocalDate,
-        vendor = vendorId,
-        expenseCategory = expenseCategoryId,
+        vendorId = vendorId,
+        expenseCategoryId = expenseCategoryId,
         notes = notes,
         hide = hide
     )

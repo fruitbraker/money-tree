@@ -26,17 +26,17 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>mtdev.expense.id</code>.
+     * Setter for <code>mtdev.expense.expense_id</code>.
      */
-    public ExpenseRecord setId(UUID value) {
+    public ExpenseRecord setExpenseId(UUID value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.expense.id</code>.
+     * Getter for <code>mtdev.expense.expense_id</code>.
      */
-    public UUID getId() {
+    public UUID getExpenseId() {
         return (UUID) get(0);
     }
 
@@ -71,32 +71,32 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
     }
 
     /**
-     * Setter for <code>mtdev.expense.vendor</code>.
+     * Setter for <code>mtdev.expense.vendor_id</code>.
      */
-    public ExpenseRecord setVendor(UUID value) {
+    public ExpenseRecord setVendorId(UUID value) {
         set(3, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.expense.vendor</code>.
+     * Getter for <code>mtdev.expense.vendor_id</code>.
      */
-    public UUID getVendor() {
+    public UUID getVendorId() {
         return (UUID) get(3);
     }
 
     /**
-     * Setter for <code>mtdev.expense.expense_category</code>.
+     * Setter for <code>mtdev.expense.expense_category_id</code>.
      */
-    public ExpenseRecord setExpenseCategory(UUID value) {
+    public ExpenseRecord setExpenseCategoryId(UUID value) {
         set(4, value);
         return this;
     }
 
     /**
-     * Getter for <code>mtdev.expense.expense_category</code>.
+     * Getter for <code>mtdev.expense.expense_category_id</code>.
      */
-    public UUID getExpenseCategory() {
+    public UUID getExpenseCategoryId() {
         return (UUID) get(4);
     }
 
@@ -155,7 +155,7 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public Field<UUID> field1() {
-        return Expense.EXPENSE.ID;
+        return Expense.EXPENSE.EXPENSE_ID;
     }
 
     @Override
@@ -170,12 +170,12 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public Field<UUID> field4() {
-        return Expense.EXPENSE.VENDOR;
+        return Expense.EXPENSE.VENDOR_ID;
     }
 
     @Override
     public Field<UUID> field5() {
-        return Expense.EXPENSE.EXPENSE_CATEGORY;
+        return Expense.EXPENSE.EXPENSE_CATEGORY_ID;
     }
 
     @Override
@@ -190,7 +190,7 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public UUID component1() {
-        return getId();
+        return getExpenseId();
     }
 
     @Override
@@ -205,12 +205,12 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public UUID component4() {
-        return getVendor();
+        return getVendorId();
     }
 
     @Override
     public UUID component5() {
-        return getExpenseCategory();
+        return getExpenseCategoryId();
     }
 
     @Override
@@ -225,7 +225,7 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public UUID value1() {
-        return getId();
+        return getExpenseId();
     }
 
     @Override
@@ -240,12 +240,12 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public UUID value4() {
-        return getVendor();
+        return getVendorId();
     }
 
     @Override
     public UUID value5() {
-        return getExpenseCategory();
+        return getExpenseCategoryId();
     }
 
     @Override
@@ -260,7 +260,7 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public ExpenseRecord value1(UUID value) {
-        setId(value);
+        setExpenseId(value);
         return this;
     }
 
@@ -278,13 +278,13 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
 
     @Override
     public ExpenseRecord value4(UUID value) {
-        setVendor(value);
+        setVendorId(value);
         return this;
     }
 
     @Override
     public ExpenseRecord value5(UUID value) {
-        setExpenseCategory(value);
+        setExpenseCategoryId(value);
         return this;
     }
 
@@ -326,14 +326,14 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> implements
     /**
      * Create a detached, initialised ExpenseRecord
      */
-    public ExpenseRecord(UUID id, LocalDate transactionDate, BigDecimal transactionAmount, UUID vendor, UUID expenseCategory, String notes, Boolean hide) {
+    public ExpenseRecord(UUID expenseId, LocalDate transactionDate, BigDecimal transactionAmount, UUID vendorId, UUID expenseCategoryId, String notes, Boolean hide) {
         super(Expense.EXPENSE);
 
-        setId(id);
+        setExpenseId(expenseId);
         setTransactionDate(transactionDate);
         setTransactionAmount(transactionAmount);
-        setVendor(vendor);
-        setExpenseCategory(expenseCategory);
+        setVendorId(vendorId);
+        setExpenseCategoryId(expenseCategoryId);
         setNotes(notes);
         setHide(hide);
     }

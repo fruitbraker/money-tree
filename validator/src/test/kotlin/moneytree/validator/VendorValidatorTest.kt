@@ -17,7 +17,7 @@ class VendorValidatorTest {
         val randomString = randomString()
 
         val randomVendor = Vendor(
-            id = randomUUID,
+            vendorId = randomUUID,
             name = randomString
         )
 
@@ -32,7 +32,7 @@ class VendorValidatorTest {
         val invalidString = randomString(999)
 
         val randomVendor = Vendor(
-            id = randomUUID,
+            vendorId = randomUUID,
             name = invalidString
         )
 
